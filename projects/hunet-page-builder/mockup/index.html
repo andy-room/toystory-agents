@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>휴넷 페이지 빌더 v1.0</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --primary: #0055C8;
+  --primary-dark: #003D96;
+  --danger: #E72300;
+  --bg: #F7F8FA;
+  --surface: #FFFFFF;
+  --border: #E5E7EB;
+  --text: #111827;
+  --text-muted: #6B7280;
+  --text-light: #9CA3AF;
+  --filter-w: 220px;
+  --header-h: 56px;
+  --bottom-h: 76px;
+  --radius: 10px;
+}
+
+body {
+  font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  overflow: hidden;
+}
+
+/* ── Header ── */
+.builder-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: var(--header-h);
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px;
+  gap: 16px;
+}
+.brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.brand-logo { font-size: 18px; font-weight: 800; color: var(--text); letter-spacing: -.5px; }
+.brand-badge {
+  font-size: 10px; font-weight: 700; color: var(--primary);
+  border: 1.5px solid var(--primary); padding: 2px 7px; border-radius: 20px;
+}
+.header-search {
+  flex: 1; max-width: 360px;
+  height: 34px; border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: var(--bg); padding: 0 14px;
+  font-size: 13px; color: var(--text); outline: none;
+}
+.header-search:focus { border-color: var(--primary); }
+.header-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.selected-count-badge {
+  display: none; align-items: center; gap: 6px;
+  background: #EEF3FF; color: var(--primary);
+  padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;
+}
+.selected-count-badge.visible { display: flex; }
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 16px; border-radius: 7px; border: none;
+  cursor: pointer; font-size: 13px; font-weight: 600; transition: all .15s;
+  white-space: nowrap;
+}
+.btn-outline { background: #fff; color: var(--text); border: 1.5px solid var(--border); }
+.btn-outline:hover { border-color: #999; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: var(--primary-dark); }
+
+/* ── Layout ── */
+.layout {
+  display: flex;
+  margin-top: var(--header-h);
+  height: calc(100vh - var(--header-h) - var(--bottom-h));
+  overflow: hidden;
+}
+
+/* ── Filter Panel ── */
+.filter-panel {
+  width: var(--filter-w);
+  flex-shrink: 0;
+  background: #fff;
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 20px 16px;
+}
+.filter-title {
+  font-size: 11px; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .6px;
+  margin-bottom: 10px; padding: 0 4px;
+}
+.filter-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 10px; border-radius: 7px; cursor: pointer;
+  transition: background .1s; margin-bottom: 2px;
+}
+.filter-item:hover { background: var(--bg); }
+.filter-item.active { background: var(--text); color: #fff; }
+.filter-item.active .filter-count { color: rgba(255,255,255,.6); }
+.filter-item-name { font-size: 13px; font-weight: 500; }
+.filter-count { font-size: 12px; color: var(--text-muted); }
+
+/* ── Component Grid ── */
+.grid-wrap {
+  flex: 1; overflow-y: auto;
+  padding: 24px 28px;
+}
+.grid-head {
+  margin-bottom: 20px;
+}
+.grid-head h2 { font-size: 22px; font-weight: 800; color: var(--text); }
+.grid-head p { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+
+.comp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+/* ── Component Card ── */
+.comp-card {
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color .2s, box-shadow .2s, transform .15s;
+  position: relative;
+}
+.comp-card:hover {
+  border-color: #C7D3E8;
+  box-shadow: 0 8px 24px rgba(0,0,0,.08);
+  transform: translateY(-2px);
+}
+.comp-card.added {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0,85,200,.12);
+}
+
+/* Card Thumbnail */
+.card-thumb {
+  width: 100%;
+  height: 188px;
+  overflow: hidden;
+  background: #F0F2F7;
+  position: relative;
+}
+.thumb-frame-wrap {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.thumb-frame {
+  width: 1280px;
+  height: 900px;
+  border: none;
+  transform-origin: top left;
+  pointer-events: none;
+  /* scale set inline */
+}
+.thumb-loading {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: #F0F2F7;
+  transition: opacity .3s;
+}
+.thumb-loading-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #C7CFD9; animation: pulse 1.2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+/* Card Hover Overlay */
+.card-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,.45);
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px;
+  opacity: 0; transition: opacity .2s;
+}
+.comp-card:hover .card-overlay { opacity: 1; }
+.overlay-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 9px 16px; border-radius: 7px; border: none;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  transition: all .15s; white-space: nowrap;
+}
+.overlay-btn-preview { background: rgba(255,255,255,.95); color: var(--text); }
+.overlay-btn-preview:hover { background: #fff; }
+.overlay-btn-add { background: var(--primary); color: #fff; }
+.overlay-btn-add:hover { background: var(--primary-dark); }
+.overlay-btn-added { background: #16A34A; color: #fff; }
+
+/* Added Check Badge */
+.added-badge {
+  position: absolute; top: 10px; right: 10px;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--primary); color: #fff;
+  font-size: 13px; font-weight: 700;
+  display: none; align-items: center; justify-content: center;
+  z-index: 2;
+}
+.comp-card.added .added-badge { display: flex; }
+
+/* Card Body */
+.card-body {
+  padding: 14px 16px;
+}
+.card-tags { display: flex; gap: 6px; margin-bottom: 10px; }
+.card-tag {
+  font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 5px;
+  background: var(--bg); color: var(--text-muted);
+}
+.card-tag.primary { background: #EEF3FF; color: var(--primary); }
+.card-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.card-subtags { display: flex; gap: 5px; flex-wrap: wrap; }
+.card-subtag {
+  font-size: 11px; color: var(--text-light);
+  border: 1px solid var(--border); padding: 2px 7px; border-radius: 4px;
+}
+
+/* ── Bottom Bar ── */
+.bottom-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  height: var(--bottom-h);
+  background: var(--text);
+  border-top: 1px solid rgba(255,255,255,.1);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+.bottom-label {
+  font-size: 12px; font-weight: 700; color: rgba(255,255,255,.5);
+  white-space: nowrap; flex-shrink: 0;
+}
+.bottom-chips {
+  flex: 1; display: flex; align-items: center; gap: 8px;
+  overflow-x: auto; padding: 4px 0;
+}
+.bottom-chips::-webkit-scrollbar { height: 4px; }
+.bottom-chips::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 2px; }
+.bottom-chip {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+  color: #fff; border-radius: 7px; padding: 6px 10px;
+  white-space: nowrap; flex-shrink: 0;
+}
+.chip-order {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--primary); color: #fff;
+  font-size: 10px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.chip-icon { font-size: 14px; }
+.chip-label { font-size: 12px; font-weight: 600; }
+.chip-actions { display: flex; gap: 3px; }
+.chip-btn {
+  width: 20px; height: 20px; border-radius: 4px; border: none;
+  background: rgba(255,255,255,.1); color: rgba(255,255,255,.7);
+  font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background .1s;
+}
+.chip-btn:hover { background: rgba(255,255,255,.25); color: #fff; }
+.chip-btn:disabled { opacity: .3; cursor: default; }
+.chip-btn.del:hover { background: rgba(231,35,0,.5); color: #fff; }
+.bottom-empty {
+  flex: 1;
+  font-size: 13px; color: rgba(255,255,255,.3);
+  display: flex; align-items: center; gap: 8px;
+}
+.bottom-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.btn-export-main {
+  background: #fff; color: var(--text);
+  padding: 9px 20px; border-radius: 7px;
+  font-size: 13px; font-weight: 700; border: none; cursor: pointer;
+  transition: all .15s;
+}
+.btn-export-main:hover { background: #F3F4F6; }
+.btn-export-main:disabled { opacity: .4; cursor: default; }
+
+/* ── Preview Modal ── */
+.preview-modal {
+  display: none; position: fixed; inset: 0; z-index: 500;
+  background: rgba(0,0,0,.8);
+  align-items: center; justify-content: center;
+  padding: 32px;
+}
+.preview-modal.open { display: flex; }
+.preview-inner {
+  background: #fff; border-radius: 12px;
+  width: 100%; max-width: 1100px;
+  height: 88vh;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,.4);
+}
+.preview-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0; gap: 12px;
+}
+.preview-header-left { display: flex; align-items: center; gap: 12px; }
+.preview-comp-icon { font-size: 22px; }
+.preview-comp-name { font-size: 15px; font-weight: 700; }
+.preview-comp-opt { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.preview-header-actions { display: flex; align-items: center; gap: 8px; }
+.preview-close {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1.5px solid var(--border); background: #fff;
+  cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center;
+}
+.preview-close:hover { background: var(--bg); }
+.preview-viewport {
+  flex: 1; overflow: hidden;
+  position: relative;
+  background: #F0F2F7;
+  display: flex; align-items: flex-start; justify-content: center;
+  overflow-y: auto;
+}
+.preview-full-frame {
+  width: 1280px;
+  min-height: 700px;
+  height: 100%;
+  border: none;
+  background: #fff;
+  flex-shrink: 0;
+}
+.preview-scale-wrap {
+  width: 100%; height: 100%;
+  display: flex; justify-content: center;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.preview-scale-inner {
+  transform-origin: top center;
+  /* scale set by JS */
+}
+
+/* ── Export Modal ── */
+.export-modal {
+  display: none; position: fixed; inset: 0; z-index: 500;
+  background: rgba(0,0,0,.7);
+  align-items: center; justify-content: center;
+  padding: 32px;
+}
+.export-modal.open { display: flex; }
+.export-inner {
+  background: #fff; border-radius: 12px;
+  width: 100%; max-width: 860px;
+  max-height: 90vh;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,.4);
+}
+.export-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; justify-content: space-between;
+  flex-shrink: 0; gap: 12px;
+}
+.export-header-text h3 { font-size: 16px; font-weight: 800; }
+.export-header-text p { font-size: 12px; color: var(--text-muted); margin-top: 5px; line-height: 1.6; }
+.export-close {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 1.5px solid var(--border); background: #fff;
+  cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.export-actions {
+  padding: 12px 24px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+.export-note { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+.export-code-wrap { flex: 1; overflow: hidden; }
+.export-code-wrap textarea {
+  width: 100%; height: 100%; min-height: 340px;
+  border: none; outline: none; resize: none;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 11.5px; line-height: 1.7;
+  padding: 16px 24px;
+  background: #1E2433; color: #A8DAFF;
+}
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 96px; right: 24px; z-index: 999;
+  background: #1E2433; color: #fff;
+  padding: 11px 18px; border-radius: 8px;
+  font-size: 13px; font-weight: 600;
+  opacity: 0; transition: opacity .3s; pointer-events: none;
+}
+.toast.show { opacity: 1; }
+
+/* No results */
+.no-results {
+  grid-column: 1/-1;
+  text-align: center; padding: 80px 0;
+  color: var(--text-muted);
+}
+.no-results-icon { font-size: 48px; margin-bottom: 12px; opacity: .3; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="builder-header">
+  <div class="brand">
+    <span class="brand-logo">휴넷 페이지 빌더</span>
+    <span class="brand-badge">v1.0</span>
+  </div>
+  <input class="header-search" type="text" placeholder="섹션 검색..." id="search-input" oninput="onSearch()">
+  <div class="header-right">
+    <div class="selected-count-badge" id="selected-badge">
+      <span id="selected-badge-num">0</span>개 선택됨
+    </div>
+    <button class="btn btn-outline" onclick="clearCanvas()">초기화</button>
+    <button class="btn btn-primary" onclick="openExport()">HTML 내보내기 →</button>
+  </div>
+</header>
+
+<!-- Layout -->
+<div class="layout">
+
+  <!-- Filter Panel -->
+  <aside class="filter-panel">
+    <div class="filter-title">Category</div>
+    <div id="filter-list"></div>
+  </aside>
+
+  <!-- Component Grid -->
+  <div class="grid-wrap">
+    <div class="grid-head">
+      <h2 id="grid-title">All Components</h2>
+      <p id="grid-count">13 components found</p>
+    </div>
+    <div class="comp-grid" id="comp-grid"></div>
+  </div>
+
+</div>
+
+<!-- Bottom Bar -->
+<div class="bottom-bar">
+  <span class="bottom-label">선택된 섹션</span>
+  <div class="bottom-chips" id="bottom-chips">
+    <div class="bottom-empty" id="bottom-empty">
+      ← 컴포넌트를 추가하면 여기에 순서대로 표시됩니다
+    </div>
+  </div>
+  <div class="bottom-actions">
+    <button class="btn-export-main" onclick="openExport()" id="export-btn" disabled>HTML 내보내기 →</button>
+  </div>
+</div>
+
+<!-- Preview Modal -->
+<div class="preview-modal" id="preview-modal">
+  <div class="preview-inner">
+    <div class="preview-header">
+      <div class="preview-header-left">
+        <span class="preview-comp-icon" id="preview-icon"></span>
+        <div>
+          <div class="preview-comp-name" id="preview-name"></div>
+          <div class="preview-comp-opt" id="preview-opt"></div>
+        </div>
+      </div>
+      <div class="preview-header-actions">
+        <button class="btn btn-primary" id="preview-add-btn" onclick="addFromPreview()"></button>
+        <button class="preview-close" onclick="closePreview()">✕</button>
+      </div>
+    </div>
+    <div class="preview-viewport">
+      <iframe id="preview-iframe" class="preview-full-frame" scrolling="yes"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- Export Modal -->
+<div class="export-modal" id="export-modal">
+  <div class="export-inner">
+    <div class="export-header">
+      <div class="export-header-text">
+        <h3>생성된 HTML 코드</h3>
+        <p>아래 코드를 복사 후, 휴넷 CMS에서 <code>&lt;div class="container"&gt;</code> 안에 붙여넣으세요.<br>
+        Hero 섹션은 container 직하위, 나머지 섹션은 <code>&lt;div class="content"&gt;</code> 안에 자동 배치됩니다.</p>
+      </div>
+      <button class="export-close" onclick="closeExport()">✕</button>
+    </div>
+    <div class="export-actions">
+      <button class="btn btn-primary" onclick="copyCode()">📋 클립보드에 복사</button>
+      <p class="export-note">
+        · 이미지 경로는 CDN 절대경로 — 그대로 사용 가능<br>
+        · 텍스트·이미지 교체는 붙여넣은 후 직접 수정
+      </p>
+    </div>
+    <div class="export-code-wrap">
+      <textarea id="export-code" readonly spellcheck="false"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">✅ 클립보드에 복사됐습니다</div>
+
+<script>
+// ============================================================
+// COMPONENT DATA — hunetFLEX 기반 13개 섹션
+// ============================================================
+const COMPONENTS = [
+  {
+    id: 'hero', en: 'Hero', ko: '상단 비주얼', icon: '🎯',
+    category: 'Hero', isHero: true,
+    tags: ['full-width', 'cta', 'visual'],
+    options: [{
+      id: 'hero-a', name: 'Option A — 텍스트 + GIF',
+      desc: '타이틀·설명문·CTA 2버튼·GIF 이미지 (hunetFLEX)',
+      html: `    <div class="sub-visual-bg hrd-smb-visual hrd-smb-visual-v2">
+        <div class="sub-visual">
+            <div class="location-b">
+                <ul>
+                    <li class="home"><a href="#">홈</a></li>
+                    <li><a href="#">휴넷기업교육</a></li>
+                    <li><a href="#">페이지명</a></li>
+                </ul>
+            </div>
+            <div class="sub-top-scroll js-scroll-move">
+                <div class="sub-tit">
+                    <p class="txt01">오직 중견 · 중소기업을 위한 구독형 멤버십</p>
+                    <p class="txt02">휴넷 FLEX</p>
+                    <p class="txt03">
+                        법정·리더십·직무·AI 교육까지 1년 내내 무제한 FLEX!<br>
+                        비싼 시행착오 대신, 검증된 올인원 패키지 구독으로<br>
+                        효율적인 성장에 투자하세요.
+                    </p>
+                    <p class="visual-btn">
+                        <a href="https://hrd.hunet.co.kr/Inquiry/Qna">도입 문의하기</a>
+                        <a href="https://hrd.hunet.co.kr/Contents/hunetFLEXApply">멤버십 신청하기</a>
+                    </p>
+                    <div class="gif-img">
+                        <p><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/HRD_DEV/Images/hrd/content/flex/20251217/visual.gif" alt=""></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>`,
+      js: ``
+    }, {
+      id: 'hero-b', name: 'Option B — 동영상 비주얼',
+      desc: '배경 동영상 + 서비스명·설명 텍스트 (터닝포인트 큐브)',
+      html: `<section class="sub-visual-bg turningpoint-cube-visual">
+        <video src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/hu/hrd/cube/TOP_PC.mp4" type="video/mp4" autoplay="" loop="" muted=""></video>
+        <div class="sub-visual">
+            <div class="location">
+                <ul>
+                    <li class="home"><a href="/">홈</a></li>
+                    <li><a href="/Contents/HunetLearningMaker">학습솔루션</a></li>
+                    <li><a href="/Contents/Turningpoint_cube">터닝포인트 큐브</a></li>
+                </ul>
+            </div>
+            <div class="sub-top-scroll js-scroll-move shown">
+                <div class="sub-tit">
+                    <p class="txt01">성과를 만드는 리더십의 출발점</p>
+                    <p class="txt02">터닝포인트 큐브™</p>
+                    <p class="txt03">
+                        리더십 진단부터 개발까지 연결되는 리더십 토탈 솔루션으로<br>
+                        우리 회사에 필요한 리더십을 효과적으로 개발하세요.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>`,
+      js: ``
+    }]
+  },
+  {
+    id: 'problem', en: 'Problem', ko: '문제 제기', icon: '❓',
+    category: 'Problem', tags: ['image', 'statistics'],
+    options: [{
+      id: 'problem-a', name: 'Option A — 통계 이미지',
+      desc: '중소·중견기업 교육 문제 통계 이미지 섹션',
+      html: `        <section class="section-smb section-question-smb">
+            <div class="tit-area js-scroll-move">
+                <h3 class="tit">
+                    교육은 필요한데, 교육비·시간·인력 부족이라면, <br><span class="linear-gradient">이제 '걱정 없이' 시작하세요.</span>
+                </h3>
+            </div>
+            <div class="question-cont">
+                <ul class="question-list">
+                    <li class="js-scroll-move">
+                        <img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/HRD_DEV/Images/hrd/content/flex/20251217/img_question05.png" width="1046" alt="">
+                    </li>
+                </ul>
+                <p class="txt01 js-scroll-move">출처: '기업교육 현황과 인식' 중소·중견기업 설문 (546개사 대상, 2025년)</p>
+            </div>
+        </section>`,
+      js: ``
+    }, {
+      id: 'problem-b', name: 'Option B — 페르소나 카드형',
+      desc: '4개 담당자 고민 카드 + 솔루션 응답 카드 (터닝포인트 큐브)',
+      html: `<section class="cube-problem-solution">
+            <div class="section-inner">
+                <p class="section-label js-scroll-move">리더십 진단을 해야 하는 교육담당자의 고민</p>
+                <h2 class="section-tit js-scroll-move">리더십 진단을 했는데,<br> 왜 아무것도 달라지지 않을까요?</h2>
+                <ul class="problem-grid js-scroll-move">
+                    <li class="problem-card"><div class="card-inner"><div class="profile-wrap"><div class="profile"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/hu/hrd/cube/profile01.png" alt=""></div><span class="card-label">H사 교육담당자</span></div><div class="text-wrap"><p class="card-tit">리더 개인 평가만 하고 끝난 느낌이에요.</p><ul class="card-desc"><li>리더 개인의 특성, 성향에만 집중</li><li>점수 비교, 유형 제시 중심의 단편적 해석</li></ul></div></div></li>
+                    <li class="problem-card"><div class="card-inner"><div class="profile-wrap"><div class="profile"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/hu/hrd/cube/profile02.png" alt=""></div><span class="card-label">K사 교육담당자</span></div><div class="text-wrap"><p class="card-tit">진단 결과가 리더가 처한 상황을 반영하지 못하네요.</p><ul class="card-desc"><li>실제 업무 맥락과 동떨어진 해석</li><li>조직 상황을 반영하지 못한 솔루션</li></ul></div></div></li>
+                    <li class="problem-card"><div class="card-inner"><div class="profile-wrap"><div class="profile"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/hu/hrd/cube/profile03.png" alt=""></div><span class="card-label">S사 교육담당자</span></div><div class="text-wrap"><p class="card-tit">진단 결과는 나왔는데, 무엇을 해야 할지 모르겠습니다.</p><ul class="card-desc"><li>추상적이고 어려운 결과 보고서</li><li>개선을 위한 구체적인 제안이나 솔루션이 없는 보고서</li></ul></div></div></li>
+                    <li class="problem-card"><div class="card-inner"><div class="profile-wrap"><div class="profile"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/hu/hrd/cube/profile04.png" alt=""></div><span class="card-label">D사 교육담당자</span></div><div class="text-wrap"><p class="card-tit">진단 이후, 달라진 게 없어 고민입니다.</p><ul class="card-desc"><li>진단 후에도 변하지 않는 리더의 문제 행동</li><li>성과 변화로 연결되지 않는 진단 결과</li></ul></div></div></li>
+                </ul>
+                <div class="solution-bridge js-scroll-move">
+                    <span class="bridge-icon"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/hu/hrd/cube/icon_arrow_double.png" alt=""></span>
+                    <p class="bridge-txt">터닝포인트 큐브™는 이러한 고민을 해결하고</p>
+                    <p class="bridge-tit">진단이 리더의 성장으로 이어지도록 설계되었습니다.</p>
+                    <span class="bridge-line"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/hu/hrd/cube/icon_arrow_down.png" alt=""></span>
+                </div>
+                <ul class="solution-grid solution-grid--striped js-scroll-move">
+                    <li class="solution-card"><div class="card-inner"><div class="card-top speech-bubble"><div class="profile"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/hu/hrd/cube/profile01.png" alt=""></div><p class="card-sub">리더 개인 평가만 하고 끝난 느낌이에요.</p></div><p class="card-solution">리더십 효과성 관점에서<br>리더십을 종합적으로 진단합니다.</p></div></li>
+                    <li class="solution-card"><div class="card-inner"><div class="card-top speech-bubble"><div class="profile"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/hu/hrd/cube/profile02.png" alt=""></div><p class="card-sub">진단 결과가 리더가 처한 상황을 반영하지 못하네요.</p></div><p class="card-solution">리더가 직면한 상황을 반영해<br>실질적인 리더십 솔루션 도출합니다.</p></div></li>
+                    <li class="solution-card"><div class="card-inner"><div class="card-top speech-bubble"><div class="profile"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/hu/hrd/cube/profile03.png" alt=""></div><p class="card-sub">진단 결과는 나왔지만, 무엇을 해야 할지 모르겠습니다.</p></div><p class="card-solution">AI 리포트를 통한<br>개인 맞춤형 솔루션을 제공합니다.</p></div></li>
+                    <li class="solution-card"><div class="card-inner"><div class="card-top speech-bubble"><div class="profile"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/hu/hrd/cube/profile04.png" alt=""></div><p class="card-sub">진단 이후에도 달라진 게 없어 고민입니다.</p></div><p class="card-solution">진단-교육-개발로 확장 가능한<br>리더십 토탈 솔루션을 제안합니다.</p></div></li>
+                </ul>
+            </div>
+        </section>`,
+      js: ``
+    }]
+  },
+  {
+    id: 'solution', en: 'Solution', ko: '해결책 제시', icon: '💡',
+    category: 'Feature & Showcase', tags: ['icon-grid', '4-col'],
+    options: [{
+      id: 'solution-a', name: 'Option A — 4열 아이콘 그리드',
+      desc: '성과·기준·운영·예산 4개 아이콘 카드',
+      html: `        <section class="section-smb section-solution01-smb">
+            <div class="tit-area js-scroll-move">
+                <h3 class="tit">현실의 어려움이 성장을 멈추지 않도록,<span class="linear-gradient">중견·중소기업의 고민을 디테일에 담았습니다.</span></h3>
+                <p class="txt">복잡하지 않게, 부담 없이, 그리고 지속 가능한 방식으로,<br>기업의 현실을 반영한 새로운 학습 지원 체계를 준비했습니다.</p>
+            </div>
+            <div class="solution-cont js-scroll-move">
+                <ul class="solution-list">
+                    <li class="w-450"><div class="inner"><span class="icon"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/HRD_DEV/Images/hrd/content/flex/20251217/icon_solution01.png" width="60" alt=""></span><div class="title">성과 극대화</div><p class="txt">리더십·직무·필수·트렌드까지 아우르는 <strong>폭넓은 커리큘럼</strong></p></div></li>
+                    <li class="w-326"><div class="inner"><span class="icon"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/HRD_DEV/Images/hrd/content/flex/20251217/icon_solution02.png" width="60" alt=""></span><div class="title">기준 고도화</div><p class="txt">대기업·공공·중견·중소 고객 레퍼런스로 <strong>입증된 품질과 신뢰</strong></p></div></li>
+                    <li class="w-398"><div class="inner"><span class="icon"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/HRD_DEV/Images/hrd/content/flex/20251217/icon_solution03.png" width="60" alt=""></span><div class="title">운영 효율화</div><p class="txt">추가 개발 없이 즉시 도입 가능한 <strong>통합 학습 플랫폼</strong></p></div></li>
+                    <li class="w-378"><div class="inner"><span class="icon"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/HRD_DEV/Images/hrd/content/flex/20251217/icon_solution04.png" width="60" alt=""></span><div class="title">예산 최적화</div><p class="txt">업계 최저 수준을 지향하는 <strong>합리적인 구독 요금제</strong></p></div></li>
+                </ul>
+            </div>
+        </section>`,
+      js: ``
+    }, {
+      id: 'solution-b', name: 'Option B — 효과성 공식 다이어그램',
+      desc: '리더십 효과성 = 역량 + (스타일 × 상황) - 위험행동 공식 시각화 (터닝포인트 큐브)',
+      html: `<section class="cube-effectiveness-formula">
+            <div class="formula-inner js-scroll-move">
+                <p class="formula-tit-line2">
+                    리더에 대한 평가가 아닌,<br>
+                    <span class="highlight">리더십 효과성 향상</span>을 목적으로 진단합니다.
+                </p>
+                <div class="formula-quote-box">
+                    <h3 class="formula-quote-tit">리더십 효과성</h3>
+                    <p class="formula-quote-txt">"리더의 행동이 조직 안에서 실제로 어떤 성과를 만들고 있는가?"</p>
+                </div>
+                <div class="formula-diagram">
+                    <div class="formula-item">
+                        <div class="formula-box formula-box-blue"><span class="formula-box-tit">리더십<br>역량</span></div>
+                        <span class="formula-box-desc">성과를 위해 리더가 반드시<br>수행해야 하는 핵심 역할</span>
+                    </div>
+                    <span class="formula-op">+</span>
+                    <div class="formula-group">
+                        <div class="formula-item">
+                            <div class="formula-box formula-box-blue"><span class="formula-box-tit">리더십<br>스타일</span></div>
+                            <span class="formula-box-desc">리더가 역량을<br>발휘하는 행동 방식</span>
+                        </div>
+                        <span class="formula-op"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M15 5L5 15M5 5L15 15" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                        <div class="formula-item">
+                            <div class="formula-box formula-box-blue"><span class="formula-box-tit">리더십 발휘<br>상황·맥락</span></div>
+                            <span class="formula-box-desc">리더가 맡은<br>업무 난이도, 조직 체계,<br>구성원 특성</span>
+                        </div>
+                    </div>
+                    <span class="formula-op"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4.16663 10H15.8333" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                    <div class="formula-item">
+                        <div class="formula-box formula-box-blue"><span class="formula-box-tit">위험<br>행동</span></div>
+                        <span class="formula-box-desc">조직의 성과를<br>저해하는 왜곡된 행동 패턴</span>
+                    </div>
+                    <span class="formula-op">=</span>
+                    <div class="formula-item">
+                        <div class="formula-box formula-box-white">
+                            <span class="formula-box-tit">리더십 효과성</span>
+                            <span class="formula-box-tit-en">Leadership Effectiveness</span>
+                        </div>
+                        <span class="formula-box-desc">리더가 가진 역량이 조직의<br>상황에 맞는 방식으로 발휘되고<br>위험 행동 없이 구성원의<br>성과 창출로 이어지는 상태</span>
+                    </div>
+                </div>
+            </div>
+        </section>`,
+      js: ``
+    }]
+  },
+  {
+    id: 'contents', en: 'Contents', ko: '콘텐츠 소개', icon: '📚',
+    category: 'Feature & Showcase', tags: ['slider', 'cards'],
+    options: [{
+      id: 'contents-a', name: 'Option A — 마이크로러닝 슬라이더',
+      desc: '직급/커리어/주제/직무/포맷 5종 카드 자동 슬라이더',
+      html: `        <section class="section-smb section-suggest">
+            <div class="tit-area js-scroll-move">
+                <h3 class="tit"><span class="linear-gradient">무려! 1만 개 + 마이크로러닝!</span><strong>계층, 직무, 포맷으로 더 강력하게 업그레이드 되었습니다.</strong></h3>
+                <p class="desc-text">주니어부터 임원진까지, 업무생산성부터 인문학까지 다양한 콘텐츠를 제공합니다.</p>
+            </div>
+            <div class="solution-cont02 js-scroll-move">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide"><div class="card-header"><div class="desc">주니어부터 경영진까지!</div></div><div class="card-body"><strong class="tit">직급</strong><ul class="lineup-list"><li><span class="dot"></span><span class="text">경영진 맞춤형</span></li><li><span class="dot"></span><span class="text">시니어 맞춤형</span></li><li><span class="dot"></span><span class="text">주니어 맞춤형</span></li></ul></div></div>
+                        <div class="swiper-slide"><div class="card-header"><div class="desc">올라운더 인재를 위해!</div></div><div class="card-body"><strong class="tit">커리어</strong><ul class="lineup-list"><li><span class="dot"></span><span class="text">요즘 비즈니스 감각</span></li><li><span class="dot"></span><span class="text">AI 스페셜 라인업</span></li><li><span class="dot"></span><span class="text">리더십 부트캠프</span></li></ul></div></div>
+                        <div class="swiper-slide"><div class="card-header"><div class="desc">업무로 이어지는 배움!</div></div><div class="card-body"><strong class="tit">주제</strong><ul class="lineup-list"><li><span class="dot"></span><span class="text">새로운 트렌드 발견소</span></li><li><span class="dot"></span><span class="text">식견을 넓히는 인문학</span></li><li><span class="dot"></span><span class="text">혁신과 관련된 모든것</span></li></ul></div></div>
+                        <div class="swiper-slide"><div class="card-header"><div class="desc">각자의 자리에서 프로!</div></div><div class="card-body"><strong class="tit">직무</strong><ul class="lineup-list"><li><span class="dot"></span><span class="text">경영·전략</span></li><li><span class="dot"></span><span class="text">마케팅</span></li><li><span class="dot"></span><span class="text">IT/디자인</span></li></ul></div></div>
+                        <div class="swiper-slide"><div class="card-header"><div class="desc">다양한 배움의 모습!</div></div><div class="card-body"><strong class="tit">포맷</strong><ul class="lineup-list"><li><span class="dot"></span><span class="text">숏폼</span></li><li><span class="dot"></span><span class="text">팟캐스트</span></li><li><span class="dot"></span><span class="text">카드뉴스</span></li></ul></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>`,
+      js: `        var solutionSwiper = new Swiper('.solution-cont02 .swiper-container', {
+            slidesPerView: 1, loop: true, loopedSlides: 30, spaceBetween: 24,
+            initialSlide: 1, centerMode: true, mousewheel: true, speed: 700,
+            autoplay: { delay: 2000, disableOnInteraction: false },
+        });
+        $(".solution-cont02 .swiper-container").hover(function () { solutionSwiper.autoplay.stop(); }, function () { solutionSwiper.autoplay.start(); });`
+    }]
+  },
+  {
+    id: 'comparison', en: 'Comparison', ko: '비용 비교', icon: '💰',
+    category: 'Stats', tags: ['receipt', 'pricing'],
+    options: [{
+      id: 'comparison-a', name: 'Option A — 영수증 비교',
+      desc: '200인 기업 기준 기존 교육비 vs FLEX 비용 비교',
+      html: `        <section class="section-smb section-support-smb section-support-smb-v2">
+            <div class="tit-area js-scroll-move">
+                <h3 class="tit">예산은 낮추고, 효과는 올리는 선택. <span class="linear-gradient">필수 교육 비용 수준으로 올인원 서비스를 제공합니다.</span></h3>
+            </div>
+            <div class="support-cont js-scroll-move">
+                <div class="receipt">
+                    <p class="tit">200인 규모 기업이 휴넷 FLEX에 가입한다면 <span>(* 베이직 기준)</span></p>
+                    <div class="price-area">
+                        <dl class="price"><dt>법정의무교육(5종)</dt><dd>2.5만원 x 200명 <b>500만 원</b></dd></dl>
+                        <dl class="price"><dt>안전보건교육(상/하반기)</dt><dd>2만원 x 200명 <b>400만 원</b></dd></dl>
+                        <dl class="price"><dt>마이크로러닝(10,000여 개)</dt><dd>최소 10만 원 x 200명 <b>2,000만 원</b></dd></dl>
+                        <dl class="price"><dt>임원 전용 멤버십 (휴넷CEO Basic)</dt><dd>100만 원 x 1명 <b>100만 원</b></dd></dl>
+                        <dl class="price"><dt>리더 전용 멤버십 (리더십저니 Basic)</dt><dd>55만 원 x 1명 <b>55만 원</b></dd></dl>
+                        <dl class="price"><dt>연수원 구축 (PC/모바일 App)</dt><dd>최소 1,000만원<b>1,000만 원</b></dd></dl>
+                        <div class="total"><p class="bg-01">교육비 합계 <strong>4,055</strong>만 원</p><p class="discount bg-02">-휴넷 지원금 <strong>3,675</strong>만 원</p></div>
+                        <div class="result"><p class="bg-03">실기업 부담금 <strong><span>연</span>380</strong>만 원*</p><p class="desc">(직원 1인당 연 1.9만 원)</p></div>
+                    </div>
+                </div>
+                <div class="sale-img js-scroll-move"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/HRD_DEV/Images/hrd/content/flex/20251217/img_sale.png" width="551" alt=""></div>
+            </div>
+        </section>`,
+      js: ``
+    }, {
+      id: 'comparison-b', name: 'Option B — 카드형 비교표',
+      desc: '기존 타사 vs 휴넷 3항목 카드 비교 (터닝포인트 큐브)',
+      html: `<section class="cube-comparison">
+            <div class="comparison-inner">
+                <div class="comparison-head">
+                    <h2 class="comparison-tit">
+                        진단이 곧 리더십을<br>
+                        관리·개발하기 위한 기준이 됩니다.
+                    </h2>
+                    <p class="comparison-desc">
+                        터닝포인트 큐브™는 조직의 상황 속에서 리더십이 어떻게 성과로 이어지는지를 종합적으로 진단하여<br>
+                        변화에 필요한 리더십 개발과 연계합니다.
+                    </p>
+                </div>
+                <div class="comparison-chart">
+                    <div class="comparison-card comparison-card--legacy">
+                        <div class="comparison-card__header">기존 타사 리더십 진단</div>
+                        <div class="comparison-card__row"><p class="row-tit">이 리더는 어떤 사람인가?</p><p class="row-desc">· 개인 특성 · 성향 중심</p></div>
+                        <div class="comparison-card__row"><p class="row-tit">점수 및 유형 제시</p><p class="row-desc">· 점수 및 유형 제시</p></div>
+                        <div class="comparison-card__row comparison-card__row--last"><p class="row-tit">참고 또는 기초 자료</p><p class="row-desc">· 진단 이후 개발을 위해선 별도의 프로그램 설계가 필요</p></div>
+                    </div>
+                    <div class="comparison-vs-col">
+                        <div class="comparison-vs-col__header">vs</div>
+                        <div class="comparison-vs-col__label">관점</div>
+                        <div class="comparison-vs-col__label">해석 방식</div>
+                        <div class="comparison-vs-col__label comparison-vs-col__label--last">활용</div>
+                    </div>
+                    <div class="comparison-card comparison-card--hunet">
+                        <div class="comparison-card__header">
+                            <img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/hu/hrd/cube/cube-icon.png" alt="" class="comparison-card__icon">
+                            휴넷 터닝포인트 큐브™
+                        </div>
+                        <div class="comparison-card__row"><p class="row-tit">이 리더는 성과를 어떻게 만들어 내고 있는가?</p><p class="row-desc">· 조직 성과 중심</p></div>
+                        <div class="comparison-card__row"><p class="row-tit">역량 · 스타일 · 위험행동의 종합적 해석</p><p class="row-desc">· 리더십 효과성 수준 제시</p></div>
+                        <div class="comparison-card__row comparison-card__row--last"><p class="row-tit">개발 및 개선의 출발점</p><p class="row-desc">· 토탈 솔루션 관점 : 진단이 리더십 개발의 출발점</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>`,
+      js: ``
+    }]
+  },
+  {
+    id: 'benefits', en: 'Benefits', ko: '멤버십 혜택', icon: '🎁',
+    category: 'Feature & Showcase', tags: ['grid', 'list'],
+    options: [{
+      id: 'benefits-a', name: 'Option A — 9가지 혜택 그리드',
+      desc: '법정교육·마이크로러닝·이러닝·연수원 등 혜택 목록',
+      html: `        <section class="section-smb section-membership-smb section-membership-smb-v2">
+            <div class="tit-area js-scroll-move">
+                <h3 class="tit">기업교육 구독의 새로운 기준,<br>휴넷 FLEX</h3>
+                <p class="txt"><b>휴넷 FLEX</b>는 법정의무교육을 포함한 고품질의 임직원 직무·리더십 교육 콘텐츠를<br>무제한 제공하는 중견·중소기업 전용 연간 약정 멤버십입니다.</p>
+            </div>
+            <div class="membership-cont js-scroll-move">
+                <dl class="mem-dl">
+                    <dt>• 가입 조건</dt><dd>공시대상기업집단에 포함되지 않는 중견 및 중소기업</dd>
+                    <dt>• 가입 기간</dt><dd>서비스 제공일로부터 1년(365일)</dd>
+                    <dt>• 한눈에 보는 휴넷FLEX 멤버십 혜택</dt>
+                    <dd>
+                        <ul class="mem-benefit-list">
+                            <li><p class="img"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/HRD_DEV/Images/hrd/content/flex/20251217/membership_list_img01.png" width="213" height="71" alt=""></p><p class="txt">매년 필수 이수해야 하는<br><b>5대 법정 &amp; 안전 보건교육은 기본.</b></p></li>
+                            <li><p class="img"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/HRD_DEV/Images/hrd/content/flex/20251217/membership_list_img02.png" height="82" alt=""></p><p class="txt">현업에서 지금 필요한 챕터만, 바로.<br><b>1만 개+ 마이크로러닝.</b></p></li>
+                            <li><p class="img"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/HRD_DEV/Images/hrd/content/flex/20251217/membership_list_img03.png" height="82" alt=""></p><p class="txt">체계적인 성장이 필요할 땐,<br><b>프리미엄 이러닝.</b></p></li>
+                            <li><p class="img"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/HRD_DEV/Images/hrd/content/flex/20251217/membership_list_img04.png" height="82" alt=""></p><p class="txt">학습자 경험에 최적화된<br><b>우리 회사 전용 연수원 · 전용 APP</b></p></li>
+                            <li><p class="img"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/HRD_DEV/Images/hrd/content/flex/20251217/membership_list_img05.png" height="82" alt=""></p><p class="txt">휴넷의 독자적 AI 기술 기반<br><b>인공지능 튜터 iLearn (아이런)</b></p></li>
+                        </ul>
+                    </dd>
+                </dl>
+            </div>
+        </section>`,
+      js: ``
+    }]
+  },
+  {
+    id: 'review', en: 'Review', ko: '고객 후기', icon: '⭐',
+    category: 'Testimonial', tags: ['slider', 'carousel'],
+    options: [{
+      id: 'review-a', name: 'Option A — 자동 슬라이더',
+      desc: '8개 기업 고객 후기 자동 순환 슬라이더',
+      html: `        <section class="section-smb section-review-smb">
+            <div class="tit-area js-scroll-move">
+                <h3 class="tit">현장의 변화,<br>휴넷 FLEX에서 시작합니다.</h3>
+            </div>
+            <div class="review-cont js-scroll-move">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide"><div class="review-person"><div class="img"><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/review_person01_2.png" alt=""></div><div class="txt"><p>화학 S사 교육담당자</p><p><b>"교육 비용을 절감하면서도<br>더 효과적인 교육이 되었어요"</b></p></div></div><div class="review-txt">기존에 법정교육과 직무교육에 각각 예산을 따로 썼는데, 휴넷 FLEX 멤버십 덕분에 기존 예산 안에서 전 임직원이 5대 법정교육과 직무 교육을 모두 들을 수 있게 됐어요.</div></div>
+                        <div class="swiper-slide"><div class="review-person"><div class="img"><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/review_person02_2.png" alt=""></div><div class="txt"><p>그룹 Y사 교육담당자</p><p><b>"계열사 직원까지 한꺼번에<br>관리할 수 있어요"</b></p></div></div><div class="review-txt">각 계열사에서 법정교육을 별도로 진행해 왔는데요. 이번에 관리 편의를 위해 모두 휴넷FLEX로 변경했습니다.</div></div>
+                        <div class="swiper-slide"><div class="review-person"><div class="img"><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/review_person03_2.png" alt=""></div><div class="txt"><p>컨설팅 J사 대표</p><p><b>"대기업 수준의 복지를<br>직원들에게 제공할 수 있어요"</b></p></div></div><div class="review-txt">합리적인 가격으로 다양한 직무 교육과 프리미엄급 팀장 교육까지 제공된다는 점이 놀라웠습니다.</div></div>
+                        <div class="swiper-slide"><div class="review-person"><div class="img"><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/review_person04_2.png" alt=""></div><div class="txt"><p>서비스업 S사 CEO</p><p><b>"직원들 뿐만 아니라 CEO로서도<br>성장할 수 있었어요"</b></p></div></div><div class="review-txt">처음에는 직원들의 역량 강화를 위해 휴넷 FLEX를 도입했어요. 그런데 경영인을 위한 휴넷CEO가 함께 제공되어 큰 도움이 되고 있어요.</div></div>
+                    </div>
+                </div>
+            </div>
+        </section>`,
+      js: `        var reviewSwiper = new Swiper('.review-cont .swiper-container', {
+            slidesPerView: 1, loop: true, loopedSlides: 3, spaceBetween: 20,
+            initialSlide: 1, centerMode: true, mousewheel: true, speed: 700,
+            autoplay: { delay: 2000, disableOnInteraction: false },
+        });
+        $(".review-cont .swiper-container").hover(function () { reviewSwiper.autoplay.stop(); }, function () { reviewSwiper.autoplay.start(); });`
+    }]
+  },
+  {
+    id: 'partner', en: 'Partner', ko: '고객사 로고', icon: '🏢',
+    category: 'Logo Cloud', tags: ['marquee', 'infinite-scroll'],
+    options: [{
+      id: 'partner-a', name: 'Option A — 무한 스크롤 로고띠',
+      desc: '36개 고객사 로고 3행 무한 자동 스크롤',
+      html: `        <section class="section-smb section-partner-smb">
+            <div class="tit-area js-scroll-move">
+                <h3 class="tit">55,000여 개사 1,000만 명이<br>휴넷과 함께합니다.</h3>
+            </div>
+            <div class="partner-cont js-scroll-move">
+                <div class="original-thum-list">
+                    <div class="original-thum-box">
+                        <ul>
+                            <li><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/client_list01.png" alt=""></li><li><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/client_list02.png" alt=""></li><li><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/client_list03.png" alt=""></li><li><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/client_list04.png" alt=""></li><li><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/client_list05.png" alt=""></li><li><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/client_list06.png" alt=""></li>
+                        </ul>
+                        <ul aria-hidden="true">
+                            <li><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/client_list01.png" alt=""></li><li><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/client_list02.png" alt=""></li><li><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/client_list03.png" alt=""></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>`,
+      js: ``
+    }]
+  },
+  {
+    id: 'whyus', en: 'Why Us', ko: '선택 이유', icon: '🏆',
+    category: 'Feature & Showcase', tags: ['tabs', 'slider'],
+    options: [{
+      id: 'whyus-a', name: 'Option A — 탭 슬라이더',
+      desc: '법정·안전·마이크로러닝·이러닝·연수원 5종 탭 콘텐츠',
+      html: `        <section class="section-smb section-basic-smb">
+            <div class="tit-area js-scroll-move">
+                <h3 class="tit">왜 많은 기업이 휴넷 FLEX를 선택할까요?</h3>
+                <p class="txt"><span class="title-img"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/HRD_DEV/Images/hrd/content/flex/20251217/img_title_reason01.png" alt="이유 하나"></span><br>단 한 번의 구독으로 완성 — All in one FLEX</p>
+            </div>
+            <div class="basic-cont">
+                <div class="basic-list">
+                    <div class="item item01 js-scroll-move">
+                        <div class="img"><div class="swiper-container basic-fade-swiper"><div class="swiper-wrapper"><div><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/HRD_DEV/Images/hrd/content/flex/20251217/basic_slide_img01.gif" width="382" alt=""></div></div></div></div>
+                        <div class="detail"><p class="icon"><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/basic_txt_emoji01.png" alt=""></p><p class="tit">연예인 X 전문가<br>몰입을 극대화하는<br>법정의무교육</p><p class="txt">미니 드라마부터 토크쇼까지<br>예능형 학습을 즐겨보세요!</p></div>
+                    </div>
+                    <div class="item item03 js-scroll-move">
+                        <div class="img">
+                            <div class="basic-slide-cont">
+                                <div class="swiper-container basic-fade-swiper on"><div class="swiper-wrapper"><div class="swiper-slide"><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/basic_slide_img03_01.png" alt=""></div><div class="swiper-slide"><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/basic_slide_img03_02.png" alt=""></div></div></div>
+                                <div class="swiper-container basic-fade-swiper"><div class="swiper-wrapper"><div class="swiper-slide"><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/basic_slide_img03_05.png" alt=""></div></div></div>
+                                <div class="swiper-container basic-fade-swiper"><div class="swiper-wrapper"><div class="swiper-slide"><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/basic_slide_img03_14.png" alt=""></div></div></div>
+                                <div class="swiper-container basic-fade-swiper"><div class="swiper-wrapper"><div class="swiper-slide"><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/basic_slide_img03_08.png" alt=""></div></div></div>
+                                <div class="swiper-container basic-fade-swiper"><div class="swiper-wrapper"><div class="swiper-slide"><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/basic_slide_img03_11.png" alt=""></div></div></div>
+                                <div class="swiper-container basic-fade-swiper"><div class="swiper-wrapper"><div class="swiper-slide"><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/basic_slide_img03_18.png" alt=""></div></div></div>
+                            </div>
+                            <ul class="basic-slide-tab"><li class="on"><button type="button">ChatGPT</button></li><li><button type="button">커뮤니케이션</button></li><li><button type="button">일반직무</button></li><li><button type="button">리더십</button></li><li><button type="button">MBA</button></li><li><button type="button">ESG</button></li></ul>
+                        </div>
+                        <div class="detail"><p class="icon"><img src="https://img.hunet.co.kr/hrd/_v5/sub/01hrd/06smb/basic_txt_emoji03.png" alt=""></p><p class="tit">스킬 중심의 1만 개+ <br> 마이크로러닝</p><p class="txt">2025년 신규 업데이트된 과정을 만나보세요!</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>`,
+      js: `        var basicFade01 = new Swiper('.item01 .swiper-container.basic-fade-swiper', { effect:'fade', loop:true, touchRatio:0, speed:500, autoplay:{delay:700} });
+        var swiperArr = []; var timerTab;
+        $('.basic-slide-cont .swiper-container.basic-fade-swiper').each(function(index){
+            var t=$(this); t.addClass('swiper-'+index);
+            swiperArr[index] = new Swiper(t, { effect:'fade', speed:500, loop:false, touchRatio:0, autoplay: index==0?{delay:1000}:false });
+        });
+        $('.basic-slide-tab li button').click(function(){
+            var btnNum=$(this).parent().index();
+            $(this).parent().addClass('on').siblings().removeClass('on');
+            $(this).closest('.img').find('.basic-fade-swiper').eq(btnNum).addClass('on').siblings().removeClass('on');
+        });`
+    }]
+  },
+  {
+    id: 'leadership', en: 'Leadership', ko: '리더십 솔루션', icon: '👔',
+    category: 'Feature & Showcase', tags: ['2-col', 'cards'],
+    options: [{
+      id: 'leadership-a', name: 'Option A — CEO + 저니 2열 카드',
+      desc: '휴넷CEO Basic + 리더십저니 Basic 2열 혜택 카드',
+      html: `        <section class="section-smb section-level-smb section-level-smb-v2">
+            <div class="tit-area js-scroll-move">
+                <h3 class="tit"><span class="title-img"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/HRD_DEV/Images/hrd/content/flex/20251217/img_title_reason02.png" alt="이유 둘"></span><br>전 직급 커버 — 경영자·임원·팀장까지 FLEX</h3>
+                <p class="txt">1인당 연간 100만원 상당의 고급 임원 과정까지 포함해, <br>중소·중견기업에서 가장 부담되는 '관리자 교육'을 확실하게 덜어드립니다.</p>
+            </div>
+            <div class="level-cont js-scroll-move">
+                <ul class="level-list">
+                    <li><div class="inner"><div class="left"><p class="txt">성장하는 모든 CEO를 위한 임원전용 교육</p><p class="tit">휴넷CEO <span class="badge red">Basic</span></p><p class="txt02">임원의 인사이트가 비즈니스를 성장시킵니다.</p><div class="txt-list"><ul><li>• 비즈니스 리뷰 <span class="point01">데일리 프리미엄 인사이트아티클</span></li><li>• 인사이트 클립 <span class="point01">매일 10분 길이의 트렌드/비즈니스 강의</span></li><li>• CEO 칼럼 <span class="point01">오피니언 리더의 혜안을 담은 평론</span></li></ul><div class="right"><p class="price"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/HRD_DEV/Images/hrd/content/flex/20251217/level_price_img01_2.png" alt="휴넷CEO 멤버십 0원"></p><p class="link"><a href="https://ceo.hunet.co.kr/membership/intro" target="_blank">휴넷CEO 자세히보기 ↗</a></p></div></div></div></div></li>
+                    <li><div class="inner"><div class="left"><p class="txt">성공하는 리더의 데일리 리더십 Tips</p><p class="tit">리더십저니 <span class="badge blue">Basic</span></p><p class="txt02">우리 회사의 미래가 될 리더의 성장과 리더십.</p><div class="txt-list"><ul><li>• 리더십 라이브러리 <span class="point01">데일리 리더십 콘텐츠</span></li><li>• 리더스 라운지 <span class="point01">리더 전용 커뮤니티</span></li><li>• 리더십 코칭 <span class="point01">온라인 자문 코칭</span></li></ul><div class="right"><p class="price"><img src="https://hunetdown.cdn.hunet.co.kr/Resources/HunetDev/HRD_DEV/Images/hrd/content/flex/20251217/level_price_img02_2.png" alt="리더십저니 0원"></p><p class="link"><a href="https://leadership.hunet.co.kr/journey/intro" target="_blank">리더십저니 자세히보기 ↗</a></p></div></div></div></div></li>
+                </ul>
+            </div>
+        </section>`,
+      js: ``
+    }]
+  },
+  {
+    id: 'pricing', en: 'Pricing', ko: '요금제 비교표', icon: '💳',
+    category: 'Pricing', tags: ['table', '3-plan'],
+    options: [{
+      id: 'pricing-a', name: 'Option A — 3플랜 비교 테이블',
+      desc: '베이직(19,000) / 스탠다드(50,000) / 프리미엄(120,000) 기능 비교',
+      html: `        <section class="section-smb section-membership-smb section-membership-smb-v2" id="eduplan">
+            <div class="tit-area js-scroll-move">
+                <h3 class="tit">연간 멤버십 비용</h3>
+                <p class="txt02">교육 니즈에 맞는 최적의 플랜을 선택하세요.</p>
+            </div>
+            <div class="membership-cont">
+                <div class="mem-price-cont js-scroll-move">
+                    <table class="pricing-table">
+                        <colgroup><col width="196"><col width="*"><col width="*"><col width="*"></colgroup>
+                        <thead>
+                            <tr>
+                                <th class="label-col"></th>
+                                <th class="basic-col"><div class="plan-header"><span class="plan-name">베이직</span><div class="price-info"><strong class="price">19,000원</strong><span class="unit">1인당/연간</span></div><a href="#" class="btn-start btn-outline">시작하기</a></div></th>
+                                <th class="standard-col"><div class="plan-header"><div class="plan-wrap"><span class="plan-name">스탠다드</span><span class="badge">추천</span></div><div class="price-info"><strong class="price">50,000원</strong><span class="unit">1인당/연간</span></div><a href="#" class="btn-start btn-filled">시작하기</a></div></th>
+                                <th class="premium-col"><div class="plan-header"><span class="plan-name">프리미엄</span><div class="price-info"><strong class="price">120,000원</strong><span class="unit">1인당/연간</span></div><a href="#" class="btn-start btn-outline">시작하기</a></div></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><th>필수 의무교육</th><td>5대 법정 교육 &amp; 안전보건교육</td><td>5대 법정 교육 &amp; 안전보건교육</td><td>5대 법정 교육 &amp; 안전보건교육</td></tr>
+                            <tr><th>마이크로러닝</th><td>10,000 개 +</td><td>10,000 개 +</td><td>10,000 개 +</td></tr>
+                            <tr><th>휴넷CEO 멤버십</th><td>1명(1년)</td><td>전체 임원(1년)</td><td>전체 임원(1년)</td></tr>
+                            <tr><th>리더십 저니</th><td>1명(3개월)</td><td>전체 리더(3개월)</td><td>전체 리더(6개월)</td></tr>
+                            <tr><th>심화 이러닝</th><td>-</td><td>100개</td><td>200개</td></tr>
+                            <tr class="last"><th>기업전용 연수원</th><td>포함</td><td>포함</td><td>포함</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>`,
+      js: ``
+    }]
+  },
+  {
+    id: 'cta', en: 'CTA Banner', ko: '강조 띠 배너', icon: '📣',
+    category: 'Call To Action', tags: ['banner', 'text-only'],
+    options: [{
+      id: 'cta-a', name: 'Option A — 슬로건 배너',
+      desc: '배경색 강조 슬로건 + 서비스명 중앙 배치',
+      html: `        <section class="section-smb section-txt-smb">
+            <div class="txt-cont js-scroll-move">
+                <p class="txt01">혜택을 두 배로, 가격은 반으로, 성장은 무한대로.</p>
+                <p class="txt02">휴넷 FLEX</p>
+            </div>
+        </section>`,
+      js: ``
+    }]
+  },
+  {
+    id: 'process', en: 'Process', ko: '진행 프로세스', icon: '🔄',
+    category: 'Feature & Showcase', tags: ['steps', 'flow', 'timeline'],
+    options: [{
+      id: 'process-a', name: 'Option A — 단계별 프로세스 플로우',
+      desc: '0~4단계 진행 프로세스 흐름도 (터닝포인트 큐브)',
+      html: `<section class="cube-process">
+            <div class="process-inner">
+                <h2 class="process-tit">진단 프로세스</h2>
+                <div class="process-flow">
+                    <div class="flow-line"></div>
+                    <div class="flow-step">
+                        <div class="step-head"><div class="step-circle">0</div><div class="step-label">0단계</div><div class="step-name">논의</div></div>
+                        <div class="step-body"><div class="step-card">진단 목적, 배경, 일정,<br>결과 활용 범위 협의</div><div class="step-card">진단 대상자 그룹<br>및 규모 논의</div></div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-head"><div class="step-circle">1</div><div class="step-label">1단계</div><div class="step-name">사전 준비</div></div>
+                        <div class="step-body"><div class="step-card">대상자 및 평가자 선정</div><div class="step-card">진단 진행 공지</div></div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-head"><div class="step-circle">2</div><div class="step-label">2단계</div><div class="step-name">진단 진행</div></div>
+                        <div class="step-body"><div class="step-card">진단 참여 독려</div><div class="step-card">진단 현황 모니터링</div></div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-head"><div class="step-circle">3</div><div class="step-label">3단계</div><div class="step-name">진단 결과 도출</div></div>
+                        <div class="step-body"><div class="step-card">진단 결과 리뷰</div><div class="step-card">향후 일정 논의</div></div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="step-head"><div class="step-circle blank-circle">4</div><div class="step-label">4단계</div><div class="step-name">교육·개발</div></div>
+                        <div class="step-body"><div class="step-card step-card--large">디브리핑 세션, 코칭 등<br>교육 및 개발 방향 논의<br>(별도 옵션)</div></div>
+                    </div>
+                </div>
+                <div class="process-footer">
+                    <p class="footer-txt">조직의 성과를 리딩하는 탁월한 리더 양성,<br>리더십 다면 진단 솔루션, 터닝포인트 큐브™로 시작하세요.</p>
+                    <div class="footer-btns">
+                        <a href="#" class="btn-black">제안서 다운로드</a>
+                        <a href="/Inquiry/Qna" class="btn-blue">터닝포인트 큐브™ 문의</a>
+                    </div>
+                </div>
+            </div>
+        </section>`,
+      js: ``
+    }]
+  },
+  {
+    id: 'faq', en: 'FAQ', ko: '자주 묻는 질문', icon: '❔',
+    category: 'FAQ', tags: ['accordion', 'q&a'],
+    options: [{
+      id: 'faq-a', name: 'Option A — 아코디언 Q&A',
+      desc: '8개 질문 아코디언 토글 (hunetFLEX 기준)',
+      html: `        <section class="section-smb section-qna-smb">
+            <div class="tit-area js-scroll-move"><h3 class="tit">FAQ</h3></div>
+            <div class="qna-cont js-scroll-move">
+                <div class="qna-acco-box open"><a href="#">Q. 멤버십 가입 프로세스는 어떻게 되나요?</a><div class="answer">멤버십 가입은 홈페이지를 통해 간편하게 진행하실 수 있으며, 서비스 약관 동의 → 입회 가능 여부 확인 → 서류 제출 → 연수원 세팅 → 서비스 이용 시작 순서로 진행됩니다.</div></div>
+                <div class="qna-acco-box"><a href="#">Q. 서비스 시작일은 언제인가요?</a><div class="answer">학습자 회원가입 및 연수원 개발 완료 후부터 이용 가능합니다.</div></div>
+                <div class="qna-acco-box"><a href="#">Q. 서비스 제공 기간은 어떻게 되나요?</a><div class="answer">서비스 시작일로부터 365일(1년)입니다.</div></div>
+                <div class="qna-acco-box"><a href="#">Q. 결제는 어떻게 하나요?</a><div class="answer">서비스 시작일 이후 2주 이내 계산서(면세)가 발행됩니다.</div></div>
+                <div class="qna-acco-box"><a href="#">Q. 멤버십 가입 기준이 있나요?</a><div class="answer">공시대상기업집단에 포함되지 않는 중견 및 중소기업에게 제공되며, 대기업과 상시 근로자 1천명 이상은 가입이 제한됩니다.</div></div>
+                <div class="qna-acco-box"><a href="#">Q. 멤버십 변경이 가능한가요?</a><div class="answer">상위 플랜 업그레이드 시 차액 납부로 즉시 변경 가능합니다. 다운그레이드 시 위약금이 발생할 수 있습니다.</div></div>
+                <div class="qna-acco-box"><a href="#">Q. 한 아이디로 여러 명이 사용할 수 있나요?</a><div class="answer">한 아이디로 동시 접속 시 기존 접속 계정은 차단됩니다.</div></div>
+            </div>
+        </section>`,
+      js: `        $('.qna-acco-box a').click(function(e){ e.preventDefault(); if($(this).siblings('.answer').is(':visible')){ $(this).siblings('.answer').slideUp().parent().removeClass('open'); }else{ $(this).siblings('.answer').slideDown().parent().addClass('open'); } });`
+    }, {
+      id: 'faq-b', name: 'Option B — 버튼형 아코디언',
+      desc: '버튼 클릭 토글 Q&A 3항목 (터닝포인트 큐브)',
+      html: `<section class="cube-faq">
+            <div class="faq-inner">
+                <h3 class="faq-tit">자주 묻는 질문</h3>
+                <ul class="cube-faq-list js-scroll-move">
+                    <li>
+                        <button type="button" class="btn-faq">Q. 리더십 다면 진단이 뭔가요?<i class="icon-chevron"></i></button>
+                        <div class="cont-faq"><p>리더십 다면 진단은 한 리더를 여러 계층의 구성원(상사, 동료, 팔로워, 본인 등)이 여러 관점에서 진행하는 다중 평가 기반 진단입니다. 설문 응답을 통해 리더의 관찰 가능한 행동을 진단하고, 리더 본인의 자기평가와 타인평가를 비교하여 강점과 개발 포인트를 보다 입체적으로 도출합니다.</p></div>
+                    </li>
+                    <li>
+                        <button type="button" class="btn-faq">Q. 왜 단순 자기 평가가 아닌, 다면 진단을 해야 하나요?<i class="icon-chevron"></i></button>
+                        <div class="cont-faq"><p>사람과 조직의 관계 속에서 발휘되는 리더십은 본인이 느끼는 모습과 타인이 경험하는 모습이 다를 수 있습니다. 다면 진단은 상사·동료·팔로워 등 다양한 관점에서 리더의 행동을 수집해 리더가 실제로 미치는 영향을 확인하게 해주고, 자기-타인 인식 차이를 개발 필요 영역으로 전환할 수 있게 돕습니다.</p></div>
+                    </li>
+                    <li>
+                        <button type="button" class="btn-faq">Q. 회사 보고서에도 반영되나요?<i class="icon-chevron"></i></button>
+                        <div class="cont-faq"><p>네, 진단 대상자별 개인 리포트와 더불어 교육담당자를 위한 조직 단위의 리더십 분석 리포트가 제공됩니다. 휴넷의 터닝포인트 리더십 진단은 리더의 성장에 초점을 둔 신뢰 기반의 다면진단을 지향합니다.</p></div>
+                    </li>
+                </ul>
+            </div>
+        </section>`,
+      js: `        $('.cube-faq-list .btn-faq').on('click', function(){ $(this).next('.cont-faq').slideToggle(); $(this).closest('li').toggleClass('open'); });`
+    }]
+  }
+];
+
+// ============================================================
+// BUILDER STATE
+// ============================================================
+let canvas = [];
+let uidCounter = 1;
+let activeCategory = 'All';
+let searchQuery = '';
+let previewTarget = null; // {comp, opt}
+
+const CATEGORIES = ['All', ...new Set(COMPONENTS.map(c => c.category))];
+
+// ============================================================
+// FILTERS
+// ============================================================
+function renderFilters() {
+  const el = document.getElementById('filter-list');
+  const counts = {};
+  counts['All'] = COMPONENTS.reduce((s, c) => s + c.options.length, 0);
+  COMPONENTS.forEach(c => {
+    counts[c.category] = (counts[c.category] || 0) + c.options.length;
+  });
+
+  el.innerHTML = CATEGORIES.map(cat => `
+    <div class="filter-item ${cat === activeCategory ? 'active' : ''}" onclick="setCategory('${cat}')">
+      <span class="filter-item-name">${cat}</span>
+      <span class="filter-count">${counts[cat] || 0}</span>
+    </div>
+  `).join('');
+}
+
+function setCategory(cat) {
+  activeCategory = cat;
+  renderFilters();
+  renderGrid();
+}
+
+// ============================================================
+// COMPONENT GRID
+// ============================================================
+function getFilteredComponents() {
+  return COMPONENTS.filter(comp => {
+    const catMatch = activeCategory === 'All' || comp.category === activeCategory;
+    if (!catMatch) return false;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      return comp.en.toLowerCase().includes(q) || comp.ko.includes(q) ||
+             comp.tags.some(t => t.includes(q)) ||
+             comp.options.some(o => o.desc.includes(q) || o.name.toLowerCase().includes(q));
+    }
+    return true;
+  });
+}
+
+function onSearch() {
+  searchQuery = document.getElementById('search-input').value.trim();
+  renderGrid();
+}
+
+function isAdded(compId, optId) {
+  return canvas.some(i => i.componentId === compId && i.optionId === optId);
+}
+
+function renderGrid() {
+  const filtered = getFilteredComponents();
+  const grid = document.getElementById('comp-grid');
+  const title = document.getElementById('grid-title');
+  const count = document.getElementById('grid-count');
+
+  // flatten options into cards
+  const cards = [];
+  filtered.forEach(comp => {
+    comp.options.forEach(opt => cards.push({ comp, opt }));
+  });
+
+  title.textContent = activeCategory === 'All' ? 'All Components' : activeCategory;
+  count.textContent = cards.length + ' components found';
+
+  if (cards.length === 0) {
+    grid.innerHTML = `<div class="no-results"><div class="no-results-icon">🔍</div><p>검색 결과가 없습니다</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = cards.map(({ comp, opt }) => {
+    const added = isAdded(comp.id, opt.id);
+    const srcdoc = makeSrcdoc(opt.html, comp.isHero);
+    const THUMB_W = 1280;
+    // We'll set the scale via the onload event; placeholder scale here
+    return `
+      <div class="comp-card ${added ? 'added' : ''}" id="card-${comp.id}-${opt.id}">
+        <div class="card-thumb">
+          <div class="thumb-frame-wrap" id="wrap-${comp.id}-${opt.id}">
+            <iframe class="thumb-frame" id="frame-${comp.id}-${opt.id}"
+              srcdoc="${escapeHtml(srcdoc)}"
+              scrolling="no" sandbox="allow-same-origin allow-scripts">
+            </iframe>
+            <div class="thumb-loading" id="loading-${comp.id}-${opt.id}">
+              <div class="thumb-loading-dot"></div>
+            </div>
+          </div>
+          <div class="card-overlay">
+            <button class="overlay-btn overlay-btn-preview" onclick="openPreview('${comp.id}','${opt.id}');event.stopPropagation()">
+              👁 Preview
+            </button>
+            <button class="overlay-btn ${added ? 'overlay-btn-added' : 'overlay-btn-add'}"
+              onclick="${added ? `removeByIds('${comp.id}','${opt.id}')` : `addToCanvas('${comp.id}','${opt.id}')`};event.stopPropagation()">
+              ${added ? '✓ 추가됨' : '+ 추가'}
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-tags">
+            <span class="card-tag primary">${comp.en}</span>
+            <span class="card-tag">${opt.name.split('—')[0].trim()}</span>
+          </div>
+          <div class="card-name">${comp.en.toLowerCase()}-${opt.id}</div>
+          <div class="card-subtags">
+            ${comp.tags.map(t => `<span class="card-subtag">${t}</span>`).join('')}
+          </div>
+        </div>
+        <div class="added-badge" title="캔버스에 추가됨">✓</div>
+      </div>
+    `;
+  }).join('');
+
+  // Set iframe scales after render
+  requestAnimationFrame(() => {
+    cards.forEach(({ comp, opt }) => {
+      const wrap = document.getElementById(`wrap-${comp.id}-${opt.id}`);
+      const frame = document.getElementById(`frame-${comp.id}-${opt.id}`);
+      const loading = document.getElementById(`loading-${comp.id}-${opt.id}`);
+      if (!wrap || !frame) return;
+      const wrapW = wrap.offsetWidth || 280;
+      const scale = wrapW / 1280;
+      frame.style.transform = `scale(${scale})`;
+      frame.style.height = Math.ceil(wrap.offsetHeight / scale) + 'px';
+      frame.addEventListener('load', () => {
+        if (loading) loading.style.opacity = '0';
+        setTimeout(() => { if (loading) loading.style.display = 'none'; }, 300);
+      });
+    });
+  });
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ============================================================
+// SRCDOC GENERATOR
+// ============================================================
+function makeSrcdoc(html, isHero) {
+  const inner = isHero
+    ? `<div class="container">${html}</div>`
+    : `<div class="container"><div class="content">${html}</div></div>`;
+  return `<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="https://hrd.hunet.co.kr/assets/css/swiper.min.css">
+<link rel="stylesheet" href="https://hrd.hunet.co.kr/assets/css/styles.css">
+<style>
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; overflow: hidden; }
+.location-b { display: none !important; }
+</style>
+</head><body>${inner}</body></html>`;
+}
+
+// ============================================================
+// PREVIEW MODAL
+// ============================================================
+function openPreview(compId, optId) {
+  const comp = COMPONENTS.find(c => c.id === compId);
+  const opt = comp.options.find(o => o.id === optId);
+  previewTarget = { comp, opt };
+
+  document.getElementById('preview-icon').textContent = comp.icon;
+  document.getElementById('preview-name').textContent = `${comp.en} — ${comp.ko}`;
+  document.getElementById('preview-opt').textContent = opt.name;
+
+  const added = isAdded(compId, optId);
+  const btn = document.getElementById('preview-add-btn');
+  btn.textContent = added ? '✓ 이미 추가됨' : '+ 캔버스에 추가';
+  btn.className = `btn ${added ? 'btn-outline' : 'btn-primary'}`;
+
+  const iframe = document.getElementById('preview-iframe');
+  const inner = comp.isHero
+    ? `<div class="container">${opt.html}</div>`
+    : `<div class="container"><div class="content">${opt.html}</div></div>`;
+  iframe.srcdoc = `<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="https://hrd.hunet.co.kr/assets/css/swiper.min.css">
+<link rel="stylesheet" href="https://hrd.hunet.co.kr/assets/css/styles.css">
+<style>* { box-sizing: border-box; } body { margin: 0; } .location-b { display: none !important; }</style>
+</head><body>${inner}</body></html>`;
+
+  document.getElementById('preview-modal').classList.add('open');
+}
+
+function closePreview() {
+  document.getElementById('preview-modal').classList.remove('open');
+  document.getElementById('preview-iframe').srcdoc = '';
+  previewTarget = null;
+}
+
+function addFromPreview() {
+  if (!previewTarget) return;
+  const { comp, opt } = previewTarget;
+  if (!isAdded(comp.id, opt.id)) {
+    addToCanvas(comp.id, opt.id);
+    const btn = document.getElementById('preview-add-btn');
+    btn.textContent = '✓ 이미 추가됨';
+    btn.className = 'btn btn-outline';
+  }
+}
+
+// ============================================================
+// CANVAS (Bottom Bar)
+// ============================================================
+function addToCanvas(compId, optId) {
+  const comp = COMPONENTS.find(c => c.id === compId);
+  const opt = comp.options.find(o => o.id === optId);
+  if (isAdded(compId, optId)) return;
+  canvas.push({
+    uid: uidCounter++,
+    componentId: compId, optionId: optId,
+    label: comp.en, ko: comp.ko, icon: comp.icon,
+    optName: opt.name, html: opt.html, js: opt.js, isHero: !!comp.isHero
+  });
+  syncUI();
+}
+
+function removeByIds(compId, optId) {
+  canvas = canvas.filter(i => !(i.componentId === compId && i.optionId === optId));
+  syncUI();
+}
+
+function removeByUid(uid) {
+  canvas = canvas.filter(i => i.uid !== uid);
+  syncUI();
+}
+
+function moveChip(uid, dir) {
+  const idx = canvas.findIndex(i => i.uid === uid);
+  if (dir === -1 && idx === 0) return;
+  if (dir === 1 && idx === canvas.length - 1) return;
+  [canvas[idx], canvas[idx + dir]] = [canvas[idx + dir], canvas[idx]];
+  syncUI();
+}
+
+function clearCanvas() {
+  if (canvas.length === 0) return;
+  if (!confirm('캔버스를 초기화하시겠습니까?')) return;
+  canvas = [];
+  syncUI();
+}
+
+function syncUI() {
+  renderBottomBar();
+  updateHeaderBadge();
+  // Re-render grid to update add/remove button states
+  renderGrid();
+}
+
+function renderBottomBar() {
+  const chips = document.getElementById('bottom-chips');
+  const empty = document.getElementById('bottom-empty');
+  const exportBtn = document.getElementById('export-btn');
+
+  exportBtn.disabled = canvas.length === 0;
+
+  if (canvas.length === 0) {
+    chips.innerHTML = '';
+    chips.appendChild(empty);
+    empty.style.display = 'flex';
+    return;
+  }
+  empty.style.display = 'none';
+
+  chips.innerHTML = canvas.map((item, idx) => `
+    <div class="bottom-chip">
+      <div class="chip-order">${idx + 1}</div>
+      <span class="chip-icon">${item.icon}</span>
+      <span class="chip-label">${item.label}</span>
+      <div class="chip-actions">
+        <button class="chip-btn" onclick="moveChip(${item.uid},-1)" ${idx===0?'disabled':''}>←</button>
+        <button class="chip-btn" onclick="moveChip(${item.uid},1)" ${idx===canvas.length-1?'disabled':''}>→</button>
+        <button class="chip-btn del" onclick="removeByUid(${item.uid})">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateHeaderBadge() {
+  const badge = document.getElementById('selected-badge');
+  const num = document.getElementById('selected-badge-num');
+  num.textContent = canvas.length;
+  badge.classList.toggle('visible', canvas.length > 0);
+}
+
+// ============================================================
+// EXPORT
+// ============================================================
+function openExport() {
+  if (canvas.length === 0) { alert('섹션을 하나 이상 추가하세요.'); return; }
+
+  const heroItems = canvas.filter(i => i.isHero);
+  const contentItems = canvas.filter(i => !i.isHero);
+  const allJs = canvas.filter(i => i.js).map(i => i.js).join('\n\n');
+
+  const heroHtml = heroItems.map(i => i.html).join('\n');
+  const contentHtml = contentItems.length > 0
+    ? `    <div class="content">\n${contentItems.map(i => i.html).join('\n\n')}\n    </div>`
+    : '';
+
+  const jsBlock = allJs
+    ? `\n<script type="text/javascript">\n$(document).ready(function () {\n${allJs}\n});\n<\/script>`
+    : '';
+
+  const date = new Date().toLocaleDateString('ko-KR');
+  const sectionList = canvas.map((i, n) => `    ${n + 1}. ${i.label} (${i.ko}) — ${i.optName}`).join('\n');
+
+  document.getElementById('export-code').value =
+`<!-- ================================================
+     휴넷 페이지 빌더 v1.0 — 생성일: ${date}
+     구성 섹션:
+${sectionList}
+     <div class="container"> 안에 붙여넣으세요.
+================================================ -->
+
+${[heroHtml, contentHtml].filter(Boolean).join('\n')}${jsBlock}`;
+
+  document.getElementById('export-modal').classList.add('open');
+}
+
+function closeExport() {
+  document.getElementById('export-modal').classList.remove('open');
+}
+
+function copyCode() {
+  const ta = document.getElementById('export-code');
+  ta.select();
+  document.execCommand('copy');
+  ta.setSelectionRange(0, 0);
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// Close modals on overlay click
+document.getElementById('preview-modal').addEventListener('click', e => { if (e.target.id === 'preview-modal') closePreview(); });
+document.getElementById('export-modal').addEventListener('click', e => { if (e.target.id === 'export-modal') closeExport(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closePreview(); closeExport(); } });
+
+// ============================================================
+// INIT
+// ============================================================
+renderFilters();
+renderGrid();
+renderBottomBar();
+</script>
+</body>
+</html>

@@ -4,8 +4,7 @@
 
 ## 사용 스킬
 작업 전 아래 스킬을 읽고 그 방식을 따른다:
-- `.claude/skills/claude-api/SKILL.md` — API 설계 및 구현 가이드
-- `.claude/skills/mcp-builder/SKILL.md` — 서버 구성 및 빌드 가이드
+- `.claude/skills/using-superpowers/SKILL.md` — 스킬 사용 기본 규칙 (공통)
 
 ## 역할
 기획서를 바탕으로 API와 DB 코드를 작성한다.

@@ -28,8 +28,8 @@
 
 ## 사용 스킬
 작업 전 아래 스킬을 읽고 그 방식을 따른다:
+- `.claude/skills/using-superpowers/SKILL.md` — 스킬 사용 기본 규칙 (공통)
 - `.claude/skills/frontend-design/SKILL.md` — UI/UX 디자인 가이드라인
-- `.claude/skills/visual-design-foundations/SKILL.md` — 색상, 타이포그래피, 간격 시스템
 
 > ⚠️ frontend-design 스킬의 "특이한 폰트, 화려한 비주얼" 방향은 기본 디자인 시스템과 충돌 시 **기본 디자인 시스템 우선**. 단, 사용자가 명시적으로 다른 스타일을 요청하면 그에 따른다.
 

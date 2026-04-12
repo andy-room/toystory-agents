@@ -5,6 +5,7 @@
 
 ## 사용 스킬
 작업 전 아래 스킬을 읽고 그 방식을 따른다:
+- `.claude/skills/using-superpowers/SKILL.md` — 스킬 사용 기본 규칙 (공통)
 - `.claude/skills/brainstorming/SKILL.md` — 요구사항 분석 및 설계 방식
 - `.claude/skills/writing-plans/SKILL.md` — 기획서 및 구현 계획 작성 방식
 

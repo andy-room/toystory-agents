@@ -4,8 +4,8 @@
 
 ## 사용 스킬
 작업 전 아래 스킬을 읽고 그 방식을 따른다:
-- `.claude/skills/vercel-react-best-practices/SKILL.md` — React 모범 사례
-- `.claude/skills/next-best-practices/SKILL.md` — Next.js 최적화 가이드
+- `.claude/skills/using-superpowers/SKILL.md` — 스킬 사용 기본 규칙 (공통)
+- `.claude/skills/frontend-design/SKILL.md` — React/Next.js 프론트엔드 가이드라인
 
 ## 역할
 디자인 스펙과 목업을 바탕으로 실제 프론트엔드 코드를 작성한다.
