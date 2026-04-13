@@ -5,5 +5,5 @@ cd /Users/syhong/Claude/toystory-agents
 if [[ -n $(git status --porcelain) ]]; then
   git add -A
   git commit -m "auto: $(date '+%Y-%m-%d %H:%M') 자동 저장"
-  git push https://github.com/soonyeons/toystory-agents.git main
+  git push origin main
 fi
