@@ -2,6 +2,7 @@
 :root {
   /* 색상 */
   --color-primary:        #1B5EFF;
+  --color-primary-light:  #5C8FFF;
   --color-primary-hover:  #1550E0;
   --color-black:          #000000;
   --color-dark:           #1a1a2e;
