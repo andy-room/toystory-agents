@@ -1,0 +1,161 @@
+/* projects/HU/pages/contents/layout.css */
+
+/* ── 전역 베이스 ────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-family);
+  background: var(--color-background);
+  color: var(--color-dark);
+  min-height: 100vh;
+}
+
+a { text-decoration: none; color: inherit; }
+ul, ol { list-style: none; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+/* ── GNB ─────────────────────────────── */
+.gnb {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  height: var(--gnb-height);
+  padding: 0 var(--spacing-5);
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.gnb__logo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.gnb__logo-hu   { font-size: 16px; font-weight: 900; color: var(--color-primary); letter-spacing: -0.5px; }
+.gnb__logo-name { font-size: 14px; font-weight: 700; color: var(--color-dark); letter-spacing: -0.3px; }
+
+.gnb__search {
+  position: relative;
+  flex: 1;
+  max-width: 360px;
+}
+.gnb__search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--color-disabled);
+  pointer-events: none;
+}
+.gnb__search-input {
+  width: 100%;
+  padding: 8px 12px 8px 34px;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  color: var(--color-body);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.gnb__search-input:focus { border-color: var(--color-primary); }
+.gnb__search-input::placeholder { color: var(--color-disabled); }
+
+.gnb__right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  flex-shrink: 0;
+}
+.gnb__plus-btn {
+  padding: 6px 14px;
+  background: linear-gradient(135deg, var(--color-primary), #5C8FFF);
+  color: var(--color-white);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+.gnb__plus-btn:hover { opacity: 0.9; }
+.gnb__login-btn {
+  padding: 6px 12px;
+  font-size: var(--font-size-sm);
+  color: var(--color-subtle);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s;
+}
+.gnb__login-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+/* ── 페이지 바디 ─────────────────────── */
+.page-body {
+  display: flex;
+  min-height: calc(100vh - var(--gnb-height));
+}
+
+/* ── LNB ─────────────────────────────── */
+.lnb {
+  position: sticky;
+  top: var(--gnb-height);
+  flex-shrink: 0;
+  width: var(--lnb-width);
+  height: calc(100vh - var(--gnb-height));
+  padding: var(--spacing-3);
+  background: var(--color-white);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: auto;
+}
+.lnb__top    { display: flex; flex-direction: column; gap: 2px; }
+.lnb__bottom { display: flex; flex-direction: column; gap: 2px; }
+
+.lnb__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: var(--color-body);
+  border-radius: var(--radius-sm);
+  letter-spacing: -0.3px;
+  transition: background 0.15s, color 0.15s;
+}
+.lnb__item:hover { background: var(--color-surface); }
+.lnb__item--active {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+.lnb__icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  stroke-width: 1.75;
+}
+.lnb__item--active .lnb__icon { color: var(--color-white); }
+
+.lnb__divider {
+  height: 1px;
+  background: rgba(171, 177, 198, 0.2);
+  margin: 4px 0;
+}
+
+/* ── 메인 콘텐츠 영역 ────────────────── */
+.main-content {
+  flex: 1;
+  padding: var(--spacing-6) var(--spacing-7);
+  background: var(--color-background);
+  min-width: 0;
+}
