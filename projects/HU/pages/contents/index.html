@@ -14,14 +14,14 @@
 <body>
 
   <!-- GNB -->
-  <header class="gnb" role="banner">
+  <header class="gnb">
     <div class="gnb__logo">
       <span class="gnb__logo-hu">HU</span>
       <span class="gnb__logo-name">휴넷유니버시티</span>
     </div>
     <div class="gnb__search">
-      <i data-lucide="search" class="gnb__search-icon"></i>
-      <input type="search" class="gnb__search-input" placeholder="과정명, 강사명, 스킬 검색">
+      <i data-lucide="search" class="gnb__search-icon" aria-hidden="true"></i>
+      <input type="search" class="gnb__search-input" aria-label="과정명, 강사명, 스킬 검색" placeholder="과정명, 강사명, 스킬 검색">
     </div>
     <nav class="gnb__right" aria-label="사용자 메뉴">
       <a href="#" class="gnb__plus-btn">HU Plus+</a>
@@ -36,40 +36,40 @@
     <nav class="lnb" aria-label="주 메뉴">
       <div class="lnb__top">
         <a href="#" class="lnb__item" data-menu="home">
-          <i data-lucide="home" class="lnb__icon"></i>
+          <i data-lucide="home" class="lnb__icon" aria-hidden="true"></i>
           <span class="lnb__label">홈</span>
         </a>
         <a href="#" class="lnb__item lnb__item--active" data-menu="contents" aria-current="page">
-          <i data-lucide="clapperboard" class="lnb__icon"></i>
+          <i data-lucide="clapperboard" class="lnb__icon" aria-hidden="true"></i>
           <span class="lnb__label">콘텐츠</span>
         </a>
         <a href="#" class="lnb__item" data-menu="career">
-          <i data-lucide="briefcase" class="lnb__icon"></i>
+          <i data-lucide="briefcase" class="lnb__icon" aria-hidden="true"></i>
           <span class="lnb__label">커리어</span>
         </a>
         <a href="#" class="lnb__item" data-menu="skill">
-          <i data-lucide="book-open" class="lnb__icon"></i>
+          <i data-lucide="book-open" class="lnb__icon" aria-hidden="true"></i>
           <span class="lnb__label">스킬</span>
         </a>
         <div class="lnb__divider"></div>
         <a href="#" class="lnb__item" data-menu="myclassroom">
-          <i data-lucide="bell" class="lnb__icon"></i>
+          <i data-lucide="bell" class="lnb__icon" aria-hidden="true"></i>
           <span class="lnb__label">마이클래스</span>
         </a>
         <div class="lnb__divider"></div>
         <a href="#" class="lnb__item" data-menu="premium">
-          <i data-lucide="trophy" class="lnb__icon"></i>
+          <i data-lucide="trophy" class="lnb__icon" aria-hidden="true"></i>
           <span class="lnb__label">프리미엄 콘텐츠</span>
         </a>
         <div class="lnb__divider"></div>
       </div>
       <div class="lnb__bottom">
         <a href="#" class="lnb__item" data-menu="support">
-          <i data-lucide="message-square" class="lnb__icon"></i>
+          <i data-lucide="message-square" class="lnb__icon" aria-hidden="true"></i>
           <span class="lnb__label">고객센터</span>
         </a>
         <a href="#" class="lnb__item" data-menu="settings">
-          <i data-lucide="sun" class="lnb__icon"></i>
+          <i data-lucide="sun" class="lnb__icon" aria-hidden="true"></i>
           <span class="lnb__label">설정</span>
         </a>
       </div>
@@ -106,18 +106,18 @@
       </div>
 
       <!-- 카드 그리드 -->
-      <ul class="card-grid" role="list" aria-label="과정 목록">
+      <ul class="card-grid" aria-label="과정 목록">
 
-        <li class="card" role="listitem">
+        <li class="card">
           <a href="#" class="card__link">
             <div class="card__thumb card__thumb--leadership">
               <span class="card__thumb-label">Leadership</span>
             </div>
             <div class="card__body">
-              <span class="card__badge badge--leadership">리더십</span>
+              <span class="card__badge badge badge--leadership">리더십</span>
               <h2 class="card__title">리더십의 핵심: 팀을 움직이는 소통 전략</h2>
               <div class="card__meta">
-                <span class="card__star">4.8★</span>
+                <span class="card__star" aria-label="평점 4.8">4.8★</span>
                 <span class="card__meta-sep">·</span>
                 <span class="card__count">수강생 2,341명</span>
               </div>
@@ -125,16 +125,16 @@
           </a>
         </li>
 
-        <li class="card" role="listitem">
+        <li class="card">
           <a href="#" class="card__link">
             <div class="card__thumb card__thumb--marketing">
               <span class="card__thumb-label">Marketing</span>
             </div>
             <div class="card__body">
-              <span class="card__badge badge--marketing">마케팅</span>
+              <span class="card__badge badge badge--marketing">마케팅</span>
               <h2 class="card__title">B2B 마케팅 전략 완성본</h2>
               <div class="card__meta">
-                <span class="card__star">4.6★</span>
+                <span class="card__star" aria-label="평점 4.6">4.6★</span>
                 <span class="card__meta-sep">·</span>
                 <span class="card__count">수강생 1,892명</span>
               </div>
@@ -142,16 +142,16 @@
           </a>
         </li>
 
-        <li class="card" role="listitem">
+        <li class="card">
           <a href="#" class="card__link">
             <div class="card__thumb card__thumb--finance">
               <span class="card__thumb-label">Finance</span>
             </div>
             <div class="card__body">
-              <span class="card__badge badge--finance">재무/회계</span>
+              <span class="card__badge badge badge--finance">재무/회계</span>
               <h2 class="card__title">CFO가 알려주는 재무제표 완전 정복</h2>
               <div class="card__meta">
-                <span class="card__star">4.9★</span>
+                <span class="card__star" aria-label="평점 4.9">4.9★</span>
                 <span class="card__meta-sep">·</span>
                 <span class="card__count">수강생 3,102명</span>
               </div>
@@ -159,16 +159,16 @@
           </a>
         </li>
 
-        <li class="card" role="listitem">
+        <li class="card">
           <a href="#" class="card__link">
             <div class="card__thumb card__thumb--data">
               <span class="card__thumb-label">Data</span>
             </div>
             <div class="card__body">
-              <span class="card__badge badge--data">데이터</span>
+              <span class="card__badge badge badge--data">데이터</span>
               <h2 class="card__title">데이터 분석 입문: SQL 완전정복</h2>
               <div class="card__meta">
-                <span class="card__star">4.7★</span>
+                <span class="card__star" aria-label="평점 4.7">4.7★</span>
                 <span class="card__meta-sep">·</span>
                 <span class="card__count">수강생 5,210명</span>
               </div>
@@ -176,16 +176,16 @@
           </a>
         </li>
 
-        <li class="card" role="listitem">
+        <li class="card">
           <a href="#" class="card__link">
             <div class="card__thumb card__thumb--sales">
               <span class="card__thumb-label">Sales</span>
             </div>
             <div class="card__body">
-              <span class="card__badge badge--sales">영업</span>
+              <span class="card__badge badge badge--sales">영업</span>
               <h2 class="card__title">고객을 사로잡는 영업 스킬 마스터</h2>
               <div class="card__meta">
-                <span class="card__star">4.5★</span>
+                <span class="card__star" aria-label="평점 4.5">4.5★</span>
                 <span class="card__meta-sep">·</span>
                 <span class="card__count">수강생 987명</span>
               </div>
@@ -193,16 +193,16 @@
           </a>
         </li>
 
-        <li class="card" role="listitem">
+        <li class="card">
           <a href="#" class="card__link">
             <div class="card__thumb card__thumb--hr">
               <span class="card__thumb-label">HR</span>
             </div>
             <div class="card__body">
-              <span class="card__badge badge--hr">HR</span>
+              <span class="card__badge badge badge--hr">HR</span>
               <h2 class="card__title">성과 중심 HR: 인재 확보부터 리텐션까지</h2>
               <div class="card__meta">
-                <span class="card__star">4.8★</span>
+                <span class="card__star" aria-label="평점 4.8">4.8★</span>
                 <span class="card__meta-sep">·</span>
                 <span class="card__count">수강생 1,456명</span>
               </div>
@@ -210,16 +210,16 @@
           </a>
         </li>
 
-        <li class="card" role="listitem">
+        <li class="card">
           <a href="#" class="card__link">
             <div class="card__thumb card__thumb--strategy">
               <span class="card__thumb-label">Strategy</span>
             </div>
             <div class="card__body">
-              <span class="card__badge badge--strategy">전략</span>
+              <span class="card__badge badge badge--strategy">전략</span>
               <h2 class="card__title">OKR로 팀 성과를 2배 높이는 방법</h2>
               <div class="card__meta">
-                <span class="card__star">4.9★</span>
+                <span class="card__star" aria-label="평점 4.9">4.9★</span>
                 <span class="card__meta-sep">·</span>
                 <span class="card__count">수강생 2,780명</span>
               </div>
@@ -227,16 +227,16 @@
           </a>
         </li>
 
-        <li class="card" role="listitem">
+        <li class="card">
           <a href="#" class="card__link">
             <div class="card__thumb card__thumb--ai">
               <span class="card__thumb-label">AI</span>
             </div>
             <div class="card__body">
-              <span class="card__badge badge--ai">AI/디지털</span>
+              <span class="card__badge badge badge--ai">AI/디지털</span>
               <h2 class="card__title">ChatGPT 업무 활용 완전 가이드</h2>
               <div class="card__meta">
-                <span class="card__star">4.9★</span>
+                <span class="card__star" aria-label="평점 4.9">4.9★</span>
                 <span class="card__meta-sep">·</span>
                 <span class="card__count">수강생 8,931명</span>
               </div>
@@ -259,7 +259,7 @@
     });
 
     // 칩 필터 토글
-    document.querySelectorAll('.chip').forEach(chip => {
+    document.querySelectorAll('.chip:not(.chip--more)').forEach(chip => {
       chip.addEventListener('click', () => {
         document.querySelectorAll('.chip--active').forEach(c => c.classList.remove('chip--active'));
         chip.classList.add('chip--active');
