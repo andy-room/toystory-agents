@@ -4,17 +4,268 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>콘텐츠 — HU 휴넷유니버시티</title>
-  <!-- 웹폰트 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
-  <!-- 아이콘 (Lucide) -->
   <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-  <!-- 스타일시트 -->
   <link rel="stylesheet" href="tokens.css">
   <link rel="stylesheet" href="layout.css">
   <link rel="stylesheet" href="contents.css">
   <link rel="stylesheet" href="responsive.css">
 </head>
 <body>
-  <p>작업 중...</p>
+
+  <!-- GNB -->
+  <header class="gnb" role="banner">
+    <div class="gnb__logo">
+      <span class="gnb__logo-hu">HU</span>
+      <span class="gnb__logo-name">휴넷유니버시티</span>
+    </div>
+    <div class="gnb__search">
+      <i data-lucide="search" class="gnb__search-icon"></i>
+      <input type="search" class="gnb__search-input" placeholder="과정명, 강사명, 스킬 검색">
+    </div>
+    <nav class="gnb__right" aria-label="사용자 메뉴">
+      <a href="#" class="gnb__plus-btn">HU Plus+</a>
+      <a href="#" class="gnb__login-btn">로그인</a>
+    </nav>
+  </header>
+
+  <!-- 페이지 본문 -->
+  <div class="page-body">
+
+    <!-- LNB -->
+    <nav class="lnb" aria-label="주 메뉴">
+      <div class="lnb__top">
+        <a href="#" class="lnb__item" data-menu="home">
+          <i data-lucide="home" class="lnb__icon"></i>
+          <span class="lnb__label">홈</span>
+        </a>
+        <a href="#" class="lnb__item lnb__item--active" data-menu="contents" aria-current="page">
+          <i data-lucide="clapperboard" class="lnb__icon"></i>
+          <span class="lnb__label">콘텐츠</span>
+        </a>
+        <a href="#" class="lnb__item" data-menu="career">
+          <i data-lucide="briefcase" class="lnb__icon"></i>
+          <span class="lnb__label">커리어</span>
+        </a>
+        <a href="#" class="lnb__item" data-menu="skill">
+          <i data-lucide="book-open" class="lnb__icon"></i>
+          <span class="lnb__label">스킬</span>
+        </a>
+        <div class="lnb__divider"></div>
+        <a href="#" class="lnb__item" data-menu="myclassroom">
+          <i data-lucide="bell" class="lnb__icon"></i>
+          <span class="lnb__label">마이클래스</span>
+        </a>
+        <div class="lnb__divider"></div>
+        <a href="#" class="lnb__item" data-menu="premium">
+          <i data-lucide="trophy" class="lnb__icon"></i>
+          <span class="lnb__label">프리미엄 콘텐츠</span>
+        </a>
+        <div class="lnb__divider"></div>
+      </div>
+      <div class="lnb__bottom">
+        <a href="#" class="lnb__item" data-menu="support">
+          <i data-lucide="message-square" class="lnb__icon"></i>
+          <span class="lnb__label">고객센터</span>
+        </a>
+        <a href="#" class="lnb__item" data-menu="settings">
+          <i data-lucide="sun" class="lnb__icon"></i>
+          <span class="lnb__label">설정</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- 메인 콘텐츠 -->
+    <main class="main-content" id="main">
+
+      <!-- 페이지 헤더 -->
+      <div class="page-header">
+        <h1 class="page-header__title">콘텐츠</h1>
+        <p class="page-header__count">전체 <strong>4,218</strong>개 과정</p>
+      </div>
+
+      <!-- 필터 바 -->
+      <div class="filter-bar" role="group" aria-label="카테고리 필터">
+        <div class="filter-bar__chips">
+          <button class="chip chip--active" type="button" data-filter="all">전체</button>
+          <button class="chip" type="button" data-filter="leadership">리더십</button>
+          <button class="chip" type="button" data-filter="marketing">마케팅</button>
+          <button class="chip" type="button" data-filter="finance">재무/회계</button>
+          <button class="chip" type="button" data-filter="data">데이터</button>
+          <button class="chip" type="button" data-filter="hr">HR</button>
+          <button class="chip" type="button" data-filter="sales">영업</button>
+          <button class="chip chip--more" type="button">더보기 ›</button>
+        </div>
+        <div class="filter-bar__sort">
+          <select class="sort-select" aria-label="정렬 방식">
+            <option value="latest">최신순</option>
+            <option value="popular">인기순</option>
+            <option value="rating">평점순</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 카드 그리드 -->
+      <ul class="card-grid" role="list" aria-label="과정 목록">
+
+        <li class="card" role="listitem">
+          <a href="#" class="card__link">
+            <div class="card__thumb card__thumb--leadership">
+              <span class="card__thumb-label">Leadership</span>
+            </div>
+            <div class="card__body">
+              <span class="card__badge badge--leadership">리더십</span>
+              <h2 class="card__title">리더십의 핵심: 팀을 움직이는 소통 전략</h2>
+              <div class="card__meta">
+                <span class="card__star">4.8★</span>
+                <span class="card__meta-sep">·</span>
+                <span class="card__count">수강생 2,341명</span>
+              </div>
+            </div>
+          </a>
+        </li>
+
+        <li class="card" role="listitem">
+          <a href="#" class="card__link">
+            <div class="card__thumb card__thumb--marketing">
+              <span class="card__thumb-label">Marketing</span>
+            </div>
+            <div class="card__body">
+              <span class="card__badge badge--marketing">마케팅</span>
+              <h2 class="card__title">B2B 마케팅 전략 완성본</h2>
+              <div class="card__meta">
+                <span class="card__star">4.6★</span>
+                <span class="card__meta-sep">·</span>
+                <span class="card__count">수강생 1,892명</span>
+              </div>
+            </div>
+          </a>
+        </li>
+
+        <li class="card" role="listitem">
+          <a href="#" class="card__link">
+            <div class="card__thumb card__thumb--finance">
+              <span class="card__thumb-label">Finance</span>
+            </div>
+            <div class="card__body">
+              <span class="card__badge badge--finance">재무/회계</span>
+              <h2 class="card__title">CFO가 알려주는 재무제표 완전 정복</h2>
+              <div class="card__meta">
+                <span class="card__star">4.9★</span>
+                <span class="card__meta-sep">·</span>
+                <span class="card__count">수강생 3,102명</span>
+              </div>
+            </div>
+          </a>
+        </li>
+
+        <li class="card" role="listitem">
+          <a href="#" class="card__link">
+            <div class="card__thumb card__thumb--data">
+              <span class="card__thumb-label">Data</span>
+            </div>
+            <div class="card__body">
+              <span class="card__badge badge--data">데이터</span>
+              <h2 class="card__title">데이터 분석 입문: SQL 완전정복</h2>
+              <div class="card__meta">
+                <span class="card__star">4.7★</span>
+                <span class="card__meta-sep">·</span>
+                <span class="card__count">수강생 5,210명</span>
+              </div>
+            </div>
+          </a>
+        </li>
+
+        <li class="card" role="listitem">
+          <a href="#" class="card__link">
+            <div class="card__thumb card__thumb--sales">
+              <span class="card__thumb-label">Sales</span>
+            </div>
+            <div class="card__body">
+              <span class="card__badge badge--sales">영업</span>
+              <h2 class="card__title">고객을 사로잡는 영업 스킬 마스터</h2>
+              <div class="card__meta">
+                <span class="card__star">4.5★</span>
+                <span class="card__meta-sep">·</span>
+                <span class="card__count">수강생 987명</span>
+              </div>
+            </div>
+          </a>
+        </li>
+
+        <li class="card" role="listitem">
+          <a href="#" class="card__link">
+            <div class="card__thumb card__thumb--hr">
+              <span class="card__thumb-label">HR</span>
+            </div>
+            <div class="card__body">
+              <span class="card__badge badge--hr">HR</span>
+              <h2 class="card__title">성과 중심 HR: 인재 확보부터 리텐션까지</h2>
+              <div class="card__meta">
+                <span class="card__star">4.8★</span>
+                <span class="card__meta-sep">·</span>
+                <span class="card__count">수강생 1,456명</span>
+              </div>
+            </div>
+          </a>
+        </li>
+
+        <li class="card" role="listitem">
+          <a href="#" class="card__link">
+            <div class="card__thumb card__thumb--strategy">
+              <span class="card__thumb-label">Strategy</span>
+            </div>
+            <div class="card__body">
+              <span class="card__badge badge--strategy">전략</span>
+              <h2 class="card__title">OKR로 팀 성과를 2배 높이는 방법</h2>
+              <div class="card__meta">
+                <span class="card__star">4.9★</span>
+                <span class="card__meta-sep">·</span>
+                <span class="card__count">수강생 2,780명</span>
+              </div>
+            </div>
+          </a>
+        </li>
+
+        <li class="card" role="listitem">
+          <a href="#" class="card__link">
+            <div class="card__thumb card__thumb--ai">
+              <span class="card__thumb-label">AI</span>
+            </div>
+            <div class="card__body">
+              <span class="card__badge badge--ai">AI/디지털</span>
+              <h2 class="card__title">ChatGPT 업무 활용 완전 가이드</h2>
+              <div class="card__meta">
+                <span class="card__star">4.9★</span>
+                <span class="card__meta-sep">·</span>
+                <span class="card__count">수강생 8,931명</span>
+              </div>
+            </div>
+          </a>
+        </li>
+
+      </ul>
+      <!-- end card-grid -->
+
+    </main>
+
+  </div>
+  <!-- end page-body -->
+
+  <script>
+    // Lucide 아이콘 렌더링 (defer로 로드 후 실행)
+    document.addEventListener('DOMContentLoaded', function() {
+      lucide.createIcons();
+    });
+
+    // 칩 필터 토글
+    document.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.chip--active').forEach(c => c.classList.remove('chip--active'));
+        chip.classList.add('chip--active');
+      });
+    });
+  </script>
+
 </body>
 </html>
