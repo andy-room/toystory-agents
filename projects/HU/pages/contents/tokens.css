@@ -1,0 +1,66 @@
+/* projects/HU/pages/contents/tokens.css */
+:root {
+  /* 색상 */
+  --color-primary:        #1B5EFF;
+  --color-primary-hover:  #1550E0;
+  --color-black:          #000000;
+  --color-dark:           #1a1a2e;
+  --color-body:           #46474c;
+  --color-subtle:         #495057;
+  --color-disabled:       #868E96;
+  --color-border:         #e9ecef;
+  --color-surface:        #f8f9fa;
+  --color-background:     #f0f4f8;
+  --color-white:          #ffffff;
+  --color-star:           #f59e0b;
+
+  /* 배지 컬러 (카테고리별) */
+  --badge-leadership-bg:  #EEF2FF;
+  --badge-leadership-fg:  #3B5BDB;
+  --badge-marketing-bg:   #FFF0F6;
+  --badge-marketing-fg:   #C2255C;
+  --badge-finance-bg:     #EBFBEE;
+  --badge-finance-fg:     #2F9E44;
+  --badge-data-bg:        #F3F0FF;
+  --badge-data-fg:        #7048E8;
+  --badge-sales-bg:       #FFF5F5;
+  --badge-sales-fg:       #C92A2A;
+  --badge-hr-bg:          #EEF2FF;
+  --badge-hr-fg:          #3B5BDB;
+  --badge-strategy-bg:    #F3F0FF;
+  --badge-strategy-fg:    #7048E8;
+  --badge-ai-bg:          #EBFBEE;
+  --badge-ai-fg:          #2F9E44;
+
+  /* 타이포그래피 */
+  --font-family:          'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-size-xs:         10px;
+  --font-size-sm:         11px;
+  --font-size-md:         12px;
+  --font-size-base:       14px;
+  --font-size-lg:         18px;
+  --font-size-xl:         20px;
+
+  /* 스페이싱 */
+  --spacing-1:  4px;
+  --spacing-2:  8px;
+  --spacing-3:  12px;
+  --spacing-4:  16px;
+  --spacing-5:  20px;
+  --spacing-6:  24px;
+  --spacing-7:  28px;
+
+  /* 레이아웃 */
+  --gnb-height:    56px;
+  --lnb-width:     196px;
+
+  /* 보더 반경 */
+  --radius-sm:   8px;
+  --radius-md:   10px;
+  --radius-lg:   12px;
+  --radius-full: 9999px;
+
+  /* 그림자 */
+  --shadow-card:   0 1px 8px rgba(0, 0, 0, 0.07);
+  --shadow-filter: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
