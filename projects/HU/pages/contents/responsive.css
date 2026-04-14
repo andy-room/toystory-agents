@@ -22,7 +22,7 @@
 
 /* ── 1024px 이하: LNB 숨김, 2열 그리드 ── */
 @media (max-width: 1023px) {
-  :root { --lnb-width: 0px; }
+  :root { --lnb-width: 0px; } /* 숨겨질 때도 토큰값 정확하게 유지 */
 
   .lnb { display: none; }
 
