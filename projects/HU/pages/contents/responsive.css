@@ -1,7 +1,7 @@
 /* projects/HU/pages/contents/responsive.css */
 
-/* ── 1440px 이하: 3열 그리드 + LNB 아이콘만 (60px) ── */
-@media (max-width: 1439px) {
+/* ── 1024–1439px: 3열 그리드 + LNB 아이콘만 (60px) ── */
+@media (min-width: 1024px) and (max-width: 1439px) {
   .card-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -22,6 +22,8 @@
 
 /* ── 1024px 이하: LNB 숨김, 2열 그리드 ── */
 @media (max-width: 1023px) {
+  :root { --lnb-width: 0px; }
+
   .lnb { display: none; }
 
   .card-grid {
