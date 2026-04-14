@@ -1,0 +1,143 @@
+/* pages/career/career.css */
+
+/* ── 커리어 카드 ─────────────────────── */
+.career-card { position: relative; }
+.career-card__link {
+  display: block;
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.career-card__link:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+/* 썸네일 (16:9) */
+.career-card__thumb {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+}
+
+/* 카테고리별 썸네일 배경 (shared tokens 재사용) */
+.career-card__thumb--leadership { background: linear-gradient(135deg, var(--thumb-leadership-from), var(--thumb-leadership-to)); }
+.career-card__thumb--marketing  { background: linear-gradient(135deg, var(--thumb-marketing-from),  var(--thumb-marketing-to));  }
+.career-card__thumb--finance    { background: linear-gradient(135deg, var(--thumb-finance-from),    var(--thumb-finance-to));    }
+.career-card__thumb--data       { background: linear-gradient(135deg, var(--thumb-data-from),       var(--thumb-data-to));       }
+.career-card__thumb--sales      { background: linear-gradient(135deg, var(--thumb-sales-from),      var(--thumb-sales-to));      }
+.career-card__thumb--hr         { background: linear-gradient(135deg, var(--thumb-hr-from),         var(--thumb-hr-to));         }
+.career-card__thumb--strategy   { background: linear-gradient(135deg, var(--thumb-strategy-from),   var(--thumb-strategy-to));   }
+.career-card__thumb--ai         { background: linear-gradient(135deg, var(--thumb-ai-from),         var(--thumb-ai-to));         }
+
+/* 오버레이: 하단에서 올라오는 그라디언트 위에 직군명 */
+.career-card__overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 14px;
+  background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+}
+.career-card__title {
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.3px;
+  margin-bottom: 2px;
+}
+.career-card__subtitle {
+  font-size: var(--font-size-sm);
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 400;
+}
+
+/* ⋮ 메뉴 버튼 */
+.career-card__menu {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.8);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.career-card__menu:hover { color: #ffffff; }
+.career-card__menu-icon {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+}
+
+/* 카드 바디 */
+.career-card__body {
+  padding: 12px 14px 14px;
+}
+
+/* 직군 설명 */
+.career-card__desc {
+  font-size: var(--font-size-md);
+  color: var(--color-body);
+  line-height: 1.5;
+  margin-bottom: 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 통계 (과정 수, 수강생 수) */
+.career-card__stats {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-bottom: 10px;
+}
+.career-card__stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--font-size-xs);
+  color: var(--color-disabled);
+}
+.career-card__stat-icon {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  stroke-width: 2;
+}
+
+/* 스킬 태그 */
+.career-card__skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-1);
+}
+.skill-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: var(--color-subtle);
+  background: var(--color-surface);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.skill-tag:hover { background: var(--color-border); }
+.skill-tag--more {
+  background: none;
+  color: var(--color-primary);
+  font-weight: 700;
+  padding-left: 2px;
+}
+.skill-tag--more:hover { background: none; color: var(--color-primary-hover); }
