@@ -91,6 +91,7 @@
 }
 
 /* ── 카드 ────────────────────────────── */
+.card { position: relative; }
 .card__link {
   display: block;
   background: var(--color-white);
@@ -123,14 +124,14 @@
 }
 
 /* 썸네일 카테고리별 배경색 */
-.card__thumb--leadership { background: linear-gradient(135deg, #1a1a2e, #16213e); }
-.card__thumb--marketing  { background: linear-gradient(135deg, #0f3460, #533483); }
-.card__thumb--finance    { background: linear-gradient(135deg, #1b4332, #2d6a4f); }
-.card__thumb--data       { background: linear-gradient(135deg, #7b2d8b, #a855f7); }
-.card__thumb--sales      { background: linear-gradient(135deg, #7f1d1d, #dc2626); }
-.card__thumb--hr         { background: linear-gradient(135deg, #1e3a5f, #2563eb); }
-.card__thumb--strategy   { background: linear-gradient(135deg, #3b1f6a, #7c3aed); }
-.card__thumb--ai         { background: linear-gradient(135deg, #064e3b, #10b981); }
+.card__thumb--leadership { background: linear-gradient(135deg, var(--thumb-leadership-from), var(--thumb-leadership-to)); }
+.card__thumb--marketing  { background: linear-gradient(135deg, var(--thumb-marketing-from),  var(--thumb-marketing-to));  }
+.card__thumb--finance    { background: linear-gradient(135deg, var(--thumb-finance-from),    var(--thumb-finance-to));    }
+.card__thumb--data       { background: linear-gradient(135deg, var(--thumb-data-from),       var(--thumb-data-to));       }
+.card__thumb--sales      { background: linear-gradient(135deg, var(--thumb-sales-from),      var(--thumb-sales-to));      }
+.card__thumb--hr         { background: linear-gradient(135deg, var(--thumb-hr-from),         var(--thumb-hr-to));         }
+.card__thumb--strategy   { background: linear-gradient(135deg, var(--thumb-strategy-from),   var(--thumb-strategy-to));   }
+.card__thumb--ai         { background: linear-gradient(135deg, var(--thumb-ai-from),         var(--thumb-ai-to));         }
 
 /* 카드 바디 */
 .card__body {
@@ -138,6 +139,7 @@
 }
 
 /* 배지 (카테고리 태그) */
+.card__badge { }
 .badge {
   display: inline-block;
   padding: 2px 8px;
@@ -177,3 +179,5 @@
   color: var(--color-disabled);
 }
 .card__star { color: var(--color-star); font-weight: 700; }
+.card__meta-sep { color: var(--color-disabled); }
+.card__count    { color: var(--color-disabled); }

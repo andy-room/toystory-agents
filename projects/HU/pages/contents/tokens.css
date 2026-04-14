@@ -62,6 +62,16 @@
   --radius-lg:   12px;
   --radius-full: 9999px;
 
+  /* 썸네일 그라디언트 (카테고리별) */
+  --thumb-leadership-from: #1a1a2e;  --thumb-leadership-to: #16213e;
+  --thumb-marketing-from:  #0f3460;  --thumb-marketing-to:  #533483;
+  --thumb-finance-from:    #1b4332;  --thumb-finance-to:    #2d6a4f;
+  --thumb-data-from:       #7b2d8b;  --thumb-data-to:       #a855f7;
+  --thumb-sales-from:      #7f1d1d;  --thumb-sales-to:      #dc2626;
+  --thumb-hr-from:         #1e3a5f;  --thumb-hr-to:         #2563eb;
+  --thumb-strategy-from:   #3b1f6a;  --thumb-strategy-to:   #7c3aed;
+  --thumb-ai-from:         #064e3b;  --thumb-ai-to:         #10b981;
+
   /* 그림자 */
   --shadow-card:   0 1px 8px rgba(0, 0, 0, 0.07);
   --shadow-filter: 0 1px 4px rgba(0, 0, 0, 0.05);

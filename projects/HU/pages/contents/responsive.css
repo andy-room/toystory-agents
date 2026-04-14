@@ -30,11 +30,9 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  /* 하단 탭 바 공간 확보 */
-  .page-body::after {
-    content: '';
-    display: block;
-    height: 64px;
+  /* 하단 탭 바 공간 확보 — main-content 하단에 여백 */
+  .main-content {
+    padding-bottom: 64px;
   }
 
   /* 하단 탭 바 플레이스홀더 */
