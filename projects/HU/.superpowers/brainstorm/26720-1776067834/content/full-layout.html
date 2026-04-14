@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HU 콘텐츠 페이지 — 전체 레이아웃 확인</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f4f8;
+    padding: 24px;
+    min-height: 100vh;
+  }
+
+  .header-label {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .header-label h2 {
+    font-size: 18px;
+    font-weight: 800;
+    color: #1a1a2e;
+    margin-bottom: 6px;
+  }
+  .header-label p {
+    font-size: 13px;
+    color: #868E96;
+  }
+
+  /* Browser chrome mockup */
+  .browser {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+    overflow: hidden;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .browser-bar {
+    background: #f1f3f5;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #e9ecef;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+  .url-bar {
+    flex: 1;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 11px;
+    color: #868E96;
+    margin-left: 8px;
+  }
+
+  /* GNB */
+  .gnb {
+    height: 56px;
+    background: #fff;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 16px;
+    position: relative;
+    z-index: 10;
+  }
+  .gnb-logo {
+    font-size: 14px;
+    font-weight: 900;
+    color: #1B5EFF;
+    letter-spacing: -0.5px;
+    white-space: nowrap;
+  }
+  .gnb-logo span { color: #1a1a2e; }
+  .gnb-search {
+    flex: 1;
+    max-width: 360px;
+    background: #f8f9fa;
+    border: 1.5px solid #e9ecef;
+    border-radius: 8px;
+    padding: 7px 12px 7px 32px;
+    font-size: 11px;
+    color: #868E96;
+    position: relative;
+  }
+  .gnb-search-wrap { position: relative; flex: 1; max-width: 360px; }
+  .gnb-search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: #adb5bd;
+  }
+  .gnb-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .gnb-plus {
+    background: linear-gradient(135deg, #1B5EFF, #5C8FFF);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .gnb-login {
+    font-size: 11px;
+    color: #495057;
+    padding: 6px 12px;
+    border: 1.5px solid #dee2e6;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+  .gnb-avatar {
+    width: 30px; height: 30px;
+    background: linear-gradient(135deg, #1B5EFF, #5C8FFF);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: #fff;
+  }
+
+  /* Page body */
+  .page-body {
+    display: flex;
+    min-height: calc(100vh - 200px);
+    max-height: 680px;
+  }
+
+  /* LNB */
+  .lnb {
+    width: 200px;
+    min-width: 200px;
+    background: #fff;
+    border-right: 1px solid #e9ecef;
+    padding: 16px 0;
+    overflow-y: auto;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    font-size: 12px;
+    color: #495057;
+    cursor: pointer;
+    border-radius: 0;
+  }
+  .nav-item.active {
+    background: #EEF2FF;
+    color: #1B5EFF;
+    font-weight: 700;
+    border-right: 3px solid #1B5EFF;
+  }
+  .nav-item:hover:not(.active) { background: #f8f9fa; }
+  .nav-icon { font-size: 14px; width: 18px; text-align: center; }
+  .nav-divider {
+    height: 1px;
+    background: #e9ecef;
+    margin: 8px 20px;
+  }
+
+  /* Main content */
+  .main {
+    flex: 1;
+    background: #f8f9fa;
+    overflow-y: auto;
+    padding: 24px 28px;
+  }
+
+  /* Page header */
+  .page-header {
+    margin-bottom: 20px;
+  }
+  .page-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #1a1a2e;
+    margin-bottom: 4px;
+  }
+  .page-count {
+    font-size: 12px;
+    color: #868E96;
+  }
+
+  /* Filter bar */
+  .filter-bar {
+    background: #fff;
+    border-radius: 10px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    flex-wrap: wrap;
+  }
+  .chip {
+    font-size: 11px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    white-space: nowrap;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .chip-active { background: #1B5EFF; color: #fff; font-weight: 700; }
+  .chip-default { background: #f1f3f5; color: #495057; border: 1.5px solid #e9ecef; }
+  .chip-more { background: #f1f3f5; color: #868E96; border: 1.5px solid #e9ecef; }
+  .filter-spacer { flex: 1; }
+  .sort-select {
+    background: #f1f3f5;
+    border: 1.5px solid #e9ecef;
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 11px;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+
+  /* Card grid */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .course-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.07);
+    transition: box-shadow 0.2s;
+    cursor: pointer;
+  }
+  .course-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
+  .card-thumb {
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 */
+    position: relative;
+  }
+  .card-thumb-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-thumb-label {
+    font-size: 9px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .card-body-inner { padding: 12px 14px 14px; }
+  .card-tag {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-bottom: 7px;
+  }
+  .card-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1a1a2e;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .card-meta {
+    font-size: 10px;
+    color: #868E96;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .star { color: #f59e0b; font-weight: 700; }
+
+  /* Courses data */
+  .bg1 { background: linear-gradient(135deg, #1a1a2e, #16213e); }
+  .bg2 { background: linear-gradient(135deg, #0f3460, #533483); }
+  .bg3 { background: linear-gradient(135deg, #1b4332, #2d6a4f); }
+  .bg4 { background: linear-gradient(135deg, #7b2d8b, #a855f7); }
+  .bg5 { background: linear-gradient(135deg, #7f1d1d, #dc2626); }
+  .bg6 { background: linear-gradient(135deg, #1e3a5f, #2563eb); }
+  .bg7 { background: linear-gradient(135deg, #3b1f6a, #7c3aed); }
+  .bg8 { background: linear-gradient(135deg, #064e3b, #10b981); }
+
+  .tag-blue { background: #EEF2FF; color: #3B5BDB; }
+  .tag-pink { background: #FFF0F6; color: #C2255C; }
+  .tag-green { background: #EBFBEE; color: #2F9E44; }
+  .tag-purple { background: #F3F0FF; color: #7048E8; }
+  .tag-red { background: #FFF5F5; color: #C92A2A; }
+  .tag-orange { background: #FFF3E0; color: #E8590C; }
+</style>
+</head>
+<body>
+
+<div class="header-label">
+  <h2>콘텐츠 페이지 — 전체 레이아웃</h2>
+  <p>카드 스타일 A + 칩 필터 A 적용. 전체 구성이 자연스러운지 확인해주세요.</p>
+</div>
+
+<div class="browser">
+  <!-- Browser chrome -->
+  <div class="browser-bar">
+    <div class="dot dot-r"></div>
+    <div class="dot dot-y"></div>
+    <div class="dot dot-g"></div>
+    <div class="url-bar">hu.hunet.co.kr/contents</div>
+  </div>
+
+  <!-- GNB -->
+  <div class="gnb">
+    <div class="gnb-logo">HU <span>휴넷유니버시티</span></div>
+    <div class="gnb-search-wrap">
+      <span class="gnb-search-icon">🔍</span>
+      <div class="gnb-search">과정명, 강사명, 스킬 검색</div>
+    </div>
+    <div class="gnb-right">
+      <div class="gnb-plus">HU Plus+</div>
+      <div class="gnb-login">로그인</div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="page-body">
+
+    <!-- LNB -->
+    <div class="lnb">
+      <div class="nav-item">
+        <span class="nav-icon">🏠</span>홈
+      </div>
+      <div class="nav-item active">
+        <span class="nav-icon">📚</span>콘텐츠
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">💼</span>커리어
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">⭐</span>스킬
+      </div>
+      <div class="nav-divider"></div>
+      <div class="nav-item">
+        <span class="nav-icon">🎓</span>마이클래스룸
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">👑</span>프리미엄
+      </div>
+    </div>
+
+    <!-- Main -->
+    <div class="main">
+
+      <!-- Page header -->
+      <div class="page-header">
+        <div class="page-title">콘텐츠</div>
+        <div class="page-count">전체 4,218개 과정</div>
+      </div>
+
+      <!-- Filter bar -->
+      <div class="filter-bar">
+        <span class="chip chip-active">전체</span>
+        <span class="chip chip-default">리더십</span>
+        <span class="chip chip-default">마케팅</span>
+        <span class="chip chip-default">재무/회계</span>
+        <span class="chip chip-default">데이터</span>
+        <span class="chip chip-default">HR</span>
+        <span class="chip chip-default">영업</span>
+        <span class="chip chip-more">더보기 ›</span>
+        <div class="filter-spacer"></div>
+        <div class="sort-select">최신순 ▾</div>
+      </div>
+
+      <!-- Card grid -->
+      <div class="card-grid">
+
+        <!-- Card 1 -->
+        <div class="course-card">
+          <div class="card-thumb">
+            <div class="card-thumb-inner bg1">
+              <span class="card-thumb-label">Leadership</span>
+            </div>
+          </div>
+          <div class="card-body-inner">
+            <span class="card-tag tag-blue">리더십</span>
+            <div class="card-title">리더십의 핵심: 팀을 움직이는 소통 전략</div>
+            <div class="card-meta">
+              <span class="star">4.8★</span>
+              <span>·</span>
+              <span>수강생 2,341명</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="course-card">
+          <div class="card-thumb">
+            <div class="card-thumb-inner bg2">
+              <span class="card-thumb-label">Marketing</span>
+            </div>
+          </div>
+          <div class="card-body-inner">
+            <span class="card-tag tag-pink">마케팅</span>
+            <div class="card-title">B2B 마케팅 전략 완성본</div>
+            <div class="card-meta">
+              <span class="star">4.6★</span>
+              <span>·</span>
+              <span>수강생 1,892명</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="course-card">
+          <div class="card-thumb">
+            <div class="card-thumb-inner bg3">
+              <span class="card-thumb-label">Finance</span>
+            </div>
+          </div>
+          <div class="card-body-inner">
+            <span class="card-tag tag-green">재무/회계</span>
+            <div class="card-title">CFO가 알려주는 재무제표 완전 정복</div>
+            <div class="card-meta">
+              <span class="star">4.9★</span>
+              <span>·</span>
+              <span>수강생 3,102명</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="course-card">
+          <div class="card-thumb">
+            <div class="card-thumb-inner bg4">
+              <span class="card-thumb-label">Data</span>
+            </div>
+          </div>
+          <div class="card-body-inner">
+            <span class="card-tag tag-purple">데이터</span>
+            <div class="card-title">데이터 분석 입문: SQL 완전정복</div>
+            <div class="card-meta">
+              <span class="star">4.7★</span>
+              <span>·</span>
+              <span>수강생 5,210명</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="course-card">
+          <div class="card-thumb">
+            <div class="card-thumb-inner bg5">
+              <span class="card-thumb-label">Sales</span>
+            </div>
+          </div>
+          <div class="card-body-inner">
+            <span class="card-tag tag-red">영업</span>
+            <div class="card-title">고객을 사로잡는 영업 스킬 마스터</div>
+            <div class="card-meta">
+              <span class="star">4.5★</span>
+              <span>·</span>
+              <span>수강생 987명</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="course-card">
+          <div class="card-thumb">
+            <div class="card-thumb-inner bg6">
+              <span class="card-thumb-label">HR</span>
+            </div>
+          </div>
+          <div class="card-body-inner">
+            <span class="card-tag tag-blue">HR</span>
+            <div class="card-title">성과 중심 HR: 인재 확보부터 리텐션까지</div>
+            <div class="card-meta">
+              <span class="star">4.8★</span>
+              <span>·</span>
+              <span>수강생 1,456명</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 7 -->
+        <div class="course-card">
+          <div class="card-thumb">
+            <div class="card-thumb-inner bg7">
+              <span class="card-thumb-label">Strategy</span>
+            </div>
+          </div>
+          <div class="card-body-inner">
+            <span class="card-tag tag-purple">전략</span>
+            <div class="card-title">OKR로 팀 성과를 2배 높이는 방법</div>
+            <div class="card-meta">
+              <span class="star">4.9★</span>
+              <span>·</span>
+              <span>수강생 2,780명</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 8 -->
+        <div class="course-card">
+          <div class="card-thumb">
+            <div class="card-thumb-inner bg8">
+              <span class="card-thumb-label">AI</span>
+            </div>
+          </div>
+          <div class="card-body-inner">
+            <span class="card-tag tag-green">AI/디지털</span>
+            <div class="card-title">ChatGPT 업무 활용 완전 가이드</div>
+            <div class="card-meta">
+              <span class="star">4.9★</span>
+              <span>·</span>
+              <span>수강생 8,931명</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- end card grid -->
+
+    </div>
+    <!-- end main -->
+
+  </div>
+  <!-- end page body -->
+
+</div>
+<!-- end browser -->
+
+<div style="text-align:center;margin-top:20px;font-size:12px;color:#868E96">
+  이 레이아웃이 괜찮으면 "좋아" 또는 수정하고 싶은 부분을 알려주세요
+</div>
+
+<script>
+// Inject into parent if inside iframe
+</script>
+
+</body>
+</html>

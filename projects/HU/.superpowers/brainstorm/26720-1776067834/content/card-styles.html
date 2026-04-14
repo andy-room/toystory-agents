@@ -1,0 +1,145 @@
+<h2>콘텐츠 페이지 — 카드 스타일 선택</h2>
+<p class="subtitle">세 가지 카드 스타일 중 HU 콘텐츠 페이지에 맞는 방향을 선택해주세요</p>
+
+<div class="cards">
+
+  <!-- Option A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f0f4ff;padding:20px;min-height:320px">
+      <div style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08);margin-bottom:12px">
+        <div style="width:100%;height:140px;background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:center">
+          <div style="color:#fff;font-size:11px;opacity:0.5">썸네일 이미지</div>
+        </div>
+        <div style="padding:14px 16px 16px">
+          <div style="display:flex;gap:6px;margin-bottom:8px">
+            <span style="background:#EEF2FF;color:#3B5BDB;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600">리더십</span>
+            <span style="background:#F1F3F5;color:#868E96;font-size:10px;padding:2px 8px;border-radius:20px">무료</span>
+          </div>
+          <div style="font-size:13px;font-weight:700;color:#1a1a2e;line-height:1.4;margin-bottom:6px">리더십의 핵심: 팀을 움직이는 소통 전략</div>
+          <div style="font-size:11px;color:#868E96">김민준 · 4.8★ · 수강생 2,341명</div>
+        </div>
+      </div>
+      <div style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08)">
+        <div style="width:100%;height:140px;background:linear-gradient(135deg,#0f3460,#533483);border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:center">
+          <div style="color:#fff;font-size:11px;opacity:0.5">썸네일 이미지</div>
+        </div>
+        <div style="padding:14px 16px 16px">
+          <div style="display:flex;gap:6px;margin-bottom:8px">
+            <span style="background:#FFF0F6;color:#C2255C;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600">마케팅</span>
+          </div>
+          <div style="font-size:13px;font-weight:700;color:#1a1a2e;line-height:1.4;margin-bottom:6px">B2B 마케팅 전략 완성본</div>
+          <div style="font-size:11px;color:#868E96">이지연 · 4.6★ · 수강생 1,892명</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A. 클린 카드</h3>
+      <p>이미지 + 텍스트 분리. 배지 태그, 강사명/평점 메타. 화이트 배경에 미묘한 그림자. 가장 범용적이고 안정적.</p>
+    </div>
+  </div>
+
+  <!-- Option B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f8f9fa;padding:20px;min-height:320px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="border-radius:12px;overflow:hidden;position:relative;height:170px;background:linear-gradient(135deg,#1a1a2e,#16213e)">
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 50%,transparent)"></div>
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:12px">
+            <span style="background:rgba(255,255,255,0.15);color:#fff;font-size:9px;padding:2px 7px;border-radius:20px;display:inline-block;margin-bottom:5px">리더십</span>
+            <div style="font-size:11px;font-weight:700;color:#fff;line-height:1.3">리더십의 핵심: 팀을 움직이는 소통 전략</div>
+            <div style="font-size:9px;color:rgba(255,255,255,0.6);margin-top:4px">4.8★ · 2,341명</div>
+          </div>
+        </div>
+        <div style="border-radius:12px;overflow:hidden;position:relative;height:170px;background:linear-gradient(135deg,#0f3460,#533483)">
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 50%,transparent)"></div>
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:12px">
+            <span style="background:rgba(255,255,255,0.15);color:#fff;font-size:9px;padding:2px 7px;border-radius:20px;display:inline-block;margin-bottom:5px">마케팅</span>
+            <div style="font-size:11px;font-weight:700;color:#fff;line-height:1.3">B2B 마케팅 전략 완성본</div>
+            <div style="font-size:9px;color:rgba(255,255,255,0.6);margin-top:4px">4.6★ · 1,892명</div>
+          </div>
+        </div>
+        <div style="border-radius:12px;overflow:hidden;position:relative;height:170px;background:linear-gradient(135deg,#1b4332,#2d6a4f)">
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 50%,transparent)"></div>
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:12px">
+            <span style="background:rgba(255,255,255,0.15);color:#fff;font-size:9px;padding:2px 7px;border-radius:20px;display:inline-block;margin-bottom:5px">재무</span>
+            <div style="font-size:11px;font-weight:700;color:#fff;line-height:1.3">CFO가 알려주는 재무제표 읽기</div>
+            <div style="font-size:9px;color:rgba(255,255,255,0.6);margin-top:4px">4.9★ · 3,102명</div>
+          </div>
+        </div>
+        <div style="border-radius:12px;overflow:hidden;position:relative;height:170px;background:linear-gradient(135deg,#7b2d8b,#a855f7)">
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 50%,transparent)"></div>
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:12px">
+            <span style="background:rgba(255,255,255,0.15);color:#fff;font-size:9px;padding:2px 7px;border-radius:20px;display:inline-block;margin-bottom:5px">데이터</span>
+            <div style="font-size:11px;font-weight:700;color:#fff;line-height:1.3">데이터 분석 입문: SQL 완전정복</div>
+            <div style="font-size:9px;color:rgba(255,255,255,0.6);margin-top:4px">4.7★ · 5,210명</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B. 이미지 오버레이 카드</h3>
+      <p>텍스트가 이미지 위에 올라오는 스타일. 더 임팩트 있고 시각적. 현 HU목업의 커리어 페이지와 유사. 콘텐츠 커버 이미지가 강조됨.</p>
+    </div>
+  </div>
+
+  <!-- Option C -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f0f4ff;padding:20px;min-height:320px">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="background:#fff;border-radius:10px;display:flex;gap:12px;padding:10px;box-shadow:0 1px 8px rgba(0,0,0,0.07);align-items:center">
+          <div style="width:88px;height:52px;background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:8px;flex-shrink:0"></div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:12px;font-weight:700;color:#1a1a2e;line-height:1.3;margin-bottom:3px">리더십의 핵심: 팀을 움직이는 소통 전략</div>
+            <div style="font-size:10px;color:#868E96;margin-bottom:4px">김민준 강사 · 리더십</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:#f59e0b;font-weight:700">4.8★</span>
+              <div style="flex:1;height:3px;background:#e9ecef;border-radius:2px"><div style="width:96%;height:100%;background:#f59e0b;border-radius:2px"></div></div>
+            </div>
+          </div>
+          <div style="font-size:11px;font-weight:700;color:#3B5BDB;white-space:nowrap">무료</div>
+        </div>
+        <div style="background:#fff;border-radius:10px;display:flex;gap:12px;padding:10px;box-shadow:0 1px 8px rgba(0,0,0,0.07);align-items:center">
+          <div style="width:88px;height:52px;background:linear-gradient(135deg,#0f3460,#533483);border-radius:8px;flex-shrink:0"></div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:12px;font-weight:700;color:#1a1a2e;line-height:1.3;margin-bottom:3px">B2B 마케팅 전략 완성본</div>
+            <div style="font-size:10px;color:#868E96;margin-bottom:4px">이지연 강사 · 마케팅</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:#f59e0b;font-weight:700">4.6★</span>
+              <div style="flex:1;height:3px;background:#e9ecef;border-radius:2px"><div style="width:92%;height:100%;background:#f59e0b;border-radius:2px"></div></div>
+            </div>
+          </div>
+          <div style="font-size:11px;font-weight:700;color:#1a1a2e;white-space:nowrap">₩49,000</div>
+        </div>
+        <div style="background:#fff;border-radius:10px;display:flex;gap:12px;padding:10px;box-shadow:0 1px 8px rgba(0,0,0,0.07);align-items:center">
+          <div style="width:88px;height:52px;background:linear-gradient(135deg,#1b4332,#2d6a4f);border-radius:8px;flex-shrink:0"></div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:12px;font-weight:700;color:#1a1a2e;line-height:1.3;margin-bottom:3px">CFO가 알려주는 재무제표 읽기</div>
+            <div style="font-size:10px;color:#868E96;margin-bottom:4px">박성훈 강사 · 재무</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:#f59e0b;font-weight:700">4.9★</span>
+              <div style="flex:1;height:3px;background:#e9ecef;border-radius:2px"><div style="width:98%;height:100%;background:#f59e0b;border-radius:2px"></div></div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:#868E96;white-space:nowrap">HU Plus+</div>
+        </div>
+        <div style="background:#fff;border-radius:10px;display:flex;gap:12px;padding:10px;box-shadow:0 1px 8px rgba(0,0,0,0.07);align-items:center">
+          <div style="width:88px;height:52px;background:linear-gradient(135deg,#7b2d8b,#a855f7);border-radius:8px;flex-shrink:0"></div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:12px;font-weight:700;color:#1a1a2e;line-height:1.3;margin-bottom:3px">데이터 분석 입문: SQL 완전정복</div>
+            <div style="font-size:10px;color:#868E96;margin-bottom:4px">최유진 강사 · 데이터</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;color:#f59e0b;font-weight:700">4.7★</span>
+              <div style="flex:1;height:3px;background:#e9ecef;border-radius:2px"><div style="width:94%;height:100%;background:#f59e0b;border-radius:2px"></div></div>
+            </div>
+          </div>
+          <div style="font-size:11px;font-weight:700;color:#1a1a2e;white-space:nowrap">₩89,000</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C. 리스트 카드 (가로형)</h3>
+      <p>썸네일 + 텍스트 수평 배치. 정보 밀도 높음. 많은 콘텐츠를 스캔하기 편리. 유튜브/넷플릭스 리스트 스타일.</p>
+    </div>
+  </div>
+
+</div>

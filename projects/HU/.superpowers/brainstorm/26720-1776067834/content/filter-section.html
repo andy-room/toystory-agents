@@ -1,0 +1,184 @@
+<h2>콘텐츠 페이지 — 필터/헤더 영역</h2>
+<p class="subtitle">콘텐츠 목록 상단의 탐색 + 필터 영역 스타일을 선택해주세요</p>
+
+<div class="cards">
+
+  <!-- Option A: 칩 필터 + 정렬 -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f8f9fa;padding:20px">
+
+      <!-- Page Header -->
+      <div style="margin-bottom:16px">
+        <div style="font-size:18px;font-weight:800;color:#1a1a2e;margin-bottom:4px">콘텐츠</div>
+        <div style="font-size:11px;color:#868E96">전체 4,218개의 과정</div>
+      </div>
+
+      <!-- Chip filters -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+        <div style="display:flex;gap:6px;flex:1;flex-wrap:wrap">
+          <span style="background:#1B5EFF;color:#fff;font-size:11px;padding:6px 14px;border-radius:20px;font-weight:600;white-space:nowrap">전체</span>
+          <span style="background:#fff;color:#495057;font-size:11px;padding:6px 14px;border-radius:20px;border:1.5px solid #dee2e6;white-space:nowrap">리더십</span>
+          <span style="background:#fff;color:#495057;font-size:11px;padding:6px 14px;border-radius:20px;border:1.5px solid #dee2e6;white-space:nowrap">마케팅</span>
+          <span style="background:#fff;color:#495057;font-size:11px;padding:6px 14px;border-radius:20px;border:1.5px solid #dee2e6;white-space:nowrap">재무/회계</span>
+          <span style="background:#fff;color:#495057;font-size:11px;padding:6px 14px;border-radius:20px;border:1.5px solid #dee2e6;white-space:nowrap">데이터</span>
+          <span style="background:#fff;color:#495057;font-size:11px;padding:6px 14px;border-radius:20px;border:1.5px solid #dee2e6;white-space:nowrap">HR</span>
+          <span style="background:#fff;color:#868E96;font-size:11px;padding:6px 14px;border-radius:20px;border:1.5px solid #dee2e6;white-space:nowrap">더보기 +</span>
+        </div>
+        <div style="background:#fff;border:1.5px solid #dee2e6;border-radius:8px;padding:6px 12px;font-size:11px;color:#495057;white-space:nowrap;display:flex;align-items:center;gap:6px">
+          <span>최신순</span><span style="color:#868E96">▾</span>
+        </div>
+      </div>
+
+      <!-- Cards preview -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,0.07)">
+          <div style="height:76px;background:linear-gradient(135deg,#1a1a2e,#16213e)"></div>
+          <div style="padding:10px">
+            <span style="background:#EEF2FF;color:#3B5BDB;font-size:9px;padding:1px 6px;border-radius:10px;font-weight:600">리더십</span>
+            <div style="font-size:10px;font-weight:700;margin-top:4px;color:#1a1a2e;line-height:1.3">리더십의 핵심: 팀을 움직이는 소통 전략</div>
+            <div style="font-size:9px;color:#868E96;margin-top:3px">4.8★ · 2,341명</div>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,0.07)">
+          <div style="height:76px;background:linear-gradient(135deg,#0f3460,#533483)"></div>
+          <div style="padding:10px">
+            <span style="background:#FFF0F6;color:#C2255C;font-size:9px;padding:1px 6px;border-radius:10px;font-weight:600">마케팅</span>
+            <div style="font-size:10px;font-weight:700;margin-top:4px;color:#1a1a2e;line-height:1.3">B2B 마케팅 전략 완성본</div>
+            <div style="font-size:9px;color:#868E96;margin-top:3px">4.6★ · 1,892명</div>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,0.07)">
+          <div style="height:76px;background:linear-gradient(135deg,#1b4332,#2d6a4f)"></div>
+          <div style="padding:10px">
+            <span style="background:#EBFBEE;color:#2F9E44;font-size:9px;padding:1px 6px;border-radius:10px;font-weight:600">재무</span>
+            <div style="font-size:10px;font-weight:700;margin-top:4px;color:#1a1a2e;line-height:1.3">CFO가 알려주는 재무제표 읽기</div>
+            <div style="font-size:9px;color:#868E96;margin-top:3px">4.9★ · 3,102명</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A. 칩 필터 + 정렬</h3>
+      <p>HDS Chips 컴포넌트 활용. 가볍고 직관적. 카테고리가 많으면 "더보기" 로 확장. 우측 정렬 드롭다운 조합.</p>
+    </div>
+  </div>
+
+  <!-- Option B: 탭 + 세부 필터 -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f8f9fa;padding:20px">
+
+      <div style="margin-bottom:14px">
+        <div style="font-size:18px;font-weight:800;color:#1a1a2e;margin-bottom:4px">콘텐츠</div>
+        <div style="font-size:11px;color:#868E96">전체 4,218개의 과정</div>
+      </div>
+
+      <!-- Tabs -->
+      <div style="display:flex;gap:0;border-bottom:2px solid #e9ecef;margin-bottom:12px">
+        <div style="padding:8px 16px;font-size:12px;font-weight:700;color:#1B5EFF;border-bottom:2px solid #1B5EFF;margin-bottom:-2px;white-space:nowrap">전체</div>
+        <div style="padding:8px 16px;font-size:12px;color:#868E96;white-space:nowrap">직무역량</div>
+        <div style="padding:8px 16px;font-size:12px;color:#868E96;white-space:nowrap">리더십</div>
+        <div style="padding:8px 16px;font-size:12px;color:#868E96;white-space:nowrap">글로벌</div>
+        <div style="padding:8px 16px;font-size:12px;color:#868E96;white-space:nowrap">AI/디지털</div>
+      </div>
+
+      <!-- Sub filters -->
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+        <div style="background:#fff;border:1.5px solid #dee2e6;border-radius:8px;padding:5px 12px;font-size:10px;color:#495057;display:flex;align-items:center;gap:4px">수준 <span style="color:#868E96">▾</span></div>
+        <div style="background:#fff;border:1.5px solid #dee2e6;border-radius:8px;padding:5px 12px;font-size:10px;color:#495057;display:flex;align-items:center;gap:4px">학습 시간 <span style="color:#868E96">▾</span></div>
+        <div style="background:#fff;border:1.5px solid #dee2e6;border-radius:8px;padding:5px 12px;font-size:10px;color:#495057;display:flex;align-items:center;gap:4px">형식 <span style="color:#868E96">▾</span></div>
+        <div style="background:#1B5EFF20;border:1.5px solid #1B5EFF40;border-radius:8px;padding:5px 12px;font-size:10px;color:#1B5EFF;font-weight:600;display:flex;align-items:center;gap:4px">무료 ✕</div>
+        <div style="margin-left:auto;background:#fff;border:1.5px solid #dee2e6;border-radius:8px;padding:5px 12px;font-size:10px;color:#495057;display:flex;align-items:center;gap:4px">최신순 <span style="color:#868E96">▾</span></div>
+      </div>
+
+      <!-- Cards -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,0.07)">
+          <div style="height:76px;background:linear-gradient(135deg,#1a1a2e,#16213e)"></div>
+          <div style="padding:10px">
+            <div style="font-size:10px;font-weight:700;color:#1a1a2e;line-height:1.3;margin-bottom:3px">리더십의 핵심: 팀을 움직이는 소통 전략</div>
+            <div style="font-size:9px;color:#868E96">4.8★ · 초급 · 2시간</div>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,0.07)">
+          <div style="height:76px;background:linear-gradient(135deg,#0f3460,#533483)"></div>
+          <div style="padding:10px">
+            <div style="font-size:10px;font-weight:700;color:#1a1a2e;line-height:1.3;margin-bottom:3px">B2B 마케팅 전략 완성본</div>
+            <div style="font-size:9px;color:#868E96">4.6★ · 중급 · 4시간</div>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,0.07)">
+          <div style="height:76px;background:linear-gradient(135deg,#1b4332,#2d6a4f)"></div>
+          <div style="padding:10px">
+            <div style="font-size:10px;font-weight:700;color:#1a1a2e;line-height:1.3;margin-bottom:3px">CFO가 알려주는 재무제표 읽기</div>
+            <div style="font-size:9px;color:#868E96">4.9★ · 초급 · 3시간</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B. 탭 + 세부 필터 드롭다운</h3>
+      <p>HDS Tab으로 대분류, 드롭다운으로 세부 필터(수준/시간/형식). 활성 필터는 칩으로 표시. 필터링 파워 높음.</p>
+    </div>
+  </div>
+
+  <!-- Option C: 검색 우선 -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f8f9fa;padding:20px">
+
+      <div style="margin-bottom:14px">
+        <div style="font-size:18px;font-weight:800;color:#1a1a2e;margin-bottom:10px">콘텐츠</div>
+        <!-- Search bar -->
+        <div style="position:relative;margin-bottom:12px">
+          <div style="background:#fff;border:1.5px solid #dee2e6;border-radius:10px;padding:9px 16px 9px 36px;font-size:11px;color:#868E96;">과정명, 강사명, 키워드 검색</div>
+          <div style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#868E96;font-size:13px">🔍</div>
+        </div>
+      </div>
+
+      <!-- Chips (secondary) -->
+      <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
+        <span style="font-size:10px;color:#868E96;font-weight:600;white-space:nowrap">빠른 선택:</span>
+        <span style="background:#1B5EFF;color:#fff;font-size:10px;padding:4px 12px;border-radius:20px;font-weight:600">전체</span>
+        <span style="background:#fff;color:#495057;font-size:10px;padding:4px 12px;border-radius:20px;border:1.5px solid #dee2e6">리더십</span>
+        <span style="background:#fff;color:#495057;font-size:10px;padding:4px 12px;border-radius:20px;border:1.5px solid #dee2e6">마케팅</span>
+        <span style="background:#fff;color:#495057;font-size:10px;padding:4px 12px;border-radius:20px;border:1.5px solid #dee2e6">재무</span>
+        <span style="background:#fff;color:#495057;font-size:10px;padding:4px 12px;border-radius:20px;border:1.5px solid #dee2e6">데이터</span>
+      </div>
+
+      <!-- Count + sort -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div style="font-size:10px;color:#868E96">전체 <strong style="color:#1a1a2e">4,218</strong>개</div>
+        <div style="background:#fff;border:1.5px solid #dee2e6;border-radius:8px;padding:4px 10px;font-size:10px;color:#495057;display:flex;align-items:center;gap:4px">최신순 <span>▾</span></div>
+      </div>
+
+      <!-- Cards -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,0.07)">
+          <div style="height:76px;background:linear-gradient(135deg,#1a1a2e,#16213e)"></div>
+          <div style="padding:10px">
+            <div style="font-size:10px;font-weight:700;color:#1a1a2e;line-height:1.3;margin-bottom:3px">리더십의 핵심</div>
+            <div style="font-size:9px;color:#868E96">4.8★ · 2,341명</div>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,0.07)">
+          <div style="height:76px;background:linear-gradient(135deg,#0f3460,#533483)"></div>
+          <div style="padding:10px">
+            <div style="font-size:10px;font-weight:700;color:#1a1a2e;line-height:1.3;margin-bottom:3px">B2B 마케팅 전략</div>
+            <div style="font-size:9px;color:#868E96">4.6★ · 1,892명</div>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,0.07)">
+          <div style="height:76px;background:linear-gradient(135deg,#1b4332,#2d6a4f)"></div>
+          <div style="padding:10px">
+            <div style="font-size:10px;font-weight:700;color:#1a1a2e;line-height:1.3;margin-bottom:3px">CFO 재무제표</div>
+            <div style="font-size:9px;color:#868E96">4.9★ · 3,102명</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C. 검색 우선 + 칩 보조</h3>
+      <p>검색창이 상단 중심. 빠른 선택 칩은 보조 역할. 검색 중심 탐색 UX. 콘텐츠 수가 많을 때 효과적.</p>
+    </div>
+  </div>
+
+</div>
