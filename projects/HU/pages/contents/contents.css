@@ -48,7 +48,7 @@
   font-size: var(--font-size-sm);
   font-weight: 500;
   color: var(--color-subtle);
-  background: var(--color-surface);
+  background: var(--color-chip-bg);
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-full);
   white-space: nowrap;
