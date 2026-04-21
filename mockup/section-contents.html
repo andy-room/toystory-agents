@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Section Contents – 걱정 없이 시작하세요</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0e0e10;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ───────────────────────────────────────────
+       SECTION
+    ─────────────────────────────────────────── */
+    .section-contents {
+      background: #171719;
+      width: 100%;
+      padding: 100px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .inner {
+      width: 1290px;
+      max-width: 100%;
+      padding: 0 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 80px;
+    }
+
+    /* ───────────────────────────────────────────
+       TITLE
+    ─────────────────────────────────────────── */
+    .title {
+      width: 100%;
+      text-align: center;
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.4;
+      letter-spacing: -0.7px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .title-line1 {
+      color: #ffffff;
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transition-delay: 0s;
+    }
+
+    .title-line2 {
+      background: linear-gradient(98.85deg, rgb(255, 178, 0) 39.89%, rgb(255, 88, 17) 59.8%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transition-delay: 0.28s;
+    }
+
+    /* ───────────────────────────────────────────
+       ANI-IMG1 WRAPPER
+    ─────────────────────────────────────────── */
+    .ani-img1 {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      align-items: flex-start;
+      width: 100%;
+    }
+
+    /* ───────────────────────────────────────────
+       ILLUST ROW
+    ─────────────────────────────────────────── */
+    .illust {
+      display: flex;
+      gap: 80px;
+      align-items: center;
+      position: relative;
+    }
+
+    /* ───────────────────────────────────────────
+       CONNECTING LINES
+    ─────────────────────────────────────────── */
+    .line {
+      position: absolute;
+      height: 2px;
+      width: 292px;
+      left: calc(50% - 150px);
+      background: linear-gradient(to right, rgba(112, 115, 124, 0) 0%, #70737c 100%);
+      transform-origin: left center;
+      transform: scaleX(0);
+      transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .line-1 { top: calc(50% - 235px); transition-delay: 0.9s; }
+    .line-2 { top: calc(50% - 70px);  transition-delay: 1.06s; }
+    .line-3 { top: calc(50% + 79px);  transition-delay: 1.22s; }
+    .line-4 { top: calc(50% + 236px); transition-delay: 1.38s; }
+
+    /* ───────────────────────────────────────────
+       CIRCLE (LEFT)
+    ─────────────────────────────────────────── */
+    .circle-wrap {
+      width: 406px;
+      height: 592px;
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+      opacity: 0;
+      transform: scale(0.86);
+      transition: opacity 0.75s ease,
+                  transform 0.75s cubic-bezier(0.34, 1.4, 0.64, 1);
+      transition-delay: 0.58s;
+    }
+
+    .circle {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 520px;
+      height: 520px;
+      border-radius: 50%;
+      background: #171719;
+      border: 2px solid #ffd951;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 132px;
+    }
+
+    .circle-text {
+      text-align: center;
+    }
+
+    .circle-stat-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 2px;
+      margin-bottom: 0;
+    }
+
+    .circle-big {
+      font-size: 32px;
+      font-weight: 700;
+      color: #ffd951;
+      line-height: 1.4;
+      letter-spacing: -0.7px;
+    }
+
+    .circle-of {
+      font-size: 16px;
+      font-weight: 400;
+      color: #aeb0b6;
+      line-height: 1.6;
+      letter-spacing: -0.5px;
+    }
+
+    .circle-body {
+      font-size: 16px;
+      font-weight: 400;
+      color: #aeb0b6;
+      line-height: 1.6;
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+    }
+
+    .circle-body.gap { margin-top: 8px; }
+
+    /* ───────────────────────────────────────────
+       LIST GROUP (RIGHT)
+    ─────────────────────────────────────────── */
+    .list-group {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .list-item {
+      background: #292a2d;
+      display: flex;
+      align-items: center;
+      border-radius: 999px;
+      opacity: 0;
+      transform: translateX(56px);
+      transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .list-item:nth-child(1) { transition-delay: 1.02s; }
+    .list-item:nth-child(2) { transition-delay: 1.18s; }
+    .list-item:nth-child(3) { transition-delay: 1.34s; }
+    .list-item:nth-child(4) { transition-delay: 1.50s; }
+
+    /* Problem side */
+    .list-problem {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 32px 40px;
+      width: 280px;
+      flex-shrink: 0;
+    }
+
+    .list-problem .pct {
+      font-size: 16px;
+      font-weight: 400;
+      color: #ffd951;
+      line-height: 1.6;
+      letter-spacing: -0.5px;
+      text-align: center;
+    }
+
+    .list-problem .name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.4;
+      letter-spacing: -0.7px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    /* Solution side */
+    .list-solution {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 32px 40px;
+      width: 280px;
+      flex-shrink: 0;
+      border-radius: 999px;
+      background: linear-gradient(to bottom,
+        rgba(174, 176, 182, 0.08) 0%,
+        rgba(174, 176, 182, 0.20) 100%
+      );
+      position: relative;
+    }
+
+    .list-solution .sub {
+      font-size: 16px;
+      font-weight: 400;
+      color: #aeb0b6;
+      line-height: 1.6;
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .list-solution .main {
+      font-size: 20px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.4;
+      letter-spacing: -0.7px;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    /* Check icon */
+    .check-icon {
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 40px;
+    }
+
+    /* ───────────────────────────────────────────
+       FOOTNOTE
+    ─────────────────────────────────────────── */
+    .footnote {
+      font-size: 16px;
+      font-weight: 400;
+      color: #aeb0b6;
+      line-height: 1.6;
+      letter-spacing: -0.5px;
+      text-align: center;
+      width: 100%;
+    }
+
+    /* ───────────────────────────────────────────
+       IS-ANIMATED STATE  (add this class to trigger)
+    ─────────────────────────────────────────── */
+    .is-animated .title-line1,
+    .is-animated .title-line2 {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .is-animated .circle-wrap {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .is-animated .line {
+      transform: scaleX(1);
+    }
+
+    .is-animated .list-item {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  </style>
+</head>
+<body>
+
+<section class="section-contents" id="section-contents">
+  <div class="inner">
+
+    <!-- ── Title ── -->
+    <div class="title">
+      <p class="title-line1">교육은 필요한데, 교육비·시간·인력 부족이라면,</p>
+      <p class="title-line2">이제 '걱정 없이' 시작하세요.</p>
+    </div>
+
+    <!-- ── Illustration + Footnote ── -->
+    <div class="ani-img1">
+      <div class="illust">
+
+        <!-- Connecting lines (drawn left→right) -->
+        <div class="line line-1"></div>
+        <div class="line line-2"></div>
+        <div class="line line-3"></div>
+        <div class="line line-4"></div>
+
+        <!-- Circle (left) -->
+        <div class="circle-wrap">
+          <div class="circle">
+            <div class="circle-text">
+              <div class="circle-stat-row">
+                <span class="circle-big">95.6%</span>
+                <span class="circle-of">의</span>
+              </div>
+              <p class="circle-body">기업이 필요하다고 답한 직원 교육.</p>
+              <p class="circle-body gap">&nbsp;중견·중소기업을 위한</p>
+              <p class="circle-body">체계적인 학습 지원을 제공합니다.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- List (right, 4 items) -->
+        <div class="list-group">
+
+          <!-- Item 1 -->
+          <div class="list-item">
+            <div class="list-problem">
+              <p class="pct">42.4%</p>
+              <p class="name">교육비 부담</p>
+            </div>
+            <div class="list-solution">
+              <div class="check-icon">
+                <img src="https://www.figma.com/api/mcp/asset/14caad05-edaa-421b-af9f-77c9980db360" alt="" width="40" height="40">
+              </div>
+              <p class="sub">합리적 구독형 요금제로</p>
+              <p class="main">예산 부담 최소화</p>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="list-item">
+            <div class="list-problem">
+              <p class="pct">42.4%</p>
+              <p class="name">교육 시간/참여 부족</p>
+            </div>
+            <div class="list-solution">
+              <div class="check-icon">
+                <img src="https://www.figma.com/api/mcp/asset/14caad05-edaa-421b-af9f-77c9980db360" alt="" width="40" height="40">
+              </div>
+              <p class="sub">즉시 몰입 가능한</p>
+              <p class="main">통합형 학습 플랫폼</p>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="list-item">
+            <div class="list-problem">
+              <p class="pct">27.1%</p>
+              <p class="name">적합한 교육이 없음</p>
+            </div>
+            <div class="list-solution">
+              <div class="check-icon">
+                <img src="https://www.figma.com/api/mcp/asset/14caad05-edaa-421b-af9f-77c9980db360" alt="" width="40" height="40">
+              </div>
+              <p class="sub">세분화된 스킬 중심의</p>
+              <p class="main">맞춤형 콘텐츠 제공</p>
+            </div>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="list-item">
+            <div class="list-problem">
+              <p class="pct">20.3%</p>
+              <p class="name">교육 전담 인력 부족</p>
+            </div>
+            <div class="list-solution">
+              <div class="check-icon">
+                <img src="https://www.figma.com/api/mcp/asset/14caad05-edaa-421b-af9f-77c9980db360" alt="" width="40" height="40">
+              </div>
+              <p class="sub">관리자 대시보드 기반</p>
+              <p class="main">운영·성과 관리 자동화</p>
+            </div>
+          </div>
+
+        </div><!-- /.list-group -->
+      </div><!-- /.illust -->
+
+      <p class="footnote">출처: '기업교육 현황과 인식' 중소·중견기업 설문 (546개사 대상, 2025년)</p>
+    </div><!-- /.ani-img1 -->
+
+  </div><!-- /.inner -->
+</section>
+
+<script>
+  const section = document.getElementById('section-contents');
+
+  // Intersection Observer for scroll-triggered use
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-animated');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  observer.observe(section);
+
+  // Auto-trigger for standalone preview (fires after 400ms on load)
+  setTimeout(() => {
+    if (!section.classList.contains('is-animated')) {
+      section.classList.add('is-animated');
+    }
+  }, 400);
+</script>
+
+</body>
+</html>
