@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>내일 콘텐츠 선공개 중 — 애니메이션</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f8f8f8;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 80px;
+      padding: 60px 40px;
+    }
+
+    /* ─── 데모 설명 ─── */
+    .demo-label {
+      font-size: 13px;
+      color: #999;
+      letter-spacing: -0.2px;
+      text-align: center;
+    }
+
+    /* ─── 배지 전체 래퍼: 원 중심이 화살표 중심에 오도록 당김 ─── */
+    .section-context {
+      display: flex;
+      align-items: center;
+      gap: 8px;           /* 원과 pill 사이 간격 */
+      margin-left: -37px; /* (화살표 32px + gap 4px) / 2 + 원 반지름 16.5px 기준 중앙 정렬 */
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ─── 오른쪽 화살표: 원 위에 올라오도록 z-index만 유지 ─── */
+    .calendar-arrow-right {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ─── 왼쪽 동그라미 (연한 라벤더) ─── */
+    .dot {
+      width: 33px;
+      height: 33px;
+      border-radius: 50%;
+      background: #ede8ff;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+
+      /* 초기 상태: 크기 0 */
+      transform: scale(0);
+      opacity: 0;
+
+      /* 1.5배 빠른 애니메이션 */
+      animation: dotExpand 0.33s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s forwards;
+    }
+
+    @keyframes dotExpand {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+      60% {
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* ─── 텍스트 pill 래퍼 ─── */
+    .pill-wrapper {
+      overflow: visible;
+    }
+
+    /* ─── 텍스트 pill: 원 크기(33px)에서 시작해 오른쪽으로 펼쳐짐 ─── */
+    .pill {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 12px;
+      background: #f3edff;
+      border-radius: 900px;
+      white-space: nowrap;
+      overflow: hidden;
+
+      /* 초기: 원 모양(33px)으로 클리핑 — 도트와 동일 크기 */
+      clip-path: inset(0 calc(100% - 33px) 0 0 round 900px);
+      opacity: 0;
+
+      animation: pillExpand 0.37s cubic-bezier(0.4, 0, 0.2, 1) 0.57s forwards;
+    }
+
+    @keyframes pillExpand {
+      0% {
+        clip-path: inset(0 calc(100% - 33px) 0 0 round 900px);
+        opacity: 1;
+      }
+      100% {
+        clip-path: inset(0 0% 0 0 round 900px);
+        opacity: 1;
+      }
+    }
+
+    .pill-text {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 25px;
+      letter-spacing: -0.2px;
+      color: #7a49ff;
+      /* 텍스트는 pill이 펼쳐지면서 페이드인 */
+      opacity: 0;
+      animation: textFadeIn 0.2s ease 0.72s forwards;
+    }
+
+    @keyframes textFadeIn {
+      to { opacity: 1; }
+    }
+
+    /* ─── 전체 페이지 맥락 미리보기 ─── */
+    .page-preview {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 60px 40px;
+      width: 100%;
+      max-width: 1024px;
+      box-shadow: 0 4px 40px rgba(0,0,0,0.08);
+    }
+
+    /* 캘린더 바 */
+    .calendar-bar {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 24px;
+    }
+
+    .calendar-arrow {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #20222d;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .calendar-arrow svg { display: block; }
+
+    .calendar-date {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 24px;
+      font-weight: 700;
+      color: #20222d;
+      letter-spacing: -0.2px;
+      margin-right: 4px;
+    }
+
+    .calendar-date svg { color: #20222d; }
+
+    /* ─── 콘텐츠 그리드 (편성표) ─── */
+    .grid {
+      display: flex;
+      gap: 28px;
+      height: 400px;
+    }
+
+    .grid-col {
+      flex: 1;
+      display: flex;
+      gap: 28px;
+      min-width: 0;
+    }
+
+    .grid-col-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      min-width: 0;
+    }
+
+    .card {
+      flex: 1;
+      border-radius: 8px;
+      background: #e0e0e0;
+      min-width: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-inner {
+      display: flex;
+      gap: 28px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* 카드 플레이스홀더 색상 */
+    .card:nth-child(1) { background: linear-gradient(160deg, #2a2a3a, #1a1a2a); }
+    .card:nth-child(2) { background: linear-gradient(160deg, #1a2a3a, #0a1a2a); }
+
+    .card-label {
+      position: absolute;
+      bottom: 20px;
+      left: 16px;
+      right: 16px;
+      color: white;
+    }
+
+    .card-category {
+      font-size: 13px;
+      opacity: 0.7;
+      margin-bottom: 4px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .card-top { flex: 1; background: linear-gradient(160deg, #3a1a2a, #2a0a1a); }
+    .card-bottom-row { display: flex; gap: 28px; flex: 1; min-height: 0; }
+    .card-small { flex: 1; border-radius: 8px; min-width: 0; }
+    .card-small:nth-child(1) { background: linear-gradient(160deg, #1a2a1a, #0a1a0a); }
+    .card-small:nth-child(2) { background: linear-gradient(160deg, #3a3a1a, #2a2a0a); }
+
+    /* ─── 리플레이 버튼 ─── */
+    .replay-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 0;
+      padding: 8px 16px;
+      border: 1.5px solid #7a49ff;
+      border-radius: 900px;
+      background: transparent;
+      color: #7a49ff;
+      font-size: 13px;
+      cursor: pointer;
+      letter-spacing: -0.2px;
+      transition: background 0.2s;
+    }
+
+    .replay-btn:hover { background: #f3edff; }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="controls">
+    <div class="demo-label">페이지 로드 시 1회 재생되는 애니메이션 — 좌측 동그라미 확대 → 텍스트 슬라이드 인</div>
+    <button class="replay-btn" onclick="replay()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M7 1.5A5.5 5.5 0 1 0 12.5 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M10.5 1.5L12.5 3.5L10.5 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      애니메이션 다시 보기
+    </button>
+  </div>
+
+  <!-- 전체 페이지 컨텍스트 미리보기 -->
+  <div class="page-preview">
+
+    <!-- 캘린더 바 + 선공개 배지 -->
+    <div class="calendar-bar">
+      <!-- 왼쪽 화살표 -->
+      <div class="calendar-arrow">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M12 5L7 10L12 15" stroke="#20222d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <!-- 캘린더 아이콘 + 날짜 -->
+      <div class="calendar-date">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <rect x="2" y="4" width="16" height="14" rx="2" stroke="#20222d" stroke-width="1.5"/>
+          <path d="M6 2V5M14 2V5" stroke="#20222d" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M2 8H18" stroke="#20222d" stroke-width="1.5"/>
+        </svg>
+        2025. 4. 16
+      </div>
+
+      <!-- 오른쪽 화살표 (원 위로 올라와야 함) -->
+      <div class="calendar-arrow calendar-arrow-right">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M8 5L13 10L8 15" stroke="#20222d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <!-- ✨ 선공개 배지 (애니메이션 대상) -->
+      <div class="section-context" id="badge-container">
+        <!-- 왼쪽 보라색 동그라미 -->
+        <div class="dot" id="anim-dot"></div>
+
+        <!-- 텍스트 pill (overflow clip 래퍼 안에) -->
+        <div class="pill-wrapper">
+          <div class="pill" id="anim-pill">
+            <span class="pill-text">내일 콘텐츠 선공개 중</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 편성표 그리드 (맥락용 플레이스홀더) -->
+    <div class="grid">
+      <!-- 왼쪽 열: 2개 카드 나란히 -->
+      <div class="grid-col">
+        <div class="card">
+          <div class="card-label">
+            <div class="card-category">경영</div>
+            <div class="card-title">심리적 회계, 경제 활동을 움직이는 숨은 원리</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-label">
+            <div class="card-category">혁신</div>
+            <div class="card-title">한국 기업의 다음 생존 전략은 창조적 혁신이다</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 오른쪽 열: 상단 1개 + 하단 2개 -->
+      <div class="grid-col-right">
+        <div class="card card-top" style="flex:1; border-radius:8px; position:relative; overflow:hidden;">
+          <div class="card-label">
+            <div class="card-category">좋은 리더를 넘어 위대한 리더로</div>
+            <div class="card-title">스스로 브랜드가 된 미술가, 앤디 워홀</div>
+          </div>
+        </div>
+        <div class="card-inner">
+          <div class="card-small card" style="position:relative; overflow:hidden;">
+            <div class="card-label">
+              <div class="card-category">먼슬리포럼</div>
+              <div class="card-title">정상을 향한 불굴의 도전정신</div>
+            </div>
+          </div>
+          <div class="card-small card" style="position:relative; overflow:hidden; background: linear-gradient(160deg, #2a2a2a, #1a1a1a);">
+            <div class="card-label">
+              <div class="card-category">북다이제스트</div>
+              <div class="card-title">좋은 리더를 넘어 위대한 리더로</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function replay() {
+      const dot = document.getElementById('anim-dot');
+      const pill = document.getElementById('anim-pill');
+
+      // 애니메이션 리셋
+      dot.style.animation = 'none';
+      pill.style.animation = 'none';
+
+      // 강제 리플로우
+      dot.offsetHeight;
+      pill.offsetHeight;
+
+      // 재적용
+      dot.style.animation = '';
+      pill.style.animation = '';
+    }
+  </script>
+
+</body>
+</html>
