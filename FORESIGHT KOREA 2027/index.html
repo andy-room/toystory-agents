@@ -1,0 +1,1171 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>FORESIGHT KOREA 2027 — 미래 인재의 시대를 여는 단 하루</title>
+  <meta name="description" content="2027.05.20 COEX Grand Ballroom · AI가 일을 다시 쓰는 시대, 한국이 먼저 그려보는 다음 10년의 학습과 인재. Foresight Korea 2027." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fastly.jsdelivr.net/gh/sunn-us/SUIT/fonts/variable/woff2/SUIT-Variable.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+<style>
+/* ============================================================
+   HDS + Foresight Korea 2027 — Dark Conference Theme
+   ============================================================ */
+:root {
+  --fk-bg:        #06070A;
+  --fk-bg-2:      #0B0D12;
+  --fk-surface:   #0F1218;
+  --fk-surface-2: #161A22;
+  --fk-elev:      #1B202B;
+  --fk-line:        rgba(255,255,255,0.08);
+  --fk-line-strong: rgba(255,255,255,0.16);
+  --fk-line-faint:  rgba(255,255,255,0.04);
+  --fk-text:       rgba(255,255,255,0.96);
+  --fk-text-2:     rgba(255,255,255,0.70);
+  --fk-text-3:     rgba(255,255,255,0.48);
+  --fk-text-4:     rgba(255,255,255,0.32);
+  --fk-accent:        #3D8BFF;
+  --fk-accent-strong: #0066FF;
+  --fk-accent-soft:   rgba(61,139,255,0.16);
+  --fk-glow:          rgba(61,139,255,0.55);
+  --fk-gold:          #D4B068;
+  --fk-gold-soft:     rgba(212,176,104,0.18);
+  --fk-red: #FF4757;
+  --fk-display: "SUIT Variable","SUIT","Pretendard Variable","Pretendard","Apple SD Gothic Neo",system-ui,sans-serif;
+  --fk-sans:    "Pretendard Variable","Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --fk-mono:    "Roboto Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--fk-bg);color:var(--fk-text);font-family:var(--fk-sans);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden;}
+body{background:radial-gradient(1200px 800px at 80% -10%,rgba(61,139,255,0.10),transparent 60%),radial-gradient(900px 700px at -10% 30%,rgba(107,92,228,0.08),transparent 60%),var(--fk-bg);min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit;padding:0;}
+input,textarea,select{font:inherit;color:inherit;}
+.fk-container{width:100%;max-width:1280px;margin:0 auto;padding:0 32px;}
+@media(max-width:768px){.fk-container{padding:0 20px;}}
+
+/* NAV */
+.fk-nav{position:fixed;top:0;left:0;right:0;z-index:60;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:rgba(6,7,10,0.6);border-bottom:1px solid transparent;transition:background 200ms ease,border-color 200ms ease;}
+.fk-nav.scrolled{background:rgba(6,7,10,0.88);border-bottom:1px solid var(--fk-line);}
+.fk-nav-brand{display:flex;align-items:center;gap:10px;font-family:var(--fk-mono);font-weight:400;font-size:11px;letter-spacing:0.2em;color:var(--fk-text-2);}
+.fk-nav-brand-mark{width:22px;height:22px;display:grid;place-items:center;background:transparent;color:var(--fk-text);border:1px solid var(--fk-line-strong);border-radius:3px;font-family:var(--fk-mono);font-weight:400;font-size:11px;letter-spacing:0;}
+.fk-nav-links{display:flex;align-items:center;gap:28px;font-size:12px;color:var(--fk-text-3);font-weight:400;letter-spacing:0.01em;}
+.fk-nav-links a{transition:color 150ms ease;}
+.fk-nav-links a:hover{color:var(--fk-text-2);}
+.fk-nav-cta{padding:8px 16px;border-radius:4px;background:transparent;color:var(--fk-text-2);font-size:12px;font-weight:400;letter-spacing:0.06em;border:1px solid var(--fk-line-strong);transition:all 150ms ease;}
+.fk-nav-cta:hover{color:var(--fk-text);border-color:rgba(255,255,255,0.3);}
+@media(max-width:900px){.fk-nav-links{display:none;}}
+
+/* BUTTONS */
+.fk-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:4px;font-weight:400;font-size:13px;letter-spacing:0.04em;transition:all 180ms ease;white-space:nowrap;}
+.fk-btn-primary{background:var(--fk-text);color:var(--fk-bg);}
+.fk-btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px -8px rgba(255,255,255,0.2);}
+.fk-btn-ghost{background:transparent;color:var(--fk-text-2);border:1px solid var(--fk-line-strong);}
+.fk-btn-ghost:hover{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.25);color:var(--fk-text);}
+.fk-btn-glow{background:var(--fk-accent-strong);color:white;box-shadow:0 0 0 1px rgba(255,255,255,0.05) inset,0 8px 28px -6px rgba(0,102,255,0.4);}
+.fk-btn-glow:hover{transform:translateY(-1px);}
+.fk-arrow{display:inline-block;width:13px;height:13px;transition:transform 200ms ease;}
+.fk-btn:hover .fk-arrow{transform:translateX(3px);}
+
+/* HERO */
+.fk-hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:140px 0 80px;--mx:0;--my:0;--px:0;--py:0;perspective:1400px;}
+.fk-hero-bg{position:absolute;inset:0;z-index:0;pointer-events:none;transform-style:preserve-3d;}
+.fk-hero-grid{position:absolute;inset:-40px;background-image:linear-gradient(to right,rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 80% 60% at 50% 50%,black,transparent 80%);-webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 50%,black,transparent 80%);transform:translate3d(calc(var(--px)*-14px),calc(var(--py)*-14px),0);transition:transform 600ms cubic-bezier(0.16,1,0.3,1);opacity:0;animation:fk-grid-in 1600ms 200ms cubic-bezier(0.16,1,0.3,1) forwards;}
+@keyframes fk-grid-in{from{opacity:0;transform:translate3d(0,0,0) scale(1.04);}to{opacity:1;}}
+.fk-hero-orb-wrap{position:absolute;inset:0;transform:translate3d(calc(var(--px)*28px),calc(var(--py)*28px),0);transition:transform 900ms cubic-bezier(0.16,1,0.3,1);will-change:transform;}
+.fk-hero-orb{position:absolute;width:1100px;height:1100px;border-radius:50%;background:radial-gradient(circle at 50% 50%,rgba(61,139,255,0.28),rgba(61,139,255,0.08) 35%,transparent 60%);left:50%;top:50%;transform:translate(-50%,-45%) scale(0.6);filter:blur(20px);opacity:0;animation:fk-orb-in 2200ms cubic-bezier(0.16,1,0.3,1) forwards,fk-orb-float 16s 2200ms ease-in-out infinite;}
+.fk-hero-orb-2{position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle at 50% 50%,rgba(212,176,104,0.22),transparent 60%);left:10%;bottom:-15%;filter:blur(40px);opacity:0;transform:scale(0.7);animation:fk-orb2-in 2600ms 400ms cubic-bezier(0.16,1,0.3,1) forwards,fk-orb-float 20s 3000ms ease-in-out infinite reverse;}
+.fk-hero-orb-3{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle at 50% 50%,rgba(107,92,228,0.18),transparent 60%);right:5%;top:10%;filter:blur(50px);opacity:0;animation:fk-orb2-in 2600ms 700ms cubic-bezier(0.16,1,0.3,1) forwards;}
+@keyframes fk-orb-in{to{opacity:1;transform:translate(-50%,-45%) scale(1);}}
+@keyframes fk-orb2-in{to{opacity:1;transform:scale(1);}}
+@keyframes fk-orb-float{0%,100%{transform:translate(-50%,-45%) scale(1);}50%{transform:translate(-50%,-52%) scale(1.07);}}
+.fk-hero-spotlight{position:absolute;inset:0;background:radial-gradient(420px circle at calc(var(--mx)*100%) calc(var(--my)*100%),rgba(255,255,255,0.08),rgba(61,139,255,0.05) 30%,transparent 60%);pointer-events:none;opacity:0;animation:fk-fade-soft 1600ms 600ms ease forwards;mix-blend-mode:screen;transition:background 120ms linear;}
+@keyframes fk-fade-soft{to{opacity:1;}}
+.fk-hero-scan{position:absolute;inset:0;background:linear-gradient(180deg,transparent 0%,rgba(255,255,255,0.04) 48%,rgba(255,255,255,0.06) 50%,rgba(255,255,255,0.04) 52%,transparent 100%);background-size:100% 200%;background-position:50% 200%;pointer-events:none;opacity:0;animation:fk-scan 14s 1800ms ease-in-out infinite;mix-blend-mode:screen;}
+@keyframes fk-scan{0%{background-position:50% 200%;opacity:0;}20%{opacity:0.6;}50%{background-position:50% -100%;opacity:0.6;}60%{opacity:0;}100%{background-position:50% -100%;opacity:0;}}
+.fk-stars{position:absolute;inset:0;pointer-events:none;transform:translate3d(calc(var(--px)*6px),calc(var(--py)*6px),0);transition:transform 800ms cubic-bezier(0.16,1,0.3,1);}
+.fk-stars span{position:absolute;width:2px;height:2px;background:white;border-radius:50%;opacity:0;animation:fk-star-in 1200ms forwards,fk-twinkle 4s ease-in-out infinite 1400ms;}
+@keyframes fk-star-in{to{opacity:var(--max,0.6);}}
+@keyframes fk-twinkle{0%,100%{opacity:0.2;transform:scale(1);}50%{opacity:0.9;transform:scale(1.4);}}
+.fk-hero-meta,.fk-hero-sub,.fk-hero-actions{opacity:0;transform:translateY(24px);transition:opacity 1000ms cubic-bezier(0.16,1,0.3,1),transform 1000ms cubic-bezier(0.16,1,0.3,1);}
+.fk-hero.ready .fk-hero-meta{opacity:1;transform:none;transition-delay:200ms;}
+.fk-hero.ready .fk-hero-sub{opacity:1;transform:none;transition-delay:1500ms;}
+.fk-hero.ready .fk-hero-actions{opacity:1;transform:none;transition-delay:1850ms;}
+.fk-hero-stat{opacity:0;transform:translateY(20px);transition:opacity 900ms cubic-bezier(0.16,1,0.3,1),transform 900ms cubic-bezier(0.16,1,0.3,1);}
+.fk-hero.ready .fk-hero-stat{opacity:1;transform:none;}
+.fk-hero.ready .fk-hero-stat:nth-child(1){transition-delay:2200ms;}
+.fk-hero.ready .fk-hero-stat:nth-child(2){transition-delay:2320ms;}
+.fk-hero.ready .fk-hero-stat:nth-child(3){transition-delay:2440ms;}
+.fk-hero.ready .fk-hero-stat:nth-child(4){transition-delay:2560ms;}
+.fk-hero-title{position:relative;transform:translate3d(calc(var(--px)*-10px),calc(var(--py)*-10px),0);transition:transform 600ms cubic-bezier(0.16,1,0.3,1);will-change:transform;}
+.fk-title-line{display:block;}
+.fk-title-line>span{display:inline-block;padding-bottom:0.16em;margin-bottom:-0.16em;transform:translateY(40%) skewY(4deg);opacity:0;transition:transform 1400ms cubic-bezier(0.2,0.85,0.2,1),opacity 1100ms cubic-bezier(0.2,0.85,0.2,1);background:linear-gradient(180deg,#ffffff 0%,rgba(255,255,255,0.72) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.fk-hero.ready .fk-title-line>span{transform:translateY(0) skewY(0);opacity:1;}
+.fk-hero.ready .fk-title-line.l1>span{transition-delay:500ms;}
+.fk-hero.ready .fk-title-line.l2>span{transition-delay:800ms;}
+.fk-hero-title::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 0%,transparent 40%,rgba(255,255,255,0.45) 50%,transparent 60%,transparent 100%);background-size:220% 100%;background-position:200% 0;mix-blend-mode:overlay;pointer-events:none;opacity:0;}
+.fk-hero.ready .fk-hero-title::after{animation:fk-shimmer 2400ms 2400ms ease-out 1;}
+@keyframes fk-shimmer{0%{opacity:0;background-position:200% 0;}20%{opacity:1;}100%{opacity:0;background-position:-120% 0;}}
+@media(prefers-reduced-motion:reduce){.fk-hero *,.fk-hero{animation-duration:0.001s!important;transition-duration:0.001s!important;}}
+.fk-hero-inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center;gap:28px;}
+.fk-hero-meta{display:inline-flex;align-items:center;gap:14px;padding:8px 16px;border:1px solid var(--fk-line);border-radius:999px;background:rgba(255,255,255,0.02);font-family:var(--fk-mono);font-size:11px;letter-spacing:0.2em;color:var(--fk-text-2);text-transform:uppercase;}
+.fk-hero-meta .dot{width:6px;height:6px;border-radius:50%;background:var(--fk-accent);box-shadow:0 0 12px var(--fk-glow);animation:fk-pulse 2s ease-in-out infinite;}
+@keyframes fk-pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.fk-hero-title{font-family:var(--fk-display);font-weight:900;font-size:clamp(56px,9vw,148px);line-height:0.92;letter-spacing:-0.04em;margin:0;color:var(--fk-text);text-wrap:balance;}
+.fk-hero-title .accent{display:inline-block;background:linear-gradient(180deg,#3D8BFF 0%,#6B5CE4 100%);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700;padding:0 0.06em 0.12em 0;margin:0 -0.06em -0.12em 0;vertical-align:baseline;}
+.fk-hero-sub{max-width:640px;color:var(--fk-text-2);font-size:clamp(15px,1.4vw,18px);font-weight:400;line-height:1.6;letter-spacing:-0.005em;}
+.fk-hero-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px;}
+.fk-hero-stats{margin-top:40px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:100%;max-width:880px;border-top:1px solid var(--fk-line);border-bottom:1px solid var(--fk-line);}
+.fk-hero-stat{padding:20px 16px;text-align:center;border-right:1px solid var(--fk-line);}
+.fk-hero-stat:last-child{border-right:none;}
+.fk-hero-stat-val{font-family:var(--fk-display);font-weight:900;font-size:32px;line-height:1;letter-spacing:-0.02em;color:#5FA8FF;}
+.fk-hero-stat-lab{margin-top:6px;font-family:var(--fk-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.18em;color:var(--fk-text-3);}
+@media(max-width:700px){.fk-hero-stats{grid-template-columns:repeat(2,1fr);}.fk-hero-stat:nth-child(2){border-right:none;}.fk-hero-stat:nth-child(1),.fk-hero-stat:nth-child(2){border-bottom:1px solid var(--fk-line);}}
+.fk-scroll-cue{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-family:var(--fk-mono);font-size:10px;letter-spacing:0.3em;color:var(--fk-text-3);text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:2;}
+.fk-scroll-cue .line{width:1px;height:28px;background:linear-gradient(to bottom,var(--fk-text-3),transparent);}
+
+/* MARQUEE */
+.fk-marquee{border-top:1px solid var(--fk-line);border-bottom:1px solid var(--fk-line);background:var(--fk-bg-2);overflow:hidden;padding:14px 0;}
+.fk-marquee-track{display:flex;gap:48px;white-space:nowrap;animation:fk-marquee 40s linear infinite;font-family:var(--fk-mono);font-weight:400;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--fk-text-3);}
+.fk-marquee-track .star{color:var(--fk-accent);opacity:0.6;}
+@keyframes fk-marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* SECTIONS */
+.fk-section{position:relative;padding:100px 0;}
+.fk-section-head{display:flex;flex-direction:column;gap:14px;margin-bottom:48px;max-width:880px;}
+.fk-section-title{font-family:var(--fk-display);font-weight:300;font-size:clamp(25px,3.5vw,45px);line-height:1.1;letter-spacing:-0.02em;margin:0;color:var(--fk-text);}
+.fk-section-title .muted{color:var(--fk-text-3);}
+.fk-section-lead{color:var(--fk-text-2);font-size:clamp(14px,1.2vw,16px);line-height:1.7;max-width:600px;}
+.fk-eyebrow{font-family:var(--fk-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(61,139,255,0.7);}
+.fk-eyebrow.gold{color:rgba(212,176,104,0.7);}
+
+/* THEME */
+.fk-theme{background:linear-gradient(180deg,transparent 0%,rgba(61,139,255,0.03) 50%,transparent 100%);border-top:1px solid var(--fk-line);border-bottom:1px solid var(--fk-line);}
+.fk-theme-headline{font-family:var(--fk-display);font-weight:200;font-size:clamp(45px,7.7vw,126px);line-height:0.92;letter-spacing:-0.03em;margin:24px 0 48px;}
+.fk-theme-headline .l1{display:block;color:var(--fk-text);}
+.fk-theme-headline .l2{display:block;color:var(--fk-text-3);}
+.fk-theme-headline .l3{display:block;color:var(--fk-text-4);font-weight:200;}
+.fk-theme-cols{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:56px;padding-top:40px;border-top:1px solid var(--fk-line);}
+.fk-theme-cols .col h4{font-family:var(--fk-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--fk-text-4);margin:0 0 14px;}
+.fk-theme-cols .col p{margin:0;color:var(--fk-text-2);font-size:15px;line-height:1.75;}
+@media(max-width:760px){.fk-theme-cols{grid-template-columns:1fr;gap:32px;}}
+
+/* KEYNOTE */
+.fk-keynote{background:var(--fk-bg-2);border-top:1px solid var(--fk-line);border-bottom:1px solid var(--fk-line);overflow:hidden;}
+.fk-keynote-stage{display:grid;grid-template-columns:1.1fr 1fr;gap:72px;align-items:center;}
+@media(max-width:960px){.fk-keynote-stage{grid-template-columns:1fr;gap:40px;}}
+.fk-keynote-photo{position:relative;aspect-ratio:4/5;border-radius:2px;overflow:hidden;background:radial-gradient(ellipse at 30% 20%,rgba(61,139,255,0.12),transparent 55%),radial-gradient(ellipse at 80% 80%,rgba(212,176,104,0.10),transparent 55%),linear-gradient(135deg,#1B202B,#0F1218);border:1px solid var(--fk-line);display:grid;place-items:center;box-shadow:0 40px 80px -40px rgba(0,0,0,0.6);}
+.fk-keynote-photo .badge{position:absolute;top:16px;left:16px;display:flex;align-items:center;gap:8px;padding:5px 10px;border-radius:2px;background:rgba(0,0,0,0.5);backdrop-filter:blur(8px);border:1px solid var(--fk-line);font-family:var(--fk-mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--fk-text-3);}
+.fk-keynote-photo .badge .dot{width:5px;height:5px;border-radius:50%;background:var(--fk-red);box-shadow:0 0 8px var(--fk-red);}
+.fk-keynote-photo .tba-overlay{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--fk-display);font-weight:200;font-size:clamp(30px,4.2vw,67px);letter-spacing:0.1em;color:rgba(255,255,255,0.05);pointer-events:none;}
+.fk-keynote-photo .corner{position:absolute;width:20px;height:20px;border:1px solid rgba(212,176,104,0.4);}
+.fk-keynote-photo .corner.tl{top:12px;left:12px;border-right:none;border-bottom:none;}
+.fk-keynote-photo .corner.tr{top:12px;right:12px;border-left:none;border-bottom:none;}
+.fk-keynote-photo .corner.bl{bottom:12px;left:12px;border-right:none;border-top:none;}
+.fk-keynote-photo .corner.br{bottom:12px;right:12px;border-left:none;border-top:none;}
+.fk-keynote-body .pre{font-family:var(--fk-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(212,176,104,0.6);margin-bottom:20px;}
+.fk-keynote-body h2{font-family:var(--fk-display);font-weight:300;font-size:clamp(28px,3.85vw,50px);line-height:1.1;letter-spacing:-0.02em;margin:0 0 14px;color:var(--fk-text);}
+.fk-keynote-body h2 .accent{color:var(--fk-text-3);}
+.fk-keynote-body .talk{margin:20px 0 0;padding:20px;border:1px solid var(--fk-line);border-left:1px solid var(--fk-accent);border-radius:0 4px 4px 0;background:rgba(255,255,255,0.015);}
+.fk-keynote-body .talk .label{font-family:var(--fk-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--fk-text-4);margin-bottom:8px;}
+.fk-keynote-body .talk h3{font-family:var(--fk-sans);font-weight:400;font-size:17px;line-height:1.45;margin:0 0 10px;color:var(--fk-text);}
+.fk-keynote-body .talk p{margin:0;color:var(--fk-text-3);font-size:14px;line-height:1.7;}
+.fk-keynote-meta{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:28px;border-top:1px solid var(--fk-line);}
+.fk-keynote-meta .item{padding:14px 0;border-right:1px solid var(--fk-line);}
+.fk-keynote-meta .item:last-child{border-right:none;padding-left:16px;}
+.fk-keynote-meta .item:first-child{padding-right:16px;}
+.fk-keynote-meta .k{font-family:var(--fk-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--fk-text-4);margin-bottom:5px;}
+.fk-keynote-meta .v{font-family:var(--fk-sans);font-weight:400;font-size:14px;color:var(--fk-text-2);}
+
+/* TRACKS */
+.fk-trackblocks{display:flex;flex-direction:column;gap:72px;}
+.fk-trackblock{position:relative;}
+.fk-trackblock-head{display:grid;grid-template-columns:180px 1fr;gap:40px;padding-bottom:28px;margin-bottom:28px;border-bottom:1px solid var(--fk-line);align-items:start;}
+@media(max-width:840px){.fk-trackblock-head{grid-template-columns:1fr;gap:14px;}}
+.fk-trackblock-code{display:flex;flex-direction:column;gap:6px;}
+.fk-trackblock-code .num{font-family:var(--fk-display);font-weight:200;font-size:clamp(50px,6.3vw,92px);line-height:0.85;letter-spacing:-0.02em;color:var(--fk-text-4);}
+.fk-trackblock-code .lbl{font-family:var(--fk-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(61,139,255,0.7);}
+.fk-trackblock-title{font-family:var(--fk-display);font-weight:300;font-size:clamp(20px,2.4vw,31px);line-height:1.1;letter-spacing:-0.015em;margin:4px 0 10px;color:var(--fk-text);}
+.fk-trackblock-title .sub{display:block;font-family:var(--fk-sans);font-weight:400;font-size:clamp(13px,1.2vw,15px);letter-spacing:0;color:var(--fk-text-3);margin-top:5px;}
+.fk-trackblock-desc{margin:0 0 14px;color:var(--fk-text-3);font-size:14px;line-height:1.7;max-width:680px;}
+.fk-trackblock-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.tag-chip{padding:4px 10px;border:1px solid rgba(61,139,255,0.18);border-radius:2px;font-size:11px;color:rgba(61,139,255,0.75);font-weight:400;letter-spacing:0.04em;background:rgba(61,139,255,0.04);}
+.fk-speakers-grid-v2{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;}
+@media(max-width:1100px){.fk-speakers-grid-v2{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:820px){.fk-speakers-grid-v2{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:480px){.fk-speakers-grid-v2{grid-template-columns:1fr;gap:12px;}}
+.fk-speaker-card-v2{display:flex;flex-direction:column;align-items:center;text-align:center;background:var(--fk-surface);border:1px solid var(--fk-line);border-radius:4px;cursor:pointer;transition:transform 220ms ease,border-color 220ms ease,background 220ms ease;padding:24px 18px 20px;width:100%;gap:14px;}
+.fk-speaker-card-v2:hover{transform:translateY(-3px);border-color:var(--fk-line-strong);background:var(--fk-surface-2);}
+.fk-speaker-card-v2:hover .fk-speaker-card-v2-name{color:var(--fk-text);}
+.fk-photo{position:relative;width:104px;height:104px;border-radius:50%;background:var(--fk-surface-2);overflow:hidden;border:1px solid rgba(61,139,255,0.15);flex-shrink:0;display:grid;place-items:center;}
+@media(max-width:480px){.fk-photo{width:88px;height:88px;}}
+.fk-photo.tba{background:var(--fk-surface);}
+.fk-photo-tba-mark{font-family:var(--fk-mono);font-weight:400;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--fk-text-4);}
+.fk-photo-tba-sub{display:none;}
+.fk-photo-figure{display:none;}
+.fk-photo-initials{font-family:var(--fk-mono);font-weight:400;font-size:13px;letter-spacing:0.06em;color:var(--fk-text-4);}
+.fk-speaker-card-v2-body{display:flex;flex-direction:column;gap:4px;position:relative;width:100%;}
+.fk-speaker-num{font-family:var(--fk-mono);font-size:9px;letter-spacing:0.18em;color:rgba(61,139,255,0.6);margin-bottom:6px;}
+.fk-speaker-card-v2-name{font-family:var(--fk-sans);font-weight:500;font-size:15px;line-height:1.3;letter-spacing:-0.01em;margin:0;color:var(--fk-text);transition:color 180ms ease;}
+.fk-speaker-card-v2.tba .fk-speaker-card-v2-name{color:var(--fk-text-4);font-weight:400;}
+.fk-speaker-card-v2-role{font-size:11px;color:var(--fk-text-4);margin:0;line-height:1.5;}
+.fk-speaker-card-v2-org{font-size:12px;color:var(--fk-text-3);font-weight:400;margin:2px 0 0;}
+.fk-speaker-card-v2-talk{margin-top:12px;padding-top:12px;border-top:1px solid var(--fk-line);font-size:12px;color:var(--fk-text-3);line-height:1.6;text-align:left;}
+.fk-speaker-card-v2-talk .label{font-family:var(--fk-mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--fk-text-4);display:block;margin-bottom:5px;}
+.fk-drawer-photo-wrap{flex-shrink:0;}
+.fk-drawer-photo-wrap .fk-photo{width:56px;height:56px;}
+.fk-drawer-photo-wrap .fk-photo-initials{font-size:11px;}
+.fk-drawer-photo-wrap .fk-photo-tba-mark{font-size:10px;}
+
+/* DRAWER */
+.fk-drawer-overlay{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity 240ms ease;}
+.fk-drawer-overlay.open{opacity:1;pointer-events:auto;}
+.fk-drawer{position:fixed;top:0;right:0;bottom:0;width:100%;max-width:560px;background:var(--fk-bg-2);border-left:1px solid var(--fk-line-strong);z-index:91;transform:translateX(100%);transition:transform 320ms cubic-bezier(0.2,0.9,0.3,1);display:flex;flex-direction:column;overflow-y:auto;}
+.fk-drawer.open{transform:translateX(0);}
+.fk-drawer-head{padding:28px 32px 24px;border-bottom:1px solid var(--fk-line);display:flex;align-items:flex-start;gap:16px;position:sticky;top:0;background:var(--fk-bg-2);z-index:2;}
+.fk-drawer-id .pre{font-family:var(--fk-mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--fk-text-4);margin-bottom:4px;}
+.fk-drawer-id h2{font-family:var(--fk-display);font-weight:300;font-size:20px;letter-spacing:-0.01em;margin:0 0 4px;color:var(--fk-text);}
+.fk-drawer-id .role{font-size:12px;color:var(--fk-text-4);}
+.fk-drawer-id .org{font-size:12px;color:var(--fk-text-3);font-weight:400;margin-top:2px;}
+.fk-drawer-close{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:var(--fk-text-2);background:rgba(255,255,255,0.04);transition:background 160ms ease;}
+.fk-drawer-close:hover{background:rgba(255,255,255,0.1);color:var(--fk-text);}
+.fk-drawer-body{padding:28px 32px 40px;}
+.fk-drawer-body h3{font-family:var(--fk-mono);font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--fk-text-3);margin:0 0 12px;}
+.fk-drawer-talk-title{font-family:var(--fk-sans);font-weight:400;font-size:16px;line-height:1.5;margin:0 0 12px;color:var(--fk-text);}
+.fk-drawer-body p{color:var(--fk-text-2);font-size:15px;line-height:1.7;margin:0 0 24px;}
+.fk-drawer-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:24px;padding-top:24px;border-top:1px solid var(--fk-line);}
+.fk-drawer-tag{padding:6px 12px;border:1px solid var(--fk-line);border-radius:999px;font-size:12px;color:var(--fk-text-2);}
+
+/* AGENDA */
+.fk-agenda{background:var(--fk-bg-2);border-top:1px solid var(--fk-line);border-bottom:1px solid var(--fk-line);}
+.fk-agenda-grid{border-top:1px solid var(--fk-line);}
+.fk-agenda-row{display:grid;grid-template-columns:140px 180px 1fr 120px;gap:24px;padding:24px 0;border-bottom:1px solid var(--fk-line);align-items:center;}
+@media(max-width:760px){.fk-agenda-row{grid-template-columns:1fr;gap:6px;padding:16px 0;}}
+.fk-agenda-time{font-family:var(--fk-mono);font-weight:400;font-size:14px;letter-spacing:0.04em;color:var(--fk-text-2);}
+.fk-agenda-type .pill{display:inline-block;padding:4px 10px;border:1px solid var(--fk-line);border-radius:999px;font-family:var(--fk-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--fk-text-3);}
+.fk-agenda-type .pill.key{color:var(--fk-gold);border-color:var(--fk-gold-soft);background:var(--fk-gold-soft);}
+.fk-agenda-type .pill.track{color:rgba(61,139,255,0.9);border-color:rgba(61,139,255,0.2);background:rgba(61,139,255,0.08);}
+.fk-agenda-title{font-size:16px;font-weight:400;color:var(--fk-text);letter-spacing:-0.01em;}
+.fk-agenda-title .sub{color:var(--fk-text-3);margin-left:8px;font-weight:400;font-size:14px;}
+.fk-agenda-room{font-family:var(--fk-mono);font-size:12px;letter-spacing:0.1em;color:var(--fk-text-3);text-align:right;}
+@media(max-width:760px){.fk-agenda-room{text-align:left;}}
+
+/* VENUE */
+.fk-venue-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--fk-line);border:1px solid var(--fk-line);}
+@media(max-width:760px){.fk-venue-grid{grid-template-columns:1fr;}}
+.fk-venue-card{padding:36px;background:var(--fk-bg);display:flex;flex-direction:column;gap:14px;}
+.fk-venue-card .pre{font-family:var(--fk-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--fk-text-4);}
+.fk-venue-card h3{font-family:var(--fk-display);font-weight:300;font-size:25px;letter-spacing:-0.01em;margin:0;color:var(--fk-text);}
+.fk-venue-card .meta{display:grid;grid-template-columns:1fr;gap:0;margin-top:8px;}
+.fk-venue-card .meta-row{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-top:1px solid var(--fk-line);font-size:13px;}
+.fk-venue-card .meta-row .k{color:var(--fk-text-4);font-family:var(--fk-mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;}
+.fk-venue-card .meta-row .v{color:var(--fk-text-2);font-weight:400;text-align:right;}
+
+/* FINAL CTA */
+.fk-final-cta{text-align:center;padding:120px 0 160px;}
+.fk-final-cta h2{font-family:var(--fk-display);font-weight:200;font-size:clamp(34px,5.6vw,84px);line-height:1.0;letter-spacing:-0.025em;margin:0 0 24px;}
+.fk-final-cta h2 .l1{display:block;color:var(--fk-text);}
+.fk-final-cta h2 .l2{display:block;color:var(--fk-text-3);}
+.fk-final-cta p{max-width:480px;margin:0 auto 36px;color:var(--fk-text-3);font-size:15px;line-height:1.7;}
+.fk-final-cta .countdown{display:inline-flex;margin-top:48px;gap:1px;background:var(--fk-line);border:1px solid var(--fk-line);border-radius:4px;overflow:hidden;}
+.fk-final-cta .countdown .unit{padding:18px 28px;background:var(--fk-bg-2);text-align:center;min-width:100px;}
+.fk-final-cta .countdown .num{font-family:var(--fk-display);font-weight:200;font-size:28px;line-height:1;letter-spacing:-0.01em;color:var(--fk-text);}
+.fk-final-cta .countdown .lab{margin-top:6px;font-family:var(--fk-mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--fk-text-4);}
+
+/* FOOTER */
+.fk-footer{border-top:1px solid var(--fk-line);padding:40px 0 80px;}
+.fk-footer-grid{display:grid;grid-template-columns:1fr auto;gap:32px;align-items:flex-end;}
+.fk-footer-brand{font-family:var(--fk-mono);font-weight:400;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:var(--fk-text-3);}
+.fk-footer-mono{font-family:var(--fk-mono);font-size:10px;letter-spacing:0.14em;color:var(--fk-text-4);text-transform:uppercase;margin-top:6px;}
+.fk-footer-legal{font-size:11px;color:var(--fk-text-4);text-align:right;line-height:1.6;}
+
+/* FLOATING BAR */
+.fk-float-bar{position:fixed;bottom:24px;left:50%;z-index:70;display:flex;align-items:center;gap:16px;padding:8px 8px 8px 24px;background:rgba(15,18,24,0.86);backdrop-filter:blur(20px) saturate(140%);-webkit-backdrop-filter:blur(20px) saturate(140%);border:1px solid var(--fk-line-strong);border-radius:999px;box-shadow:0 24px 60px -20px rgba(0,0,0,0.6),0 0 0 1px rgba(255,255,255,0.04) inset;opacity:0;pointer-events:none;transform:translateX(-50%) translateY(20px);transition:opacity 400ms ease,transform 400ms ease;max-width:calc(100% - 32px);}
+.fk-float-bar.visible{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0);}
+.fk-float-info{display:flex;flex-direction:column;gap:2px;}
+.fk-float-info .title{font-size:13px;font-weight:600;color:var(--fk-text);letter-spacing:-0.01em;}
+.fk-float-info .sub{font-family:var(--fk-mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--fk-text-3);}
+.fk-float-cta{padding:14px 22px;background:var(--fk-text);color:var(--fk-bg);border-radius:999px;font-size:14px;font-weight:600;letter-spacing:-0.01em;display:inline-flex;align-items:center;gap:8px;transition:transform 150ms ease;}
+.fk-float-cta:hover{transform:translateY(-1px);}
+.fk-float-cta .seats{font-family:var(--fk-mono);font-size:10px;font-weight:500;letter-spacing:0.15em;padding:3px 8px;background:rgba(0,0,0,0.12);border-radius:999px;}
+@media(max-width:600px){.fk-float-bar{padding:6px 6px 6px 16px;gap:10px;}.fk-float-info .title{font-size:12px;}.fk-float-info .sub{font-size:9px;letter-spacing:0.14em;}.fk-float-cta{padding:11px 16px;font-size:13px;}}
+
+/* MODAL */
+.fk-modal-overlay{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:grid;place-items:center;padding:24px;opacity:0;pointer-events:none;transition:opacity 220ms ease;}
+.fk-modal-overlay.open{opacity:1;pointer-events:auto;}
+.fk-modal{width:100%;max-width:560px;max-height:calc(100vh - 48px);overflow-y:auto;background:var(--fk-bg-2);border:1px solid var(--fk-line-strong);border-radius:16px;position:relative;transform:translateY(12px) scale(0.98);opacity:0;transition:transform 280ms cubic-bezier(0.2,0.9,0.3,1.2),opacity 220ms ease;box-shadow:0 40px 100px -30px rgba(0,0,0,0.7);}
+.fk-modal-overlay.open .fk-modal{transform:translateY(0) scale(1);opacity:1;}
+.fk-modal-head{padding:32px 32px 24px;border-bottom:1px solid var(--fk-line);position:relative;}
+.fk-modal-pre{font-family:var(--fk-mono);font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(61,139,255,0.8);margin-bottom:8px;}
+.fk-modal-head h2{font-family:var(--fk-display);font-weight:300;font-size:20px;letter-spacing:-0.01em;margin:0 0 6px;color:var(--fk-text);}
+.fk-modal-head .sub{font-size:13px;color:var(--fk-text-3);margin:0;}
+.fk-modal-close{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:var(--fk-text-2);background:rgba(255,255,255,0.04);transition:background 160ms ease;}
+.fk-modal-close:hover{background:rgba(255,255,255,0.1);color:var(--fk-text);}
+.fk-modal-body{padding:28px 32px 32px;}
+.fk-form-row{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.fk-form-row.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.fk-form-row.grid-2>*{margin-bottom:0;}
+.fk-form-label{font-family:var(--fk-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--fk-text-3);display:flex;align-items:center;gap:6px;}
+.fk-form-label .req{color:var(--fk-accent);}
+.fk-input,.fk-select{width:100%;padding:12px 14px;background:var(--fk-bg);border:1px solid var(--fk-line);border-radius:8px;font-size:15px;color:var(--fk-text);font-family:var(--fk-sans);transition:border-color 150ms ease,background 150ms ease;outline:none;}
+.fk-input::placeholder{color:var(--fk-text-4);}
+.fk-input:focus,.fk-select:focus{border-color:var(--fk-accent);background:rgba(61,139,255,0.03);}
+.fk-input.error{border-color:var(--fk-red);background:rgba(255,71,87,0.04);}
+.fk-input-error{font-size:12px;color:var(--fk-red);margin-top:2px;display:flex;align-items:center;gap:6px;}
+.fk-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='1.5'%3E%3Cpath d='M3 5l3 3 3-3'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:12px;padding-right:36px;}
+.fk-select option{background:var(--fk-bg-2);color:var(--fk-text);}
+.fk-checkbox-group{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;}
+@media(max-width:480px){.fk-checkbox-group{grid-template-columns:1fr;}}
+.fk-checkbox{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--fk-line);border-radius:8px;cursor:pointer;font-size:13px;color:var(--fk-text-2);transition:all 150ms ease;}
+.fk-checkbox:hover{border-color:var(--fk-line-strong);color:var(--fk-text);}
+.fk-checkbox.checked{border-color:var(--fk-accent);background:rgba(61,139,255,0.08);color:var(--fk-text);}
+.fk-checkbox .box{width:16px;height:16px;border:1.5px solid var(--fk-line-strong);border-radius:4px;display:grid;place-items:center;transition:all 150ms ease;flex-shrink:0;}
+.fk-checkbox.checked .box{background:var(--fk-accent);border-color:var(--fk-accent);}
+.fk-checkbox .box svg{width:12px;height:12px;color:white;opacity:0;}
+.fk-checkbox.checked .box svg{opacity:1;}
+.fk-consent{display:flex;align-items:flex-start;gap:10px;margin-top:8px;font-size:13px;color:var(--fk-text-2);cursor:pointer;line-height:1.5;}
+.fk-consent .box{width:16px;height:16px;border:1.5px solid var(--fk-line-strong);border-radius:4px;display:grid;place-items:center;flex-shrink:0;margin-top:2px;}
+.fk-consent.checked .box{background:var(--fk-accent);border-color:var(--fk-accent);}
+.fk-consent .box svg{width:12px;height:12px;color:white;opacity:0;}
+.fk-consent.checked .box svg{opacity:1;}
+.fk-modal-foot{padding:20px 32px 28px;border-top:1px solid var(--fk-line);background:var(--fk-bg);border-radius:0 0 16px 16px;display:flex;align-items:center;gap:12px;flex-direction:column;}
+.fk-submit{width:100%;padding:16px;background:var(--fk-accent-strong);color:white;border-radius:999px;font-size:15px;font-weight:600;letter-spacing:-0.01em;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:all 180ms ease;box-shadow:0 0 0 1px rgba(255,255,255,0.06) inset,0 16px 40px -8px var(--fk-glow);}
+.fk-submit:hover{transform:translateY(-1px);}
+.fk-submit-note{font-size:11px;color:var(--fk-text-3);text-align:center;}
+.fk-success{padding:56px 40px 40px;text-align:center;}
+.fk-success-icon{width:64px;height:64px;border-radius:50%;background:var(--fk-accent-soft);border:1px solid var(--fk-accent-soft);display:grid;place-items:center;margin:0 auto 24px;position:relative;color:var(--fk-accent);}
+.fk-success-icon::before{content:"";position:absolute;inset:-8px;border-radius:50%;border:1px solid var(--fk-accent-soft);animation:fk-ring 1.6s ease-out infinite;}
+@keyframes fk-ring{0%{transform:scale(0.9);opacity:0.8;}100%{transform:scale(1.4);opacity:0;}}
+.fk-success h2{font-family:var(--fk-display);font-weight:300;font-size:20px;letter-spacing:-0.01em;margin:0 0 12px;color:var(--fk-text);}
+.fk-success p{color:var(--fk-text-2);margin:0 0 24px;font-size:14px;line-height:1.6;}
+.fk-success-ticket{background:var(--fk-bg);border:1px dashed var(--fk-line-strong);border-radius:8px;padding:20px;margin:24px 0;text-align:left;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;}
+.fk-success-ticket .conf-label{font-family:var(--fk-mono);font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--fk-text-3);margin-bottom:4px;}
+.fk-success-ticket .conf-no{font-family:var(--fk-mono);font-size:17px;font-weight:600;letter-spacing:0.08em;color:var(--fk-text);}
+.fk-success-ticket .qr{width:64px;height:64px;background:repeating-linear-gradient(0deg,var(--fk-text) 0 2px,transparent 2px 4px),repeating-linear-gradient(90deg,var(--fk-text) 0 2px,transparent 2px 4px);border-radius:4px;opacity:0.6;}
+
+/* FADE UP */
+.fk-fade-up{opacity:0;transform:translateY(24px);transition:opacity 700ms ease,transform 700ms ease;}
+.fk-fade-up.in{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+  <div id="root"></div>
+
+<script>
+window.FK_EVENT = {
+  name: "FORESIGHT KOREA 2027",
+  tagline: "미래 인재의 시대를 여는 단 하루",
+  date: "2027.05.20",
+  dateFull: "2027년 5월 20일 (목)",
+  time: "09:00 – 18:00 KST",
+  venue: "COEX Grand Ballroom, Seoul",
+  venueKor: "서울 코엑스 그랜드볼룸",
+  seatsLabel: "선착순 1,500석",
+  ticketLabel: "Early Bird · 무료 초청",
+  organizer: "Hunet 휴넷",
+  themeEyebrow: "THE THEME · 2027",
+  themeL1: "Reframe",
+  themeL2: "the Future",
+  themeL3: "of Learning.",
+  themeIntro: "지난 10년의 학습은 콘텐츠를 늘리는 일이었습니다.\n다음 10년의 학습은, 사람을 다시 정의하는 일입니다.",
+  themeCols: [
+    { h: "THE QUESTION", p: "AI가 일을 대신하는 시대, 사람은 무엇을 더 배워야 하는가. 기술과 직무의 절반이 5년 안에 다시 쓰여지는 지금, 우리는 학습의 좌표축 자체를 다시 설계해야 합니다." },
+    { h: "THE FORESIGHT", p: "Foresight Korea 2027은 글로벌 학자·CHRO·AI 리더가 한자리에 모여, 2030년의 일터와 인재상을 미리 펼쳐 보입니다. 단 하루, 단 하나의 무대에서." }
+  ],
+  tracks: [
+    { id:"A", code:"TRACK A", title:"AI × Learning", sub:"AI와 학습의 재설계", desc:"거대언어모델 이후의 학습 경험, 개인화 코치, AI 튜터링, 멀티모달 평가까지 — 학습을 다시 발명하는 사람들의 이야기.", tags:["LLM","Adaptive Learning","AI Tutor","Assessment"], speakers:[
+      { initials:"TBA", name:"공개 예정", role:"Keynote · AI Research", org:"Global AI Lab", talk:"Beyond the Tutor: 학습은 어떻게 다시 쓰이는가", tba:true },
+      { initials:"KK", name:"김기훈", role:"Chief AI Officer", org:"휴넷 AI 연구소", talk:"한국형 LLM 기반 학습 코치, 12개월의 실험" },
+      { initials:"TBA", name:"공개 예정", role:"VP, Product", org:"Global EdTech", talk:"Adaptive Learning at Scale", tba:true },
+      { initials:"PJ", name:"박지원", role:"Head of HRD", org:"S전자", talk:"조직 내 AI 도입과 학습 ROI의 재정의" }
+    ]},
+    { id:"B", code:"TRACK B", title:"Future of Work", sub:"일하는 방식의 다음 10년", desc:"스킬 기반 조직, 하이브리드 워크, 자율적 팀, 그리고 AI 동료. 일이 변할 때 사람과 학습은 어떻게 함께 진화하는가.", tags:["Skills-based Org","Hybrid","Autonomy","AI Coworkers"], speakers:[
+      { initials:"TBA", name:"공개 예정", role:"Professor", org:"Wharton / MIT", talk:"Skills-Based Organization 2.0", tba:true },
+      { initials:"LS", name:"이수민", role:"CHRO", org:"K카드", talk:"직무에서 스킬로 — HR 운영체제의 전환" },
+      { initials:"JS", name:"정상우", role:"Founder", org:"Future Work Lab", talk:"AI 동료와 함께 일하기: 팀 디자인의 변화" },
+      { initials:"TBA", name:"공개 예정", role:"Author", org:"글로벌 베스트셀러", talk:"The New Career Operating System", tba:true }
+    ]},
+    { id:"C", code:"TRACK C", title:"Leadership 2030", sub:"리더십의 새 좌표", desc:"변화의 속도가 사람을 앞서가는 시대 — 의사결정·문화·임팩트. 다음 세대의 리더는 무엇을 다르게 하는가.", tags:["Decision Making","Culture","Impact","Coaching"], speakers:[
+      { initials:"CJ", name:"최정인", role:"전 CEO", org:"글로벌 컨설팅펌", talk:"불확실성의 리더십: Foresight as Strategy" },
+      { initials:"TBA", name:"공개 예정", role:"Executive Coach", org:"Stanford GSB", talk:"The Inner Operating System of Leaders", tba:true },
+      { initials:"YS", name:"윤상호", role:"대표", org:"신생 IT 스타트업", talk:"20대 CEO가 본 30년차 조직의 미래" },
+      { initials:"TBA", name:"공개 예정", role:"Chair", org:"Global HR Forum", talk:"Boardroom Conversations: HR in 2030", tba:true }
+    ]},
+    { id:"D", code:"TRACK D", title:"Talent & Culture", sub:"인재와 문화의 다음 챕터", desc:"MZ 다음의 세대, 글로벌 인재 전쟁, 학습 문화. 사람을 끌어들이고 머물게 만드는 조직의 비밀.", tags:["Next-gen","Global Talent","Culture","Engagement"], speakers:[
+      { initials:"HK", name:"한경수", role:"People & Culture VP", org:"글로벌 테크기업", talk:"Culture as Product: 문화의 제품화" },
+      { initials:"MS", name:"문선아", role:"조직심리학 교수", org:"서울대학교", talk:"Z 다음 세대, 무엇이 다를까" },
+      { initials:"TBA", name:"공개 예정", role:"Chief People Officer", org:"Fortune 500", talk:"Global Talent Pipeline 2027", tba:true },
+      { initials:"SH", name:"서희원", role:"Founder", org:"Learning Studio", talk:"학습 문화를 디자인한다는 것" }
+    ]}
+  ],
+  agenda: [
+    { time:"08:30", type:"open", typeLabel:"OPEN",    title:"등록 및 네트워킹 라운지", room:"Lobby" },
+    { time:"09:30", type:"key",  typeLabel:"KEYNOTE", title:"Opening Keynote", sub:"Beyond Learning — 인재의 시대를 다시 정의하다", room:"MAIN STAGE" },
+    { time:"10:30", type:"track",typeLabel:"TRACK",   title:"Track Session I", sub:"A / B / C / D 동시 진행", room:"ROOM A–D" },
+    { time:"12:00", type:"open", typeLabel:"BREAK",   title:"Networking Lunch", sub:"휴넷 인사이트 라운지", room:"Hall 3" },
+    { time:"13:30", type:"key",  typeLabel:"KEYNOTE", title:"Mainstage Conversation", sub:"AI, Work, and the Next Decade", room:"MAIN STAGE" },
+    { time:"14:30", type:"track",typeLabel:"TRACK",   title:"Track Session II", sub:"A / B / C / D 동시 진행", room:"ROOM A–D" },
+    { time:"16:00", type:"track",typeLabel:"TRACK",   title:"Track Session III", sub:"Deep Dive Workshops", room:"ROOM A–D" },
+    { time:"17:30", type:"key",  typeLabel:"CLOSE",   title:"Closing & Foresight Awards", sub:"한 해를 바꿀 인재 5인 발표", room:"MAIN STAGE" }
+  ]
+};
+</script>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useMemo } = React;
+
+// Icons
+const IconArrow = ({ className = "fk-arrow" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M5 12h14M13 5l7 7-7 7" />
+  </svg>
+);
+const IconCheck = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M5 12l5 5L20 7" />
+  </svg>
+);
+const IconClose = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18 6L6 18M6 6l12 12" />
+  </svg>
+);
+
+// Hooks
+function useScrolled(threshold = 40) {
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > threshold);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [threshold]);
+  return scrolled;
+}
+
+function useFadeUp() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        }
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -80px 0px" }
+    );
+    el.querySelectorAll(".fk-fade-up").forEach(n => io.observe(n));
+    return () => io.disconnect();
+  }, []);
+  return ref;
+}
+
+// TopNav
+function TopNav({ onApply }) {
+  const scrolled = useScrolled(20);
+  return (
+    <nav className={`fk-nav ${scrolled ? "scrolled" : ""}`}>
+      <a href="#top" className="fk-nav-brand">
+        <span className="fk-nav-brand-mark">F</span>
+        <span>FORESIGHT&nbsp;KOREA&nbsp;2027</span>
+      </a>
+      <div className="fk-nav-links">
+        <a href="#theme">주제</a>
+        <a href="#keynote">키노트</a>
+        <a href="#tracks">트랙</a>
+        <a href="#agenda">아젠다</a>
+        <a href="#venue">장소</a>
+      </div>
+      <button className="fk-nav-cta" onClick={onApply}>신청하기</button>
+    </nav>
+  );
+}
+
+// Hero Stars
+function HeroStars() {
+  const stars = useMemo(() => {
+    const arr = [];
+    for (let i = 0; i < 60; i++) {
+      const x = Math.sin(i * 12.9898) * 43758.5453 % 1;
+      const y = Math.sin(i * 78.233) * 43758.5453 % 1;
+      const sz = Math.abs(Math.sin(i * 5.123) * 1000 % 1);
+      const max = 0.2 + Math.abs(x * y) * 0.6;
+      arr.push({
+        left: `${Math.abs(x) * 100}%`,
+        top: `${Math.abs(y) * 100}%`,
+        delay: `${i % 9 * 0.35}s`,
+        starDelay: `${i % 11 * 80}ms`,
+        size: sz > 0.85 ? 3 : sz > 0.6 ? 2 : 1,
+        max
+      });
+    }
+    return arr;
+  }, []);
+  return (
+    <div className="fk-stars" aria-hidden="true">
+      {stars.map((s, i) => (
+        <span key={i} style={{ left: s.left, top: s.top, width: `${s.size}px`, height: `${s.size}px`, animationDelay: `${s.starDelay}, ${s.delay}`, "--max": s.max }} />
+      ))}
+    </div>
+  );
+}
+
+// Hero
+function Hero({ event, onApply }) {
+  const heroRef = useRef(null);
+
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+    const id1 = requestAnimationFrame(() => {
+      const id2 = requestAnimationFrame(() => el.classList.add("ready"));
+      el.__readyRaf = id2;
+    });
+    return () => { cancelAnimationFrame(id1); if (el.__readyRaf) cancelAnimationFrame(el.__readyRaf); };
+  }, []);
+
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+    let raf = 0;
+    let pending = { x: 0.5, y: 0.5 };
+    let current = { x: 0.5, y: 0.5 };
+    const tick = () => {
+      current.x += (pending.x - current.x) * 0.12;
+      current.y += (pending.y - current.y) * 0.12;
+      el.style.setProperty("--mx", current.x.toFixed(4));
+      el.style.setProperty("--my", current.y.toFixed(4));
+      el.style.setProperty("--px", (current.x * 2 - 1).toFixed(4));
+      el.style.setProperty("--py", (current.y * 2 - 1).toFixed(4));
+      const dx = Math.abs(pending.x - current.x);
+      const dy = Math.abs(pending.y - current.y);
+      if (dx > 0.0015 || dy > 0.0015) raf = requestAnimationFrame(tick); else raf = 0;
+    };
+    const onMove = (e) => {
+      const r = el.getBoundingClientRect();
+      pending.x = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+      pending.y = Math.max(0, Math.min(1, (e.clientY - r.top) / r.height));
+      if (!raf) raf = requestAnimationFrame(tick);
+    };
+    const onLeave = () => { pending.x = 0.5; pending.y = 0.5; if (!raf) raf = requestAnimationFrame(tick); };
+    el.addEventListener("mousemove", onMove);
+    el.addEventListener("mouseleave", onLeave);
+    return () => { el.removeEventListener("mousemove", onMove); el.removeEventListener("mouseleave", onLeave); if (raf) cancelAnimationFrame(raf); };
+  }, []);
+
+  return (
+    <section className="fk-hero" id="top" ref={heroRef}>
+      <div className="fk-hero-bg">
+        <div className="fk-hero-orb-wrap">
+          <div className="fk-hero-orb" />
+          <div className="fk-hero-orb-2" />
+          <div className="fk-hero-orb-3" />
+        </div>
+        <div className="fk-hero-grid" />
+        <HeroStars />
+        <div className="fk-hero-spotlight" />
+        <div className="fk-hero-scan" />
+      </div>
+      <div className="fk-hero-inner fk-container">
+        <div className="fk-hero-meta">
+          <span className="dot" />
+          <span>{event.date} · COEX SEOUL</span>
+          <span style={{ color: "var(--fk-text-4)" }}>·</span>
+          <span>{event.ticketLabel}</span>
+        </div>
+        <h1 className="fk-hero-title">
+          <span className="fk-title-line l1"><span>FORESIGHT</span></span>
+          <span className="fk-title-line l2"><span>KOREA&nbsp;<span className="accent" style={{ fontSize: "clamp(50px,8vw,140px)", fontFamily: "var(--fk-display)", lineHeight: "0.95" }}>2027</span></span></span>
+        </h1>
+        <p className="fk-hero-sub">
+          AI가 일을 다시 쓰는 시대,<br />
+          한국이 먼저 그려보는 <strong style={{ color: "var(--fk-text)", fontWeight: 600 }}>다음 10년의 학습과 인재</strong>.<br />
+          글로벌 학자·CHRO·AI 리더가 단 하루, 단 하나의 무대에 모입니다.
+        </p>
+        <div className="fk-hero-actions">
+          <button className="fk-btn fk-btn-glow" onClick={onApply}>무료 신청하기 <IconArrow /></button>
+          <a href="#theme" className="fk-btn fk-btn-ghost">행사 둘러보기 <IconArrow /></a>
+        </div>
+        <div className="fk-hero-stats">
+          <div className="fk-hero-stat"><div className="fk-hero-stat-val">12+</div><div className="fk-hero-stat-lab">Global Speakers</div></div>
+          <div className="fk-hero-stat"><div className="fk-hero-stat-val">4</div><div className="fk-hero-stat-lab">Concurrent Tracks</div></div>
+          <div className="fk-hero-stat"><div className="fk-hero-stat-val">1,500</div><div className="fk-hero-stat-lab">HRD Leaders</div></div>
+          <div className="fk-hero-stat"><div className="fk-hero-stat-val">1</div><div className="fk-hero-stat-lab">Day · One Stage</div></div>
+        </div>
+      </div>
+      <div className="fk-scroll-cue"><span>SCROLL</span><span className="line" /></div>
+    </section>
+  );
+}
+
+// Marquee
+function Marquee({ event }) {
+  const items = [event.date,"★","COEX GRAND BALLROOM","★","1 DAY · ONE STAGE","★","12+ GLOBAL SPEAKERS","★","4 CONCURRENT TRACKS","★","FREE INVITATION","★","FORESIGHT KOREA 2027","★"];
+  const loop = [...items, ...items];
+  return (
+    <div className="fk-marquee" aria-hidden="true">
+      <div className="fk-marquee-track">
+        {loop.map((t, i) => <span key={i} className={t === "★" ? "star" : ""}>{t}</span>)}
+      </div>
+    </div>
+  );
+}
+
+// Theme
+function Theme({ event }) {
+  const ref = useFadeUp();
+  return (
+    <section className="fk-theme fk-section" id="theme" ref={ref}>
+      <div className="fk-container">
+        <div className="fk-section-head fk-fade-up">
+          <div className="fk-eyebrow">{event.themeEyebrow}</div>
+          <p className="fk-section-lead" style={{ whiteSpace: "pre-line" }}>{event.themeIntro}</p>
+        </div>
+        <h2 className="fk-theme-headline fk-fade-up">
+          <span className="l1">{event.themeL1}</span>
+          <span className="l2">{event.themeL2}</span>
+          <span className="l3">{event.themeL3}</span>
+        </h2>
+        <div className="fk-theme-cols fk-fade-up">
+          {event.themeCols.map((c, i) => (
+            <div className="col" key={i}>
+              <h4>{c.h}</h4>
+              <p>{c.p}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Keynote
+function Keynote({ onApply }) {
+  const ref = useFadeUp();
+  return (
+    <section className="fk-keynote fk-section" id="keynote" ref={ref}>
+      <div className="fk-container">
+        <div className="fk-section-head fk-fade-up">
+          <div className="fk-eyebrow gold">THE OPENING KEYNOTE</div>
+          <h2 className="fk-section-title" style={{ lineHeight: "1.25" }}>
+            한 사람이 무대에 오르면,<br />
+            <span className="muted">한 시대의 좌표가 바뀝니다.</span>
+          </h2>
+        </div>
+        <div className="fk-keynote-stage">
+          <div className="fk-keynote-photo fk-fade-up">
+            <span className="corner tl" /><span className="corner tr" /><span className="corner bl" /><span className="corner br" />
+            <div className="badge"><span className="dot" /> KEYNOTE · 09:30</div>
+            <div className="tba-overlay">TBA</div>
+          </div>
+          <div className="fk-keynote-body fk-fade-up">
+            <div className="pre">KEYNOTE SPEAKER · 2027.05.20</div>
+            <h2>The Speaker<br /><span className="accent">Will Be Unveiled.</span></h2>
+            <p style={{ color: "var(--fk-text-2)", fontSize: 17, lineHeight: 1.7, marginTop: 16 }}>
+              2027년의 인재상을 단 60분 안에 다시 쓰게 할, 세계가 주목하는 단 한 명의 연사. 무대 위 첫 30초가 한국 HRD의 다음 10년을 결정합니다.
+            </p>
+            <div className="talk">
+              <div className="label">OPENING TALK</div>
+              <h3>Beyond Learning — 인재의 시대를 다시 정의하다</h3>
+              <p>AI 이후의 일터에서 사람이 가지는 새로운 의미. 학습은 어떻게 '콘텐츠를 소비하는 일'에서 '자신을 갱신하는 운영체제'로 진화하는가.</p>
+            </div>
+            <div className="fk-keynote-meta">
+              <div className="item"><div className="k">Announcement</div><div className="v">2027.03 공개 예정</div></div>
+              <div className="item"><div className="k">Reserve</div><div className="v">
+                <button className="fk-btn fk-btn-ghost" style={{ padding: "8px 14px", fontSize: 13 }} onClick={onApply}>좌석 선점하기 <IconArrow /></button>
+              </div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Speaker Photo
+function SpeakerPhoto({ sp, large }) {
+  if (sp.img) return <div className={`fk-photo ${large ? "lg" : ""}`} style={{ backgroundImage: `url(${sp.img})`, backgroundSize: "cover", backgroundPosition: "center" }} />;
+  if (sp.tba) return (
+    <div className={`fk-photo tba ${large ? "lg" : ""}`}>
+      <div className="fk-photo-tba-mark">TBA</div>
+    </div>
+  );
+  return (
+    <div className={`fk-photo ${large ? "lg" : ""}`}>
+      <div className="fk-photo-initials">{sp.initials}</div>
+    </div>
+  );
+}
+
+// Track Block
+function TrackBlock({ track, index, onSpeaker }) {
+  return (
+    <article className="fk-trackblock fk-fade-up" id={`track-${track.id.toLowerCase()}`}>
+      <header className="fk-trackblock-head">
+        <div className="fk-trackblock-code">
+          <span className="num">{String(index + 1).padStart(2, "0")}</span>
+          <span className="lbl">{track.code}</span>
+        </div>
+        <div className="fk-trackblock-meta">
+          <h3 className="fk-trackblock-title">{track.title}<span className="sub">{track.sub}</span></h3>
+          <p className="fk-trackblock-desc">{track.desc}</p>
+          <div className="fk-trackblock-tags">
+            {track.tags.map((t, i) => <span key={i} className="tag-chip">{t}</span>)}
+          </div>
+        </div>
+      </header>
+      <div className="fk-speakers-grid-v2">
+        {track.speakers.map((sp, i) => (
+          <button type="button" key={i} className={`fk-speaker-card-v2 ${sp.tba ? "tba" : ""}`} onClick={() => onSpeaker({ ...sp, track })}>
+            <SpeakerPhoto sp={sp} large />
+            <div className="fk-speaker-card-v2-body">
+              <div className="fk-speaker-num">{`0${i + 1}`}</div>
+              <h4 className="fk-speaker-card-v2-name">{sp.name}</h4>
+              <p className="fk-speaker-card-v2-role">{sp.role}</p>
+              <p className="fk-speaker-card-v2-org">{sp.org}</p>
+              <div className="fk-speaker-card-v2-talk"><span className="label">TALK</span>{sp.talk}</div>
+            </div>
+          </button>
+        ))}
+      </div>
+    </article>
+  );
+}
+
+// Tracks
+function Tracks({ event, onSpeaker }) {
+  const ref = useFadeUp();
+  return (
+    <section className="fk-section" id="tracks" ref={ref}>
+      <div className="fk-container">
+        <div className="fk-section-head fk-fade-up">
+          <div className="fk-eyebrow">CONCURRENT TRACKS · 4</div>
+          <h2 className="fk-section-title" style={{ marginTop: 16, lineHeight: "1.25" }}>
+            네 개의 무대,<br /><span className="muted">하루 동안 펼쳐지는 미래.</span>
+          </h2>
+          <p className="fk-section-lead">A, B, C, D — 각 트랙은 단 하루 동시에 진행됩니다. 좌석 신청 시 관심 트랙을 선택해주세요.</p>
+        </div>
+        <div className="fk-trackblocks">
+          {event.tracks.map((t, i) => <TrackBlock key={t.id} track={t} index={i} onSpeaker={onSpeaker} />)}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Speaker Drawer
+function SpeakerDrawer({ speaker, onClose }) {
+  useEffect(() => {
+    if (!speaker) return;
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [speaker, onClose]);
+  const open = !!speaker;
+  const sp = speaker || {};
+  return (
+    <>
+      <div className={`fk-drawer-overlay ${open ? "open" : ""}`} onClick={onClose} />
+      <aside className={`fk-drawer ${open ? "open" : ""}`} aria-hidden={!open}>
+        <div className="fk-drawer-head">
+          <div className="fk-drawer-photo-wrap"><SpeakerPhoto sp={sp} large={false} /></div>
+          <div className="fk-drawer-id">
+            <div className="pre">{sp.track ? sp.track.code : ""}</div>
+            <h2>{sp.name || ""}</h2>
+            <div className="role">{sp.role || ""}</div>
+            <div className="org">{sp.org || ""}</div>
+          </div>
+          <button className="fk-drawer-close" onClick={onClose} aria-label="Close"><IconClose /></button>
+        </div>
+        <div className="fk-drawer-body">
+          <h3>SESSION TITLE</h3>
+          <div className="fk-drawer-talk-title">{sp.talk || ""}</div>
+          {sp.tba
+            ? <p>해당 세션의 연사는 곧 공개됩니다. 사전 신청자에게 우선 안내드립니다.</p>
+            : <p>{sp.role}로 활동하며 한국 HRD·AI·조직 분야의 최전선에서 새로운 학습 모델을 실험해 온 인물. 이번 무대에서는 지난 12개월간의 현장 데이터와 함께, 2030년의 인재상을 어떻게 설계할지 공유합니다.</p>
+          }
+          <div className="fk-drawer-tags">
+            {(sp.track && sp.track.tags || []).map((t, i) => <span key={i} className="fk-drawer-tag">{t}</span>)}
+          </div>
+        </div>
+      </aside>
+    </>
+  );
+}
+
+// Agenda
+function Agenda({ event }) {
+  const ref = useFadeUp();
+  return (
+    <section className="fk-agenda fk-section" id="agenda" ref={ref}>
+      <div className="fk-container">
+        <div className="fk-section-head fk-fade-up">
+          <div className="fk-eyebrow">PROGRAM · ONE DAY</div>
+          <h2 className="fk-section-title">아침부터 저녁까지,<br /><span className="muted">하루로 압축한 미래.</span></h2>
+        </div>
+        <div className="fk-agenda-grid fk-fade-up">
+          {event.agenda.map((row, i) => (
+            <div className="fk-agenda-row" key={i}>
+              <div className="fk-agenda-time">{row.time}</div>
+              <div className="fk-agenda-type">
+                <span className={`pill ${row.type === "key" ? "key" : row.type === "track" ? "track" : ""}`}>{row.typeLabel}</span>
+              </div>
+              <div className="fk-agenda-title">{row.title}{row.sub && <span className="sub">· {row.sub}</span>}</div>
+              <div className="fk-agenda-room">{row.room}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Venue
+function Venue({ event, onApply }) {
+  const ref = useFadeUp();
+  return (
+    <section className="fk-section" id="venue" ref={ref}>
+      <div className="fk-container">
+        <div className="fk-section-head fk-fade-up">
+          <div className="fk-eyebrow">VENUE & DETAILS</div>
+          <h2 className="fk-section-title" style={{ lineHeight: "1.25" }}>서울의 한가운데,<br /><span className="muted">미래가 모이는 무대.</span></h2>
+        </div>
+        <div className="fk-venue-grid fk-fade-up">
+          <div className="fk-venue-card">
+            <div className="pre">THE VENUE</div>
+            <h3>COEX<br />Grand Ballroom</h3>
+            <div style={{ color: "var(--fk-text-2)", fontSize: 15, lineHeight: 1.6 }}>서울특별시 강남구 영동대로 513<br />그랜드볼룸 (Hall 1F)</div>
+            <div className="meta">
+              <div className="meta-row"><span className="k">Date</span><span className="v">{event.dateFull}</span></div>
+              <div className="meta-row"><span className="k">Time</span><span className="v">{event.time}</span></div>
+              <div className="meta-row"><span className="k">Capacity</span><span className="v">{event.seatsLabel}</span></div>
+              <div className="meta-row"><span className="k">Host</span><span className="v">{event.organizer}</span></div>
+            </div>
+          </div>
+          <div className="fk-venue-card">
+            <div className="pre">HOW TO ATTEND</div>
+            <h3>초대제로 운영됩니다.</h3>
+            <p style={{ color: "var(--fk-text-2)", margin: 0 }}>Foresight Korea 2027은 HRD 리더, 경영진, AI·조직 분야 실무 전문가를 위한 초청제 무료 컨퍼런스입니다. 사전 신청 후 자격 검토를 거쳐 좌석이 배정됩니다. 한정된 1,500석, 통상 3주 이내 마감됩니다.</p>
+            <div style={{ display: "flex", gap: 12, marginTop: 24, flexWrap: "wrap" }}>
+              <button className="fk-btn fk-btn-glow" onClick={onApply}>지금 신청하기 <IconArrow /></button>
+              <a href="#agenda" className="fk-btn fk-btn-ghost">프로그램 보기</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Countdown
+function useCountdown(target) {
+  const [t, setT] = useState(() => Math.max(0, target.getTime() - Date.now()));
+  useEffect(() => {
+    const id = setInterval(() => setT(Math.max(0, target.getTime() - Date.now())), 1000);
+    return () => clearInterval(id);
+  }, [target]);
+  return {
+    days: Math.floor(t / (1000 * 60 * 60 * 24)),
+    hours: Math.floor(t / (1000 * 60 * 60) % 24),
+    mins: Math.floor(t / (1000 * 60) % 60),
+    secs: Math.floor(t / 1000 % 60)
+  };
+}
+
+// Final CTA
+function FinalCTA({ onApply }) {
+  const target = useMemo(() => new Date("2027-05-20T09:00:00+09:00"), []);
+  const c = useCountdown(target);
+  const ref = useFadeUp();
+  return (
+    <section className="fk-final-cta" ref={ref}>
+      <div className="fk-container fk-fade-up">
+        <div className="fk-eyebrow" style={{ justifyContent: "center", display: "inline-flex" }}>THE FUTURE STARTS IN</div>
+        <h2 style={{ marginTop: 32 }}>
+          <span className="l1" style={{ lineHeight: "1.15" }}>미래를 미리</span>
+          <span className="l2" style={{ lineHeight: "1.15" }}>설계하는 단 하루.</span>
+        </h2>
+        <p>한 자리가 한 회사의 다음 10년을 바꿉니다. 좌석은 사전 신청자 순으로 배정됩니다.</p>
+        <div>
+          <button className="fk-btn fk-btn-glow" onClick={onApply} style={{ padding: "18px 36px", fontSize: 16 }}>무료 신청하기 <IconArrow /></button>
+        </div>
+        <div className="countdown">
+          <div className="unit"><div className="num">{String(c.days).padStart(3, "0")}</div><div className="lab">Days</div></div>
+          <div className="unit"><div className="num">{String(c.hours).padStart(2, "0")}</div><div className="lab">Hours</div></div>
+          <div className="unit"><div className="num">{String(c.mins).padStart(2, "0")}</div><div className="lab">Min</div></div>
+          <div className="unit"><div className="num">{String(c.secs).padStart(2, "0")}</div><div className="lab">Sec</div></div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Footer
+function Footer({ event }) {
+  return (
+    <footer className="fk-footer">
+      <div className="fk-container">
+        <div className="fk-footer-grid">
+          <div>
+            <div className="fk-footer-brand">FORESIGHT KOREA 2027</div>
+            <div className="fk-footer-mono">HOSTED BY · {event.organizer} · {event.date}</div>
+          </div>
+          <div className="fk-footer-legal">© 2027 Hunet Co., Ltd. All rights reserved.<br />사업자등록번호 220-87-37971 · 휴넷 컨퍼런스 운영팀</div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// Floating Bar
+function FloatingBar({ onApply, event }) {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const onScroll = () => {
+      const past = window.scrollY > window.innerHeight * 0.6;
+      const nearBottom = (window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 120;
+      setVisible(past && !nearBottom);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  return (
+    <div className={`fk-float-bar ${visible ? "visible" : ""}`}>
+      <div className="fk-float-info">
+        <div className="title">FORESIGHT KOREA 2027</div>
+        <div className="sub">{event.date} · COEX · {event.ticketLabel}</div>
+      </div>
+      <button className="fk-float-cta" onClick={onApply}>
+        <span>신청하기</span>
+        <span className="seats">{event.seatsLabel}</span>
+        <IconArrow />
+      </button>
+    </div>
+  );
+}
+
+// Registration Modal
+const ROLES = ["C-Level / 경영진","임원 / 본부장","팀장 / 매니저","실무자 / 담당자","교수 / 연구원","창업가 / 대표","기타"];
+const HEAR = ["이메일 초대","지인 추천","휴넷 홈페이지","LinkedIn / SNS","언론 / 기사","기타"];
+
+function validate(values) {
+  const e = {};
+  if (!values.name || values.name.trim().length < 2) e.name = "이름을 정확히 입력해주세요.";
+  if (!values.company || values.company.trim().length < 1) e.company = "회사명을 입력해주세요.";
+  if (!values.role) e.role = "직책을 선택해주세요.";
+  if (!values.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) e.email = "유효한 이메일을 입력해주세요.";
+  const ph = (values.phone || "").replace(/[^0-9]/g, "");
+  if (!ph || ph.length < 9 || ph.length > 11) e.phone = "휴대폰 번호를 정확히 입력해주세요.";
+  if (!values.tracks || values.tracks.length === 0) e.tracks = "관심 트랙을 1개 이상 선택해주세요.";
+  if (!values.consent) e.consent = "개인정보 수집·이용에 동의해주세요.";
+  return e;
+}
+
+function formatPhone(v) {
+  const d = (v || "").replace(/[^0-9]/g, "").slice(0, 11);
+  if (d.length < 4) return d;
+  if (d.length < 8) return d.replace(/(\d{3})(\d+)/, "$1-$2");
+  return d.replace(/(\d{3})(\d{3,4})(\d{4})/, "$1-$2-$3");
+}
+
+function RegistrationModal({ open, onClose, event }) {
+  const [values, setValues] = useState({ name:"", company:"", role:"", email:"", phone:"", tracks:[], hear:"", consent:false, marketing:false });
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+  const [confNo, setConfNo] = useState("");
+  const firstFieldRef = useRef(null);
+
+  useEffect(() => {
+    if (open) {
+      setValues({ name:"", company:"", role:"", email:"", phone:"", tracks:[], hear:"", consent:false, marketing:false });
+      setErrors({}); setTouched({}); setSubmitted(false);
+      setTimeout(() => firstFieldRef.current && firstFieldRef.current.focus(), 200);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
+  const set = (k, v) => setValues(s => {
+    const next = { ...s, [k]: v };
+    if (touched[k] || errors[k]) setErrors(validate(next));
+    return next;
+  });
+  const touch = (k) => setTouched(t => ({ ...t, [k]: true }));
+  const toggleTrack = (id) => set("tracks", values.tracks.includes(id) ? values.tracks.filter(t => t !== id) : [...values.tracks, id]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const err = validate(values);
+    setErrors(err);
+    setTouched({ name:1, company:1, role:1, email:1, phone:1, tracks:1, consent:1 });
+    if (Object.keys(err).length > 0) return;
+    setConfNo("FK27-" + Math.random().toString(36).slice(2, 7).toUpperCase());
+    setSubmitted(true);
+  };
+
+  const showErr = (k) => (touched[k] && errors[k]) ? errors[k] : null;
+
+  return (
+    <div className={`fk-modal-overlay ${open ? "open" : ""}`} onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="fk-modal" role="dialog" aria-modal="true" aria-labelledby="fk-modal-title">
+        {!submitted ? (
+          <form onSubmit={handleSubmit}>
+            <div className="fk-modal-head">
+              <div className="fk-modal-pre">REGISTRATION · FORESIGHT KOREA 2027</div>
+              <h2 id="fk-modal-title">무대를 예약하세요.</h2>
+              <p className="sub">{event.dateFull} · {event.venue} · 사전 신청 (무료)</p>
+              <button type="button" className="fk-modal-close" onClick={onClose} aria-label="닫기"><IconClose /></button>
+            </div>
+            <div className="fk-modal-body">
+              <div className="fk-form-row grid-2">
+                <div>
+                  <div className="fk-form-label">이름 <span className="req">*</span></div>
+                  <input ref={firstFieldRef} className={`fk-input ${showErr("name") ? "error" : ""}`} placeholder="홍길동" value={values.name} onChange={e => set("name", e.target.value)} onBlur={() => touch("name")} />
+                  {showErr("name") && <div className="fk-input-error">{errors.name}</div>}
+                </div>
+                <div>
+                  <div className="fk-form-label">직책 <span className="req">*</span></div>
+                  <select className={`fk-select ${showErr("role") ? "error" : ""}`} value={values.role} onChange={e => set("role", e.target.value)} onBlur={() => touch("role")}>
+                    <option value="" disabled>선택해주세요</option>
+                    {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
+                  </select>
+                  {showErr("role") && <div className="fk-input-error">{errors.role}</div>}
+                </div>
+              </div>
+              <div className="fk-form-row">
+                <div className="fk-form-label">회사 / 소속 <span className="req">*</span></div>
+                <input className={`fk-input ${showErr("company") ? "error" : ""}`} placeholder="휴넷 주식회사" value={values.company} onChange={e => set("company", e.target.value)} onBlur={() => touch("company")} />
+                {showErr("company") && <div className="fk-input-error">{errors.company}</div>}
+              </div>
+              <div className="fk-form-row grid-2">
+                <div>
+                  <div className="fk-form-label">이메일 <span className="req">*</span></div>
+                  <input type="email" className={`fk-input ${showErr("email") ? "error" : ""}`} placeholder="name@company.com" value={values.email} onChange={e => set("email", e.target.value)} onBlur={() => touch("email")} />
+                  {showErr("email") && <div className="fk-input-error">{errors.email}</div>}
+                </div>
+                <div>
+                  <div className="fk-form-label">휴대폰 <span className="req">*</span></div>
+                  <input type="tel" className={`fk-input ${showErr("phone") ? "error" : ""}`} placeholder="010-0000-0000" value={values.phone} onChange={e => set("phone", formatPhone(e.target.value))} onBlur={() => touch("phone")} />
+                  {showErr("phone") && <div className="fk-input-error">{errors.phone}</div>}
+                </div>
+              </div>
+              <div className="fk-form-row">
+                <div className="fk-form-label">관심 트랙 <span className="req">*</span> <span style={{ fontFamily:"var(--fk-sans)", textTransform:"none", letterSpacing:0, color:"var(--fk-text-4)" }}>· 복수 선택 가능</span></div>
+                <div className="fk-checkbox-group">
+                  {event.tracks.map(t => {
+                    const checked = values.tracks.includes(t.id);
+                    return (
+                      <div key={t.id} className={`fk-checkbox ${checked ? "checked" : ""}`} onClick={() => { toggleTrack(t.id); touch("tracks"); }}>
+                        <div className="box"><IconCheck /></div>
+                        <div>
+                          <div style={{ fontWeight:600, color:"var(--fk-text)", fontSize:13 }}>{t.code} · {t.title}</div>
+                          <div style={{ fontSize:11, color:"var(--fk-text-3)" }}>{t.sub}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                {showErr("tracks") && <div className="fk-input-error">{errors.tracks}</div>}
+              </div>
+              <div className="fk-form-row">
+                <div className="fk-form-label">행사 인지 경로</div>
+                <select className="fk-select" value={values.hear} onChange={e => set("hear", e.target.value)}>
+                  <option value="" disabled>선택해주세요 (선택사항)</option>
+                  {HEAR.map(r => <option key={r} value={r}>{r}</option>)}
+                </select>
+              </div>
+              <div className={`fk-consent ${values.consent ? "checked" : ""}`} onClick={() => { set("consent", !values.consent); touch("consent"); }}>
+                <div className="box"><IconCheck /></div>
+                <div><strong style={{ color:"var(--fk-text)" }}>[필수]</strong> 개인정보 수집·이용 동의. 수집 항목: 이름·소속·이메일·연락처. 보유 기간: 행사 종료 후 6개월.</div>
+              </div>
+              {showErr("consent") && <div className="fk-input-error" style={{ marginLeft:26 }}>{errors.consent}</div>}
+              <div className={`fk-consent ${values.marketing ? "checked" : ""}`} onClick={() => set("marketing", !values.marketing)}>
+                <div className="box"><IconCheck /></div>
+                <div><strong style={{ color:"var(--fk-text-2)" }}>[선택]</strong> 휴넷의 인재·학습 인사이트 뉴스레터를 받겠습니다.</div>
+              </div>
+            </div>
+            <div className="fk-modal-foot">
+              <button type="submit" className="fk-submit">무료 신청 완료하기 <IconArrow /></button>
+              <div className="fk-submit-note">신청 즉시 안내 메일이 발송되며, 자격 검토 후 최종 좌석이 확정됩니다.</div>
+            </div>
+          </form>
+        ) : (
+          <div>
+            <div className="fk-modal-head" style={{ textAlign:"center", borderBottom:"none", paddingBottom:0 }}>
+              <button type="button" className="fk-modal-close" onClick={onClose} aria-label="닫기"><IconClose /></button>
+            </div>
+            <div className="fk-success">
+              <div className="fk-success-icon"><IconCheck /></div>
+              <h2>신청이 접수되었습니다.</h2>
+              <p>{values.name} 님의 사전 신청이 정상적으로 접수되었습니다.<br />입력해주신 <strong style={{ color:"var(--fk-text)" }}>{values.email}</strong> 로<br />확정 안내가 발송될 예정입니다.</p>
+              <div className="fk-success-ticket">
+                <div>
+                  <div className="conf-label">CONFIRMATION NO.</div>
+                  <div className="conf-no">{confNo}</div>
+                  <div style={{ fontSize:12, color:"var(--fk-text-3)", marginTop:8 }}>{event.dateFull} · {event.venueKor}</div>
+                </div>
+                <div className="qr" aria-hidden="true" />
+              </div>
+              <div style={{ display:"flex", gap:10, justifyContent:"center", flexWrap:"wrap" }}>
+                <button className="fk-btn fk-btn-ghost" onClick={onClose}>닫기</button>
+                <button className="fk-btn fk-btn-primary" onClick={onClose}>내용 더 보기 <IconArrow /></button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// App
+function App() {
+  const event = window.FK_EVENT;
+  const [modalOpen, setModalOpen] = useState(false);
+  const [speaker, setSpeaker] = useState(null);
+  const openApply = () => setModalOpen(true);
+  const closeApply = () => setModalOpen(false);
+  return (
+    <>
+      <TopNav onApply={openApply} />
+      <Hero event={event} onApply={openApply} />
+      <Marquee event={event} />
+      <Theme event={event} />
+      <Keynote onApply={openApply} />
+      <Tracks event={event} onSpeaker={setSpeaker} />
+      <Agenda event={event} />
+      <Venue event={event} onApply={openApply} />
+      <FinalCTA onApply={openApply} />
+      <Footer event={event} />
+      <FloatingBar onApply={openApply} event={event} />
+      <SpeakerDrawer speaker={speaker} onClose={() => setSpeaker(null)} />
+      <RegistrationModal open={modalOpen} onClose={closeApply} event={event} />
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
