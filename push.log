@@ -665,3 +665,37 @@ remote: This repository moved. Please use the new location:
 remote:   git@github.com:andy-room/toystory-agents.git        
 To github.com:soonyeons/toystory-agents.git
    419f886..d4058fe  main -> main
+warning: adding embedded git repository: .claude/worktrees/pensive-heyrovsky-18eb27
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint: 
+hint: 	git submodule add <url> .claude/worktrees/pensive-heyrovsky-18eb27
+hint: 
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint: 
+hint: 	git rm --cached .claude/worktrees/pensive-heyrovsky-18eb27
+hint: 
+hint: See "git help submodule" for more information.
+[main 2f06b3e] auto: 2026-05-18 17:00 자동 저장
+ Committer: hunet_syhong <syhong@hunet-soon.local>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file:
+
+    git config --global --edit
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 2 files changed, 20 insertions(+)
+ create mode 160000 .claude/worktrees/pensive-heyrovsky-18eb27
+remote: This repository moved. Please use the new location:        
+remote:   git@github.com:andy-room/toystory-agents.git        
+To github.com:soonyeons/toystory-agents.git
+   d4058fe..2f06b3e  main -> main
