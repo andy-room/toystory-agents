@@ -2103,11 +2103,10 @@ function renderEditor() {
           <section class="esec" id="sec-info">
             <div class="esec-header">
               <div class="esec-num">01</div>
-              <div class="esec-title">과정 정보</div>
-              <div class="esec-desc">제작할 과정의 기본 정보를 입력하세요.</div>
+              <div class="esec-title">과정명</div>
+              <div class="esec-desc">제작할 과정의 과정명을 입력해주세요.</div>
             </div>
             <div class="field" style="max-width:520px">
-              <label class="flabel">과정명 <span class="req">*</span></label>
               <input class="input lg" id="courseNameInput" placeholder="예: 신입사원 리더십 과정"
                 value="${esc(S.courseName)}" autofocus
                 oninput="S.courseName=this.value; updateLeftCourseTitle()"
