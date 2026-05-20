@@ -1549,7 +1549,6 @@ const S = {
   clibSort: 'recent',
   clibPage: 1,
   clibSelected: null,
-  clibImported: false,
   contentEditMode: false,
   contentRegMode: 'new',
   contentSearch: '',
@@ -2200,7 +2199,6 @@ function selectType(id) {
     S.clibSelected = null;
     S.clibSearch = '';
     S.clibPage = 1;
-    S.clibImported = false;
     toast(`"${label}" 선택됨`, 'success');
     updateNavStatus();
     refreshTypeBadge();
@@ -2247,18 +2245,16 @@ function renderCourseLibPanel() {
   const totalPages = Math.max(1, Math.ceil(items.length / PER_PAGE));
   const page = Math.min(S.clibPage, totalPages);
   const pageItems = items.slice((page-1)*PER_PAGE, page*PER_PAGE);
+
   const isDetail = !!S.clibSelected;
   const detailCourse = isDetail ? COURSE_LIBRARY.find(c=>c.id===S.clibSelected) : null;
-  const typeLabel = S.creationType === 'prepkg' ? '프리패키지드 코스' : '이전 과정 불러오기';
 
-  /* ── 목록 패널 ── */
   const listPanel = `
-    <div class="fc-panel" style="width:100%">
-      <!-- 상단: 타입 정보 + 검색/필터 -->
+    <div class="fc-panel">
       <div class="frame-content-head">
-        <span class="ctit">${typeLabel}</span>
+        <span class="ctit">과정 선택</span>
       </div>
-      <div class="clib-toolbar" style="border-bottom:1px solid var(--border)">
+      <div class="clib-toolbar" style="border-top:none;border-bottom:1px solid var(--border)">
         <input class="clib-search" placeholder="과정명 또는 카테고리 검색"
           value="${esc(S.clibSearch||'')}"
           oninput="S.clibSearch=this.value;S.clibPage=1;refreshTocFrame()"/>
@@ -2269,12 +2265,11 @@ function renderCourseLibPanel() {
             onclick="S.clibSort='uses';S.clibPage=1;refreshTocFrame()">활용순</button>
         </div>
       </div>
-      <!-- 목록 -->
       <div class="clib-list">
         ${pageItems.length === 0
           ? `<div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--text-3);font-size:13px">검색 결과가 없습니다</div>`
           : pageItems.map(c => `
-            <div class="clib-row" onclick="S.clibSelected='${c.id}';refreshTocFrame()">
+            <div class="clib-row ${S.clibSelected===c.id?'selected':''}" onclick="S.clibSelected='${c.id}';refreshTocFrame()">
               <div class="clib-ico">
                 <img src="${TYPE_IMG[c.type]||'./images/PDF.png'}" alt="${c.type}"/>
               </div>
@@ -2295,9 +2290,7 @@ function renderCourseLibPanel() {
       </div>` : ''}
     </div>`;
 
-  /* ── 상세 패널 ── */
   const detailPanel = detailCourse ? (() => {
-    const totalContents = detailCourse.toc.reduce((s,ch)=>s+ch.contents.length,0);
     const tocHTML = detailCourse.toc.map(ch => `
       <div class="clib-toc-chapter">
         <div class="clib-toc-ch-title">${esc(ch.title)}</div>
@@ -2311,29 +2304,21 @@ function renderCourseLibPanel() {
           </div>`).join('')}
       </div>`).join('');
     return `
-      <div class="fc-panel" style="display:flex;flex-direction:column;overflow:hidden;width:100%">
-        <!-- 상단: 뒤로가기 + 선택 과정 정보 -->
+      <div class="fc-panel" style="display:flex;flex-direction:column;overflow:hidden">
         <div class="frame-content-head" style="flex-shrink:0">
           <button class="back-btn" onclick="S.clibSelected=null;refreshTocFrame()">← 목록</button>
-          <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">
-            <div style="width:24px;height:24px;border-radius:5px;overflow:hidden;flex-shrink:0">
-              <img src="${TYPE_IMG[detailCourse.type]||'./images/PDF.png'}" style="width:100%;height:100%;object-fit:contain"/>
-            </div>
-            <span class="ctit" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(detailCourse.title)}</span>
-            <span style="font-size:11px;color:var(--text-3);flex-shrink:0">${esc(detailCourse.category)} · ${detailCourse.toc.length}개 목차 · ${totalContents}개 콘텐츠</span>
-          </div>
+          <span class="ctit">${esc(detailCourse.title)}</span>
         </div>
-        <!-- 커리큘럼 -->
         <div class="creg-form" style="flex:1;overflow-y:auto">
+          <div style="font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:8px">커리큘럼 구성</div>
           <div class="clib-detail-toc">${tocHTML}</div>
         </div>
-        <!-- 하단 액션 -->
         <div class="creg-actions">
           <button class="creg-btn-cancel" onclick="S.clibSelected=null;refreshTocFrame()">취소</button>
           <button class="creg-btn-submit" onclick="selectCourseFromLib('${detailCourse.id}')">이 과정으로 불러오기</button>
         </div>
       </div>`;
-  })() : `<div class="fc-panel" style="width:100%"></div>`;
+  })() : `<div class="fc-panel"></div>`;
 
   return `
     <div class="frame-content" id="frameContent">
@@ -2357,14 +2342,13 @@ function selectCourseFromLib(courseId) {
   }));
   S.activeTocId = S.toc[0]?.id || null;
   S.clibSelected = null;
-  S.clibImported = true;
   toast(`"${course.title}" 과정을 불러왔습니다.`, 'success');
   updateNavStatus();
   refreshTocFrame();
 }
 
 function renderTocFrame() {
-  const isClibMode = (S.creationType === 'import' || S.creationType === 'prepkg') && !S.clibImported;
+  const isClibMode = S.creationType === 'import' || S.creationType === 'prepkg';
   const toc = S.toc.find(t=>t.id===S.activeTocId);
   const contentPanel = isClibMode
     ? renderCourseLibPanel()
@@ -2383,7 +2367,46 @@ function renderTocFrame() {
         <!-- 패널 행 -->
         <div class="toc-panels">
           ${isClibMode ? `
-          <!-- clib 모드: 좌측 패널 없이 전체 너비 -->
+          <!-- clib 모드 왼쪽 패널 -->
+          <div class="frame-toc">
+            <div class="frame-toc-head">
+              <span class="ftit">${S.creationType === 'prepkg' ? '프리패키지드 코스' : '이전 과정 불러오기'}</span>
+            </div>
+            <div class="frame-toc-items" style="padding:12px 10px;display:flex;flex-direction:column;gap:10px">
+              ${S.clibSelected ? (() => {
+                const sel = COURSE_LIBRARY.find(c=>c.id===S.clibSelected);
+                if (!sel) return '';
+                const totalContents = sel.toc.reduce((s,ch)=>s+ch.contents.length,0);
+                return `
+                  <div style="display:flex;gap:8px;align-items:flex-start">
+                    <div style="width:36px;height:36px;border-radius:var(--r8);overflow:hidden;flex-shrink:0;background:var(--surface-2)">
+                      <img src="${TYPE_IMG[sel.type]||'./images/PDF.png'}" style="width:100%;height:100%;object-fit:contain"/>
+                    </div>
+                    <div>
+                      <div style="font-size:13px;font-weight:700;color:var(--text);line-height:1.4">${esc(sel.title)}</div>
+                      <div style="font-size:11px;color:var(--text-3);margin-top:3px">${esc(sel.category)}</div>
+                    </div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:5px;background:var(--surface-2);border-radius:var(--r8);padding:10px 12px">
+                    <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--text-3)">제작일</span><span style="color:var(--text-2);font-weight:600">${sel.date}</span></div>
+                    <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--text-3)">활용수</span><span style="color:var(--text-2);font-weight:600">${sel.uses}회</span></div>
+                    <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--text-3)">목차</span><span style="color:var(--text-2);font-weight:600">${sel.toc.length}개</span></div>
+                    <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--text-3)">콘텐츠</span><span style="color:var(--text-2);font-weight:600">${totalContents}개</span></div>
+                  </div>`;
+              })() : `
+                <div style="font-size:12px;color:var(--text-3);line-height:1.7">
+                  ${S.creationType === 'prepkg'
+                    ? 'LABS가 설계한 구성을 가져와 수정합니다.<br/>오른쪽에서 원하는 코스를 선택하세요.'
+                    : '기존에 만든 과정을 기반으로<br/>수정·재활용합니다.<br/><br/>오른쪽에서 불러올 과정을 선택하세요.'}
+                </div>`}
+            </div>
+            ${S.clibSelected ? `
+            <div class="frame-toc-foot" style="padding:10px">
+              <button class="toc-add-btn" style="width:100%;background:var(--surface-2);color:var(--text-3);border:none"
+                onclick="S.clibSelected=null;refreshTocFrame()">← 목록으로</button>
+            </div>` : ''}
+          </div>
+          <!-- clib 모드 오른쪽 패널 -->
           ${contentPanel}
           ` : `
           <!-- 일반 TOC 왼쪽 패널 -->
