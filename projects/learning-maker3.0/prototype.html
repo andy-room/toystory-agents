@@ -3529,6 +3529,7 @@ function renderOfflineSessions(contentId) {
 
 function renderOfflineSessionsRegistered(contentId) {
   const sessions = getOfflineSessions(contentId);
+  const em = !!S.offlineEditModeMap[contentId];
 
   const sessionsHTML = sessions.map((sess, idx) => {
     const schedulesHTML = sess.schedules.map(sch => `
@@ -3559,7 +3560,7 @@ function renderOfflineSessionsRegistered(contentId) {
           ondblclick="oregDblClick(event,this,'${contentId}','${sess.id}','${sch.id}','notes','text')">
           <span class="oreg-field-val">${esc(sch.notes)||'—'}</span>
         </div>
-        <button class="oreg-del-btn oreg-del-visible" onclick="removeOfflineScheduleReg('${contentId}','${sess.id}','${sch.id}')">✕</button>
+        ${em ? `<button class="oreg-del-btn oreg-del-visible" onclick="removeOfflineScheduleReg('${contentId}','${sess.id}','${sch.id}')">✕</button>` : '<span></span>'}
       </div>
     `).join('');
 
@@ -3600,7 +3601,7 @@ function renderOfflineSessionsRegistered(contentId) {
             </div>
             <button class="t-add-btn" style="opacity:1;pointer-events:auto;margin-left:4px" title="일정 추가"
               onclick="addOfflineScheduleReg('${contentId}','${sess.id}')">+</button>
-            <button class="oreg-del-btn oreg-del-visible oreg-sess-del" onclick="removeOfflineSessionReg('${contentId}','${sess.id}')">🗑</button>
+            ${em ? `<button class="oreg-del-btn oreg-del-visible oreg-sess-del" onclick="removeOfflineSessionReg('${contentId}','${sess.id}')">🗑</button>` : ''}
           </div>
           <div class="oreg-schedules">
             ${sess.schedules.length > 0 ? `
@@ -3616,7 +3617,10 @@ function renderOfflineSessionsRegistered(contentId) {
   return `
     <div class="offline-session-header">
       <div class="offline-session-title">오프라인 회차 및 일정</div>
-      <button class="offline-session-add-btn" onclick="addOfflineSessionReg('${contentId}')">⏰ + 회차 추가</button>
+      <div style="display:flex;gap:6px">
+        <button class="offline-session-add-btn" onclick="addOfflineSessionReg('${contentId}')">⏰ + 회차 추가</button>
+        <button class="offline-session-add-btn${em?' oreg-editmode-active':''}" onclick="toggleOfflineEditMode('${contentId}')">${em?'✓ 편집 완료':'편집'}</button>
+      </div>
     </div>
     <div class="offline-timeline">${sessionsHTML}</div>
   `;
