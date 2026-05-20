@@ -2026,7 +2026,6 @@ function renderDashboard() {
                 <div class="cmeta">${meta}${certTxt?` · ${certTxt}`:''}</div>
               </div>
               <span class="status-pill ${item.status}">${sl[item.status]||item.status}</span>
-              <button class="btn btn-icon btn-ghost" onclick="event.stopPropagation();go('editor')" title="편집"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.333 2a1.886 1.886 0 0 1 2.667 2.667L5.333 13.333 2 14l.667-3.333L11.333 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
             </div>`;
           }).join('')}
       </div>
