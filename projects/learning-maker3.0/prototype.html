@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>러닝메이커 — 개선안 v1.6 (HDS)</title>
+<title>러닝메이커 — 개선안 prototype2 (HDS)</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/static/woff2/SUIT.css">
 <style>
@@ -834,26 +834,17 @@ input,select,textarea { font-family:inherit; font-size:16px }
 .tlabel { font-size:13px; font-weight:600; color:var(--text) }
 
 /* ─── Open Checklist ──────────────────────────────────────── */
-.open-checks { display:flex; flex-direction:column; gap:8px; margin-bottom:28px }
-.open-check-item {
-  display:flex; align-items:center; gap:12px;
-  padding:14px 16px; border:1px solid var(--border); border-radius:var(--r8); background:var(--surface);
-}
-.open-check-item.ok   { border-color:rgba(0,191,64,.3);  background:#EBFAF0 }  /* green-200 */
-.open-check-item.warn { border-color:rgba(255,146,0,.3); background:#FFFBF5 }  /* orange-100 */
-.open-check-item.err  { border-color:rgba(250,46,67,.3);  background:var(--danger-soft) }
-[data-theme="dark"] .open-check-item.ok   { background:rgba(0,191,64,.1) }
-[data-theme="dark"] .open-check-item.warn { background:rgba(255,146,0,.1) }
-[data-theme="dark"] .open-check-item.err  { background:rgba(250,46,67,.1) }
-.cico { width:24px; height:24px; border-radius:999px; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0 }
-.open-check-item.ok   .cico { background:var(--success); color:#fff }
-.open-check-item.warn .cico { background:var(--warn); color:#fff }
-.open-check-item.err  .cico { background:var(--danger); color:#fff }
-.cbody { flex:1 }
-.cbody .clbl { font-size:13px; font-weight:700; color:var(--text) }
-.cbody .cdesc { font-size:12px; color:var(--text-2); margin-top:2px }
-.cbody .clink { font-size:12px; color:var(--brand); font-weight:600; cursor:pointer; display:inline-block; margin-top:2px }
-.cbody .clink:hover { text-decoration:underline }
+.open-checks { display:flex; flex-direction:column; border:1px solid var(--border); border-radius:var(--r8); overflow:hidden; margin-bottom:24px }
+.open-check-item { display:flex; align-items:center; gap:10px; padding:9px 14px; border-bottom:1px solid var(--border); background:var(--surface) }
+.open-check-item:last-child { border-bottom:none }
+.cico { width:16px; height:16px; border-radius:999px; display:flex; align-items:center; justify-content:center; font-size:9px; flex-shrink:0; font-weight:700 }
+.open-check-item.ok .cico  { background:var(--success); color:#fff }
+.open-check-item.err .cico { background:var(--danger);  color:#fff }
+.clbl { font-size:12px; font-weight:600; color:var(--text-2); width:60px; flex-shrink:0 }
+.cdesc { font-size:13px; color:var(--text); flex:1 }
+.open-check-item.err .cdesc { color:var(--danger) }
+.clink { font-size:12px; color:var(--brand); font-weight:600; cursor:pointer; flex-shrink:0 }
+.clink:hover { text-decoration:underline }
 
 /* ─── Buttons ─────────────────────────────────────────────── */
 .btn {
@@ -951,18 +942,25 @@ input,select,textarea { font-family:inherit; font-size:16px }
   overflow:hidden;
 }
 .sc-row {
-  display:flex; align-items:center; gap:16px;
-  padding:16px 20px;
+  display:flex; align-items:center; min-height:52px;
   border-bottom:1px solid var(--border);
 }
 .sc-row:last-child { border-bottom:none }
-.sc-row.sc-sub { padding:10px 20px 10px 40px; background:var(--surface-2) }
+.sc-row.sc-sub { min-height:44px }
 .sc-lbl {
-  font-size:14px; font-weight:700; color:var(--text);
-  width:130px; flex-shrink:0;
+  font-size:13px; font-weight:700; color:var(--text-2);
+  width:130px; flex-shrink:0; padding:10px 16px;
+  background:var(--surface-2); border-right:1px solid var(--border);
+  align-self:stretch; display:flex; align-items:center;
+}
+.sc-row.sc-sub .sc-lbl {
+  padding-left:28px; font-weight:600; font-size:12px; color:var(--text-3);
+}
+.sc-ctrl {
+  flex:1; display:flex; align-items:center; flex-wrap:wrap;
+  gap:8px; padding:10px 16px;
 }
 .sc-desc { font-size:12px; color:var(--text-3); margin-top:2px }
-.sc-ctrl { flex:1; display:flex; align-items:center; gap:8px; flex-wrap:wrap }
 .sc-pill {
   display:flex; align-items:center; gap:5px;
   padding:6px 12px; border-radius:var(--r8);
@@ -986,8 +984,8 @@ input,select,textarea { font-family:inherit; font-size:16px }
 .sc-toggle-row:last-child { border-bottom:none }
 .sc-toggle-info { flex:1 }
 .sc-toggle-lbl { font-size:14px; font-weight:700; color:var(--text) }
-.sc-toggle-desc { font-size:12px; color:var(--text-3); margin-top:2px }
-.sc-state-txt { font-size:12px; font-weight:700; color:var(--text-2); min-width:52px; text-align:right }
+.sc-toggle-desc { font-size:14px; color:var(--text-3); margin-top:2px }
+.sc-state-txt { font-size:14px; font-weight:700; color:var(--text-2); min-width:52px; text-align:right }
 
 /* ── 콘텐츠 등록 패널 ── */
 .creg-mode-bar {
@@ -1119,6 +1117,84 @@ input,select,textarea { font-family:inherit; font-size:16px }
 }
 .creg-back-list:hover { color:var(--brand) }
 
+/* ── 부가 설정 메타 카드 ── */
+.s5-meta-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r20); overflow:hidden; margin-bottom:12px;
+}
+.s5-meta-row {
+  display:flex; align-items:flex-start;
+  border-bottom:1px solid var(--border);
+  min-height:56px;
+}
+.s5-meta-row:last-child { border-bottom:none }
+.s5-meta-lbl {
+  font-size:13px; font-weight:700; color:var(--text-2);
+  width:130px; flex-shrink:0; padding:14px 16px;
+  background:var(--surface-2); border-right:1px solid var(--border);
+  align-self:stretch; display:flex; align-items:center;
+}
+.s5-meta-body { flex:1; min-width:0; padding:12px 16px }
+
+/* 썸네일 업로드 */
+.s5-thumb-area {
+  display:flex; gap:12px; align-items:flex-start;
+}
+.s5-thumb-preview {
+  width:96px; height:64px; border-radius:var(--r8);
+  background:var(--surface-2); border:1.5px dashed var(--border-strong);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:4px; cursor:pointer; flex-shrink:0;
+  transition:border-color var(--tr), background var(--tr);
+}
+.s5-thumb-preview:hover { border-color:var(--brand); background:var(--brand-soft) }
+.s5-thumb-preview .s5-thumb-plus { font-size:20px; color:var(--text-3); line-height:1 }
+.s5-thumb-preview span { font-size:10px; color:var(--text-3); font-weight:600 }
+.s5-thumb-hint { font-size:12px; color:var(--text-3); line-height:1.6; margin-top:6px }
+
+/* 과정 소개 textarea */
+.s5-intro-textarea {
+  width:100%; min-height:80px; padding:10px 12px;
+  border:1.5px solid var(--border-md); border-radius:var(--r8);
+  font-size:13px; color:var(--text); background:var(--surface);
+  resize:vertical; outline:none; font-family:inherit; line-height:1.6;
+  transition:border-color var(--tr);
+}
+.s5-intro-textarea:focus { border-color:var(--brand) }
+
+/* 카테고리 pills */
+.s5-cat-pills { display:flex; flex-wrap:wrap; gap:6px }
+.s5-cat-pill {
+  padding:6px 13px; border-radius:var(--r8);
+  border:1.5px solid var(--border-strong); background:var(--surface);
+  font-size:13px; font-weight:600; color:var(--text-2); cursor:pointer;
+  transition:border-color var(--tr), background var(--tr), color var(--tr);
+}
+.s5-cat-pill:hover { border-color:var(--brand); color:var(--brand) }
+.s5-cat-pill.active { border-color:var(--brand); background:var(--brand-soft); color:var(--brand) }
+
+/* 태그 입력 */
+.s5-tag-wrap {
+  display:flex; flex-wrap:wrap; gap:6px; align-items:center;
+  border:1.5px solid var(--border-md); border-radius:var(--r8);
+  padding:6px 10px; background:var(--surface); min-height:40px;
+  cursor:text; transition:border-color var(--tr);
+}
+.s5-tag-wrap:focus-within { border-color:var(--brand) }
+.s5-tag-chip {
+  display:flex; align-items:center; gap:4px; padding:3px 9px;
+  border-radius:var(--r4); background:var(--surface-3);
+  font-size:12px; font-weight:600; color:var(--text-2);
+}
+.s5-tag-chip button {
+  background:none; border:none; cursor:pointer; color:var(--text-3);
+  font-size:12px; padding:0; display:flex; align-items:center;
+}
+.s5-tag-input {
+  border:none; outline:none; font-size:13px; background:transparent;
+  color:var(--text); min-width:100px; flex:1; padding:2px 0;
+}
+
 /* 이전 제작 리스트 */
 .creg-prev-wrap { display:flex; flex-direction:column; flex:1; overflow:hidden }
 .creg-search-bar {
@@ -1151,6 +1227,93 @@ input,select,textarea { font-family:inherit; font-size:16px }
 .creg-prev-title { font-size:13px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
 .creg-prev-meta { font-size:11px; color:var(--text-3); margin-top:2px }
 .creg-prev-empty { padding:32px 16px; text-align:center; font-size:13px; color:var(--text-3) }
+
+.ai-write-btn {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:28px; height:28px; border-radius:var(--r8);
+  border:none;
+  background:linear-gradient(135deg,#6366f1,#8b5cf6,#ec4899);
+  color:#fff; font-size:16px; line-height:1; cursor:pointer;
+  transition:opacity var(--tr); flex-shrink:0;
+}
+.ai-write-btn:hover { opacity:.85 }
+
+.sc-radio-group { display:flex; align-items:center; gap:16px }
+.sc-radio-item { display:flex; align-items:center; gap:6px; cursor:pointer }
+.sc-radio-item input[type=radio] { display:none }
+.sc-radio-dot {
+  width:16px; height:16px; border-radius:50%;
+  border:2px solid var(--border-strong);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; transition:border-color var(--tr);
+}
+.sc-radio-item.active .sc-radio-dot {
+  border-color:var(--brand);
+}
+.sc-radio-item.active .sc-radio-dot::after {
+  content:''; width:8px; height:8px; border-radius:50%;
+  background:var(--brand); display:block;
+}
+.sc-radio-lbl { font-size:13px; font-weight:600; color:var(--text-2) }
+.sc-radio-item.active .sc-radio-lbl { color:var(--brand) }
+
+.sc-select {
+  height:34px; padding:0 28px 0 10px; border-radius:var(--r8);
+  border:1.5px solid var(--border-md); background:var(--surface);
+  color:var(--text); font-size:13px; font-weight:600;
+  cursor:pointer; outline:none;
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23878A93' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 8px center;
+  transition:border-color var(--tr);
+}
+.sc-select:focus { border-color:var(--brand) }
+.sc-select:disabled { opacity:.45; cursor:not-allowed }
+
+/* 학습 방식 인라인 */
+.lm-days-inline {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:4px 10px; background:var(--surface-2); border-radius:var(--r6);
+  font-size:13px; color:var(--text-2);
+  transition:opacity .2s; margin-left:6px; margin-right:20px;
+}
+.lm-days-inline.disabled { opacity:.25; pointer-events:none }
+.lm-period-wrap { position:relative; display:inline-flex; align-items:center }
+.lm-period-chip {
+  display:inline-flex; align-items:center; gap:4px; margin-left:8px;
+  padding:4px 10px; border-radius:var(--r6);
+  background:var(--brand-soft); color:var(--brand);
+  font-size:12px; font-weight:600; cursor:pointer; border:none;
+  transition:background var(--tr);
+}
+.lm-period-chip:hover { background:#D6E8FF }
+.lm-period-set-btn {
+  margin-left:8px; padding:4px 10px; border-radius:var(--r6);
+  border:1.5px solid var(--border-md); background:var(--surface);
+  color:var(--text-3); font-size:12px; font-weight:600; cursor:pointer;
+  transition:border-color var(--tr), color var(--tr);
+}
+.lm-period-set-btn:hover { border-color:var(--brand); color:var(--brand) }
+.lm-period-tooltip {
+  position:absolute; top:calc(100% + 10px); left:-8px; z-index:300;
+  background:var(--surface); border:1px solid var(--border-md);
+  border-radius:var(--r12); padding:16px;
+  box-shadow:0 8px 28px rgba(0,0,0,.14); min-width:330px;
+}
+.lm-pt-row {
+  display:flex; align-items:center; gap:8px; margin-bottom:10px;
+}
+.lm-pt-row:last-of-type { margin-bottom:0 }
+.lm-pt-lbl {
+  font-size:12px; font-weight:700; color:var(--text-2); width:54px; flex-shrink:0;
+}
+.lm-pt-confirm {
+  width:100%; margin-top:12px; padding:7px; border-radius:var(--r8);
+  border:none; background:var(--brand); color:#fff;
+  font-size:13px; font-weight:700; cursor:pointer;
+  transition:background var(--tr);
+}
+.lm-pt-confirm:hover { background:var(--brand-strong) }
 </style>
 </head>
 <body>
@@ -1216,7 +1379,6 @@ input,select,textarea { font-family:inherit; font-size:16px }
 const S = {
   courseName: '',
   courseDesc: '',
-  courseCategory: '리더십',
   creationType: null,
   toc: [
     { id:'t1', title:'오리엔테이션', contents:[
@@ -1250,6 +1412,13 @@ const S = {
   contentRegData: null,
   contentRegFromPrev: false,
   contentPrevSelected: null,
+  periodPickerOpen: false,
+  courseThumbnail: null,
+  courseIntro: '',
+  courseCat1: '',
+  courseCat2: '',
+  courseCat3: '',
+  courseTags: [],
 };
 
 const TYPES = [
@@ -1319,8 +1488,13 @@ const DASH_DATA = [
 function go(path) { location.hash = '/' + path }
 window.addEventListener('hashchange', route);
 window.addEventListener('load', route);
-document.addEventListener('click', () => closeTypeTooltip());
-document.addEventListener('keydown', e => { if(e.key==='Escape') closeTypeTooltip(); });
+document.addEventListener('click', () => { closeTypeTooltip(); });
+document.addEventListener('keydown', e => {
+  if(e.key==='Escape') {
+    closeTypeTooltip();
+    if(S.periodPickerOpen){ S.periodPickerOpen=false; refreshS4(); }
+  }
+});
 
 function route() {
   const h = location.hash.replace(/^#\/?/, '') || 'dashboard';
@@ -2568,43 +2742,59 @@ function renderS4() {
   return `<div class="settings-card">
     <div class="sc-row">
       <div class="sc-lbl">학습 방식</div>
-      <div class="sc-ctrl">
-        <label class="sc-pill ${e.immediate?'active':''}">
-          <input type="radio" name="lpMode" value="immediate" ${e.immediate?'checked':''} onchange="S.enroll.immediate=true;refreshS4();updateNavStatus()"/>
-          즉시 학습
+      <div class="sc-ctrl" style="flex-wrap:nowrap">
+        <!-- 즉시 학습 + 인라인 기간 -->
+        <label class="sc-radio-item ${e.immediate?'active':''}">
+          <input type="radio" name="lpMode" value="immediate" ${e.immediate?'checked':''}
+            onchange="S.enroll.immediate=true;S.periodPickerOpen=false;refreshS4();updateNavStatus()"/>
+          <span class="sc-radio-dot"></span>
+          <span class="sc-radio-lbl">즉시 학습</span>
         </label>
-        <label class="sc-pill ${!e.immediate?'active':''}">
-          <input type="radio" name="lpMode" value="period" ${!e.immediate?'checked':''} onchange="S.enroll.immediate=false;refreshS4();updateNavStatus()"/>
-          기간 학습
-        </label>
+        <div class="lm-days-inline ${e.immediate?'':'disabled'}">
+          신청일부터
+          <input type="number" class="sc-num-in" value="${e.days}" min="1" max="365"
+            style="width:52px" ${e.immediate?'':'tabindex="-1"'}
+            onchange="S.enroll.days=+this.value;updateNavStatus()"/>
+          일간
+        </div>
+        <!-- 기간 학습 + 툴팁 -->
+        <div class="lm-period-wrap">
+          <label class="sc-radio-item ${!e.immediate?'active':''}">
+            <input type="radio" name="lpMode" value="period" ${!e.immediate?'checked':''}
+              onchange="S.enroll.immediate=false;S.periodPickerOpen=true;refreshS4();updateNavStatus()"/>
+            <span class="sc-radio-dot"></span>
+            <span class="sc-radio-lbl">기간 학습</span>
+          </label>
+          ${!e.immediate ? (e.learnFrom||e.learnTo ? `
+            <button class="lm-period-chip" onclick="S.periodPickerOpen=!S.periodPickerOpen;refreshS4()">
+              ${e.learnFrom||'?'} ~ ${e.learnTo||'?'} ✎
+            </button>` : `
+            <button class="lm-period-set-btn" onclick="S.periodPickerOpen=!S.periodPickerOpen;refreshS4()">
+              기간 설정 ▾
+            </button>`) : ''}
+          ${!e.immediate && S.periodPickerOpen ? `
+          <div class="lm-period-tooltip" onclick="event.stopPropagation()">
+            <div class="lm-pt-row">
+              <span class="lm-pt-lbl">신청 기간</span>
+              <input type="date" class="input" style="font-size:12px;flex:1" value="${e.applyFrom}"
+                onchange="S.enroll.applyFrom=this.value;updateNavStatus()"/>
+              <span style="color:var(--text-3);flex-shrink:0">~</span>
+              <input type="date" class="input" style="font-size:12px;flex:1" value="${e.applyTo}"
+                onchange="S.enroll.applyTo=this.value;updateNavStatus()"/>
+            </div>
+            <div class="lm-pt-row">
+              <span class="lm-pt-lbl">학습 기간</span>
+              <input type="date" class="input" style="font-size:12px;flex:1" value="${e.learnFrom}"
+                onchange="S.enroll.learnFrom=this.value;updateNavStatus()"/>
+              <span style="color:var(--text-3);flex-shrink:0">~</span>
+              <input type="date" class="input" style="font-size:12px;flex:1" value="${e.learnTo}"
+                onchange="S.enroll.learnTo=this.value;updateNavStatus()"/>
+            </div>
+            <button class="lm-pt-confirm" onclick="S.periodPickerOpen=false;refreshS4()">확인</button>
+          </div>` : ''}
+        </div>
       </div>
     </div>
-    ${e.immediate ? `
-    <div class="sc-row sc-sub">
-      <div class="sc-lbl" style="width:130px;font-size:13px;font-weight:600;color:var(--text-2)">학습 기간</div>
-      <div class="sc-ctrl" style="gap:6px">
-        신청일부터
-        <input type="number" class="sc-num-in" value="${e.days}" min="1" max="365"
-          onchange="S.enroll.days=+this.value;updateNavStatus()"/>
-        일간
-      </div>
-    </div>` : `
-    <div class="sc-row sc-sub">
-      <div class="sc-lbl" style="width:130px;font-size:13px;font-weight:600;color:var(--text-2)">신청 기간</div>
-      <div class="sc-ctrl" style="gap:6px">
-        <input type="date" class="input" style="font-size:12px" value="${e.applyFrom}" onchange="S.enroll.applyFrom=this.value;updateNavStatus()"/>
-        <span style="color:var(--text-3)">~</span>
-        <input type="date" class="input" style="font-size:12px" value="${e.applyTo}" onchange="S.enroll.applyTo=this.value;updateNavStatus()"/>
-      </div>
-    </div>
-    <div class="sc-row sc-sub">
-      <div class="sc-lbl" style="width:130px;font-size:13px;font-weight:600;color:var(--text-2)">학습 기간</div>
-      <div class="sc-ctrl" style="gap:6px">
-        <input type="date" class="input" style="font-size:12px" value="${e.learnFrom}" onchange="S.enroll.learnFrom=this.value;updateNavStatus()"/>
-        <span style="color:var(--text-3)">~</span>
-        <input type="date" class="input" style="font-size:12px" value="${e.learnTo}" onchange="S.enroll.learnTo=this.value;updateNavStatus()"/>
-      </div>
-    </div>`}
     <div class="sc-row">
       <div class="sc-lbl">모집 정원</div>
       <div class="sc-ctrl">
@@ -2619,25 +2809,32 @@ function renderS4() {
     <div class="sc-row">
       <div class="sc-lbl">수료 방식</div>
       <div class="sc-ctrl">
-        <label class="sc-pill ${e.completion==='immediate'?'active':''}">
-          <input type="radio" name="compMode" value="immediate" ${e.completion==='immediate'?'checked':''}
-            onchange="S.enroll.completion='immediate';refreshS4();updateNavStatus()"/>
-          즉시 수료
-        </label>
-        <label class="sc-pill ${e.completion==='end'?'active':''}">
-          <input type="radio" name="compMode" value="end" ${e.completion==='end'?'checked':''}
-            onchange="S.enroll.completion='end';refreshS4();updateNavStatus()"/>
-          기간 종료 후
-        </label>
+        <div class="sc-radio-group">
+          <label class="sc-radio-item ${e.completion==='immediate'?'active':''}">
+            <input type="radio" name="compMode" value="immediate" ${e.completion==='immediate'?'checked':''}
+              onchange="S.enroll.completion='immediate';refreshS4();updateNavStatus()"/>
+            <span class="sc-radio-dot"></span>
+            <span class="sc-radio-lbl">즉시 수료</span>
+          </label>
+          <label class="sc-radio-item ${e.completion==='end'?'active':''}">
+            <input type="radio" name="compMode" value="end" ${e.completion==='end'?'checked':''}
+              onchange="S.enroll.completion='end';refreshS4();updateNavStatus()"/>
+            <span class="sc-radio-dot"></span>
+            <span class="sc-radio-lbl">기간 종료 후</span>
+          </label>
+        </div>
       </div>
     </div>
     <div class="sc-row" style="border-bottom:none">
       <div class="sc-lbl">수료 조건</div>
-      <div class="sc-ctrl" style="gap:12px">
+      <div class="sc-ctrl" style="gap:10px">
         <span style="font-size:13px;font-weight:600;color:var(--text-2)">진도율</span>
-        <input type="range" min="0" max="100" step="10" value="${e.progress}" style="flex:1;min-width:120px;accent-color:var(--brand)"
-          oninput="S.enroll.progress=+this.value;document.getElementById('s4ProgV').textContent=this.value+'%';updateNavStatus()"/>
-        <span id="s4ProgV" style="font-size:16px;font-weight:800;color:var(--brand);min-width:44px">${e.progress}%</span>
+        <div style="display:flex;align-items:center;gap:8px;flex:1;max-width:240px">
+          <input type="range" min="0" max="100" step="10" value="${e.progress}"
+            style="flex:1;height:3px;accent-color:var(--brand);cursor:pointer"
+            oninput="S.enroll.progress=+this.value;document.getElementById('s4ProgV').textContent=this.value+'%';updateNavStatus()"/>
+          <span id="s4ProgV" style="font-size:14px;font-weight:800;color:var(--brand);min-width:38px;text-align:right">${e.progress}%</span>
+        </div>
       </div>
     </div>
   </div>`;
@@ -2647,26 +2844,159 @@ function refreshS4() { const w=document.getElementById('s4Wrap'); if(w) w.innerH
 /* ══════════════════════════════════════════════════════════
    Step 5 — 부가 설정
 ══════════════════════════════════════════════════════════ */
+const CAT_DATA = {
+  '경영·리더십': {
+    '리더십': ['팀 리더십','조직 리더십','전략적 리더십'],
+    '경영전략': ['사업기획','변화관리','의사결정'],
+    '조직관리': ['성과관리','인재개발','조직문화'],
+  },
+  'IT·테크': {
+    '개발': ['프론트엔드','백엔드','모바일'],
+    '데이터': ['데이터분석','AI·ML','빅데이터'],
+    '인프라': ['클라우드','보안','네트워크'],
+  },
+  '마케팅·영업': {
+    '디지털마케팅': ['SNS마케팅','콘텐츠마케팅','퍼포먼스마케팅'],
+    '영업': ['B2B영업','고객관리','협상스킬'],
+    '브랜드': ['브랜드전략','PR','광고기획'],
+  },
+  'HR·조직관리': {
+    '채용': ['채용기획','인터뷰스킬','온보딩'],
+    '교육훈련': ['교육기획','HRD','코칭'],
+    '노무': ['노동법','급여관리','복리후생'],
+  },
+  '재무·회계': {
+    '회계': ['재무회계','관리회계','세무'],
+    '재무': ['재무분석','예산관리','투자'],
+    '자금': ['자금계획','원가관리','내부통제'],
+  },
+  '어학': {
+    '영어': ['비즈니스영어','영어회화','영어작문'],
+    '중국어': ['비즈니스중국어','중국어회화','HSK'],
+    '기타외국어': ['일본어','스페인어','독일어'],
+  },
+  '직무공통': {
+    '커뮤니케이션': ['발표스킬','글쓰기','회의진행'],
+    '문서작성': ['보고서','기획서','제안서'],
+    '업무효율': ['시간관리','엑셀','프로젝트관리'],
+  },
+};
+
+function addCourseTag(val) {
+  const tag = val.trim().replace(/^#/,'');
+  if (!tag || S.courseTags.includes(tag) || S.courseTags.length >= 10) return;
+  S.courseTags.push(tag);
+  document.getElementById('s5Wrap').innerHTML = renderS5();
+}
+function removeCourseTag(tag) {
+  S.courseTags = S.courseTags.filter(t=>t!==tag);
+  document.getElementById('s5Wrap').innerHTML = renderS5();
+}
+function setCat1(v) {
+  S.courseCat1=v; S.courseCat2=''; S.courseCat3='';
+  document.getElementById('s5Wrap').innerHTML=renderS5();
+}
+function setCat2(v) {
+  S.courseCat2=v; S.courseCat3='';
+  document.getElementById('s5Wrap').innerHTML=renderS5();
+}
+function setCat3(v) {
+  S.courseCat3=v;
+  document.getElementById('s5Wrap').innerHTML=renderS5();
+}
+
 function renderS5() {
-  const rows = [
-    {key:'sequential', label:'학습 순서', desc:'등록된 목차 순서대로 학습', onL:'순서 학습', offL:'자율 학습'},
-    {key:'progressLock', label:'진도바 이동 제한', desc:'동영상 프로그레스바 임의 이동 차단', onL:'제한', offL:'허용'},
-    {key:'speedLock', label:'동영상 배속 고정', desc:'1배속으로 고정', onL:'고정', offL:'자유'},
-    {key:'captureBlock', label:'화면 캡처 방지', desc:'캡처 프로그램 방어로 저작권 보호', onL:'적용', offL:'미적용'},
+  const toggleRows = [
+    {key:'sequential',   label:'학습 순서',       desc:'등록된 목차 순서대로 학습',           onL:'순서 학습', offL:'자율 학습'},
+    {key:'progressLock', label:'진도바 이동 제한', desc:'동영상 프로그레스바 임의 이동 차단',   onL:'제한',     offL:'허용'},
+    {key:'speedLock',    label:'동영상 배속 고정', desc:'1배속으로 고정',                       onL:'고정',     offL:'자유'},
+    {key:'captureBlock', label:'화면 캡처 방지',   desc:'캡처 프로그램 방어로 저작권 보호',     onL:'적용',     offL:'미적용'},
   ];
-  return `<div class="settings-card">
-    ${rows.map(r=>`
-      <div class="sc-toggle-row">
-        <div class="sc-toggle-info">
-          <div class="sc-toggle-lbl">${r.label}</div>
-          <div class="sc-toggle-desc">${r.desc}</div>
+  return `
+  <!-- 과정 메타 설정 -->
+  <div class="s5-meta-card">
+    <!-- 썸네일 -->
+    <div class="s5-meta-row">
+      <div class="s5-meta-lbl">썸네일</div>
+      <div class="s5-meta-body">
+        <div class="s5-thumb-area">
+          <div class="s5-thumb-preview" onclick="toast('썸네일 업로드 (프로토타입)')">
+            <div class="s5-thumb-plus">+</div>
+            <span>이미지 추가</span>
+          </div>
+          <div class="s5-thumb-hint">
+            · 권장 사이즈: 800 × 450px (16:9)<br/>
+            · JPG, PNG, GIF (최대 10MB)<br/>
+            · 썸네일은 1개만 등록 가능합니다
+          </div>
         </div>
-        <span id="s5txt${r.key}" class="sc-state-txt">${S.extra[r.key]?r.onL:r.offL}</span>
-        <label class="toggle-switch">
-          <input type="checkbox" ${S.extra[r.key]?'checked':''}
-            onchange="S.extra['${r.key}']=this.checked;document.getElementById('s5txt${r.key}').textContent=this.checked?'${r.onL}':'${r.offL}';updateNavStatus()"/>
-          <span class="ttrack"><span class="tthumb"></span></span>
-        </label>
+      </div>
+    </div>
+    <!-- 과정 소개 -->
+    <div class="s5-meta-row">
+      <div class="s5-meta-lbl" style="flex-direction:column;align-items:flex-start;justify-content:flex-start;padding-top:14px;gap:8px">
+        <span>과정 소개</span>
+        <button class="ai-write-btn" title="AI로 작성하기" onclick="toast('AI 작성 기능은 준비 중입니다.','success')">✦</button>
+      </div>
+      <div class="s5-meta-body">
+        <textarea class="s5-intro-textarea"
+          placeholder="수강생에게 보여질 과정 소개를 입력해 주세요."
+          oninput="S.courseIntro=this.value">${esc(S.courseIntro)}</textarea>
+      </div>
+    </div>
+    <!-- 카테고리 -->
+    <div class="s5-meta-row">
+      <div class="s5-meta-lbl">카테고리</div>
+      <div class="s5-meta-body">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <select class="sc-select" onchange="setCat1(this.value)">
+            <option value="">대분류 선택</option>
+            ${Object.keys(CAT_DATA).map(c=>`<option value="${c}" ${S.courseCat1===c?'selected':''}>${c}</option>`).join('')}
+          </select>
+          <select class="sc-select" onchange="setCat2(this.value)" ${!S.courseCat1?'disabled':''}>
+            <option value="">중분류 선택</option>
+            ${S.courseCat1 ? Object.keys(CAT_DATA[S.courseCat1]||{}).map(c=>`<option value="${c}" ${S.courseCat2===c?'selected':''}>${c}</option>`).join('') : ''}
+          </select>
+          <select class="sc-select" onchange="setCat3(this.value)" ${!S.courseCat2?'disabled':''}>
+            <option value="">소분류 선택</option>
+            ${S.courseCat2 ? (CAT_DATA[S.courseCat1]?.[S.courseCat2]||[]).map(c=>`<option value="${c}" ${S.courseCat3===c?'selected':''}>${c}</option>`).join('') : ''}
+          </select>
+        </div>
+      </div>
+    </div>
+    <!-- 태그 -->
+    <div class="s5-meta-row">
+      <div class="s5-meta-lbl">태그 <span style="font-size:12px;font-weight:400;color:var(--text-3)">(최대 10개)</span></div>
+      <div class="s5-meta-body">
+        <div class="s5-tag-wrap" onclick="this.querySelector('.s5-tag-input').focus()">
+          ${S.courseTags.map(tag=>`
+            <div class="s5-tag-chip">#${esc(tag)}
+              <button onclick="event.stopPropagation();removeCourseTag('${esc(tag)}')">✕</button>
+            </div>`).join('')}
+          <input class="s5-tag-input"
+            placeholder="${S.courseTags.length===0?'#태그를 입력하고 Enter':''}"
+            onkeydown="if(event.key==='Enter'||event.key===','||event.key===' '){event.preventDefault();addCourseTag(this.value);this.value=''}" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 학습 옵션 토글 -->
+  <div class="settings-card">
+    ${toggleRows.map(r=>`
+      <div class="sc-row" style="${r===toggleRows[toggleRows.length-1]?'border-bottom:none':''}">
+        <div class="sc-lbl">${r.label}</div>
+        <div class="sc-ctrl" style="justify-content:space-between">
+          <span style="font-size:14px;color:var(--text-3)">${r.desc}</span>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span id="s5txt${r.key}" class="sc-state-txt">${S.extra[r.key]?r.onL:r.offL}</span>
+            <label class="toggle-switch">
+              <input type="checkbox" ${S.extra[r.key]?'checked':''}
+                onchange="S.extra['${r.key}']=this.checked;document.getElementById('s5txt${r.key}').textContent=this.checked?'${r.onL}':'${r.offL}';updateNavStatus()"/>
+              <span class="ttrack"><span class="tthumb"></span></span>
+            </label>
+          </div>
+        </div>
       </div>`).join('')}
   </div>`;
 }
@@ -2759,11 +3089,9 @@ function renderS6() {
       ${checks.map(c=>`
         <div class="open-check-item ${c.ok?'ok':'err'}">
           <div class="cico">${c.ok?'✓':'✗'}</div>
-          <div class="cbody">
-            <div class="clbl">${c.label}</div>
-            <div class="cdesc">${c.desc}</div>
-            ${!c.ok?`<span class="clink" onclick="scrollToSection('${c.anchor}')">← 해당 항목으로 이동</span>`:''}
-          </div>
+          <span class="clbl">${c.label}</span>
+          <span class="cdesc">${c.desc}</span>
+          ${!c.ok?`<span class="clink" onclick="scrollToSection('${c.anchor}')">이동 →</span>`:''}
         </div>
       `).join('')}
     </div>
