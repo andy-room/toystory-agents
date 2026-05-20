@@ -3399,7 +3399,8 @@ function registerContent() {
     if (S.contentRegData?.dur) c.dur = S.contentRegData.dur;
     c.registered = true;
     toast(`"${formTitle}" 등록 완료`, 'success');
-    closeContentEdit();
+    S.contentEditMode = false;
+    refreshTocFrame();
   };
   if (S.contentRegFromPrev && S.contentRegData) {
     const modified = formTitle !== S.contentRegData.title;
@@ -3875,7 +3876,11 @@ function registerOfflineSessions(contentId) {
   const sessions = getOfflineSessions(contentId);
   if (sessions.length === 0) return;
   S.offlineRegisteredMap[contentId] = true;
-  refreshOfflineSessions(contentId);
+  const toc = S.toc.find(t => t.id === S.activeTocId);
+  const c = toc?.contents.find(c => c.id === contentId);
+  if (c) { c.registered = true; toast(`"${c.title}" 등록 완료`, 'success'); }
+  S.contentEditMode = false;
+  refreshTocFrame();
 }
 
 function unregisterOfflineSessions(contentId) {
