@@ -1864,15 +1864,15 @@ const S = {
 };
 
 const TYPES = [
-  {id:'offline',    bg:'rgba(0,191,64,.06)',     imgs:['./images/오프라인.png'],
+  {id:'offline',    bg:'rgba(167,105,230,.06)',  imgs:['./images/오프라인.png'],
     label:'오프라인',                sub:'오프라인 현장 학습의 일정, 회차 출석관리를 통한 학습',     kind:'offline', tags:['오프라인','출석관리']},
-  {id:'blended',    bg:'rgba(101,65,242,.06)',   imgs:['./images/오프라인.png','./images/동영상.png','./images/과제.png'],
+  {id:'blended',    bg:'rgba(167,105,230,.06)',  imgs:['./images/오프라인.png','./images/동영상.png','./images/과제.png'],
     label:'현장학습 + 사전,사후 교육', sub:'오프라인 현장 학습과 사전 사후 교육을 통한 복합 과정',  kind:'offline', tags:['오프라인','사전교육','사후교육']},
-  {id:'micro',      bg:'rgba(255,146,0,.06)',    imgs:['./images/동영상.png'],
+  {id:'micro',      bg:'rgba(240,64,48,.06)',    imgs:['./images/유튜브.png'],
     label:'마이크로러닝',             sub:'짧은 동영상 수강을 위한 심플한 학습 과정',              kind:'online',  tags:['짧은 동영상']},
-  {id:'micro+',     bg:'rgba(255,200,0,.06)',    imgs:['./images/동영상.png','./images/아티클.png'],
+  {id:'micro+',     bg:'rgba(240,64,48,.06)',    imgs:['./images/유튜브.png','./images/아티클.png'],
     label:'마이크로러닝 + 자료',      sub:'짧은 동영상과 자료를 함께 학습하는 과정',               kind:'online',  tags:['동영상','아티클','자료']},
-  {id:'online',     bg:'rgba(0,102,255,.06)',    imgs:['./images/동영상.png','./images/퀴즈.png','./images/시험.png'],
+  {id:'online',     bg:'rgba(26,110,224,.06)',   imgs:['./images/동영상.png','./images/퀴즈.png','./images/시험.png'],
     label:'온라인',                  sub:'동영상 강의를 통한 학습 과정',                          kind:'online',  tags:['동영상','퀴즈','시험','과제']},
   {id:'hybrid',     bg:'rgba(0,191,140,.06)',    imgs:['./images/동영상.png','./images/오프라인.png','./images/토론.png'],
     label:'하이브리드러닝',           sub:'온라인 + 오프라인을 통한 복합 과정',                    kind:'hybrid',  tags:['온라인','오프라인']},
@@ -1911,33 +1911,33 @@ const SECTIONS = [
 
 const DASH_DATA = [
   /* 편집중 */
-  {title:'생생경영학', kind:'online', status:'create', mod:'오늘'},
-  {title:'AI 마스터 전문교육과정', kind:'online', status:'create', mod:'어제'},
-  {title:'AI 리터러시 교육', kind:'hybrid', status:'edit', mod:'3일 전'},
-  {title:'글로벌 비즈니스 커뮤니케이션', kind:'online', status:'create', mod:'4일 전'},
-  {title:'조직문화 혁신 워크숍', kind:'offline', status:'edit', mod:'5일 전'},
+  {title:'생생경영학', kind:'online', typeId:'micro', status:'create', mod:'오늘'},
+  {title:'AI 마스터 전문교육과정', kind:'online', typeId:'online', status:'create', mod:'어제'},
+  {title:'AI 리터러시 교육', kind:'hybrid', typeId:'hybrid', status:'edit', mod:'3일 전'},
+  {title:'글로벌 비즈니스 커뮤니케이션', kind:'online', typeId:'micro+', status:'create', mod:'4일 전'},
+  {title:'조직문화 혁신 워크숍', kind:'offline', typeId:'offline', status:'edit', mod:'5일 전'},
   /* 모집중 */
-  {title:'2026년 2차 DVP Ⅳ 과정', kind:'offline', status:'ready', learnFrom:'2026-06-01', learnTo:'2026-07-31'},
-  {title:'CNA(11기)', kind:'online', status:'ready', learnFrom:'2026-05-20', learnTo:'2026-06-30'},
-  {title:'신입사원 Jump Up 과정', kind:'hybrid', status:'ready', learnFrom:'2026-07-01', learnTo:'2026-08-31'},
-  {title:'경영능력 평가 양성과정', kind:'online', status:'ready', learnFrom:'2026-05-15', learnTo:'2026-06-30'},
-  {title:'디지털 전환 리더십 과정', kind:'hybrid', status:'ready', learnFrom:'2026-06-10', learnTo:'2026-07-10'},
-  {title:'데이터 분석 기초 과정', kind:'online', status:'ready', learnFrom:'2026-06-20', learnTo:'2026-08-20'},
-  {title:'고객 응대 서비스 스킬', kind:'online', status:'ready', learnFrom:'2026-07-01', learnTo:'2026-07-31'},
+  {title:'2026년 2차 DVP Ⅳ 과정', kind:'offline', typeId:'offline', status:'ready', learnFrom:'2026-06-01', learnTo:'2026-07-31'},
+  {title:'CNA(11기)', kind:'online', typeId:'online', status:'ready', learnFrom:'2026-05-20', learnTo:'2026-06-30'},
+  {title:'신입사원 Jump Up 과정', kind:'hybrid', typeId:'blended', status:'ready', learnFrom:'2026-07-01', learnTo:'2026-08-31'},
+  {title:'경영능력 평가 양성과정', kind:'online', typeId:'micro', status:'ready', learnFrom:'2026-05-15', learnTo:'2026-06-30'},
+  {title:'디지털 전환 리더십 과정', kind:'hybrid', typeId:'hybrid', status:'ready', learnFrom:'2026-06-10', learnTo:'2026-07-10'},
+  {title:'데이터 분석 기초 과정', kind:'online', typeId:'online', status:'ready', learnFrom:'2026-06-20', learnTo:'2026-08-20'},
+  {title:'고객 응대 서비스 스킬', kind:'online', typeId:'micro+', status:'ready', learnFrom:'2026-07-01', learnTo:'2026-07-31'},
   /* 학습중 */
-  {title:'데이터기반 문제해결 기본과정', kind:'online', status:'ongoing', learnFrom:'2026-04-15', learnTo:'2026-06-15'},
-  {title:'2026년 상반기 리더십 아카데미', kind:'offline', status:'ongoing', learnFrom:'2026-03-01', learnTo:'2026-06-30'},
-  {title:'프로젝트 관리 실무 과정', kind:'hybrid', status:'ongoing', learnFrom:'2026-04-01', learnTo:'2026-06-30'},
+  {title:'데이터기반 문제해결 기본과정', kind:'online', typeId:'online', status:'ongoing', learnFrom:'2026-04-15', learnTo:'2026-06-15'},
+  {title:'2026년 상반기 리더십 아카데미', kind:'offline', typeId:'offline', status:'ongoing', learnFrom:'2026-03-01', learnTo:'2026-06-30'},
+  {title:'프로젝트 관리 실무 과정', kind:'hybrid', typeId:'blended', status:'ongoing', learnFrom:'2026-04-01', learnTo:'2026-06-30'},
   /* 학습종료 */
-  {title:'경력사원 입문교육', kind:'offline', status:'done', certify:'completed'},
-  {title:'2025년 7차 DVP Ⅱ 과정', kind:'offline', status:'done', certify:'processing'},
-  {title:'2025년 데이터기반 문제해결(3차)', kind:'online', status:'done', certify:'completed'},
-  {title:'비즈니스 글쓰기 실전 과정', kind:'online', status:'done', certify:'completed'},
-  {title:'2025년 하반기 신입사원 교육', kind:'hybrid', status:'done', certify:'completed'},
-  {title:'재무·회계 기초 이해', kind:'online', status:'done', certify:'processing'},
-  {title:'안전보건 법정의무 교육 2025', kind:'online', status:'done', certify:'completed'},
-  {title:'협업툴 활용 실무 트레이닝', kind:'online', status:'done', certify:'completed'},
-  {title:'2025년 4차 DVP Ⅰ 과정', kind:'offline', status:'done', certify:'completed'},
+  {title:'경력사원 입문교육', kind:'offline', typeId:'offline', status:'done', certify:'completed'},
+  {title:'2025년 7차 DVP Ⅱ 과정', kind:'offline', typeId:'offline', status:'done', certify:'processing'},
+  {title:'2025년 데이터기반 문제해결(3차)', kind:'online', typeId:'micro', status:'done', certify:'completed'},
+  {title:'비즈니스 글쓰기 실전 과정', kind:'online', typeId:'online', status:'done', certify:'completed'},
+  {title:'2025년 하반기 신입사원 교육', kind:'hybrid', typeId:'blended', status:'done', certify:'completed'},
+  {title:'재무·회계 기초 이해', kind:'online', typeId:'online', status:'done', certify:'processing'},
+  {title:'안전보건 법정의무 교육 2025', kind:'online', typeId:'micro+', status:'done', certify:'completed'},
+  {title:'협업툴 활용 실무 트레이닝', kind:'online', typeId:'micro', status:'done', certify:'completed'},
+  {title:'2025년 4차 DVP Ⅰ 과정', kind:'offline', typeId:'offline', status:'done', certify:'completed'},
 ];
 
 /* ══════════════════════════════════════════════════════════
@@ -1975,6 +1975,10 @@ const DASH_PAGE_SIZE = 12;
 function setDashPage(p) { dashPage = p; renderDashboard(); }
 function renderDashboard() {
   const KIND_IMG = {online:'./images/동영상.png', offline:'./images/오프라인.png', hybrid:'./images/아티클.png'};
+  const getItemIcon = item => {
+    const t = TYPES.find(t => t.id === item.typeId);
+    return (t?.imgs?.[0]) || KIND_IMG[item.kind] || './images/동영상.png';
+  };
   const sl = {create:'과정 생성', edit:'콘텐츠 편집', ready:'오픈 예정', ongoing:'학습 중', done:'학습 완료'};
   const tabs = [
     {id:'all',     label:'전체',    items:DASH_DATA},
@@ -2016,7 +2020,7 @@ function renderDashboard() {
             const certTxt = item.certify==='processing'?'수료 처리 중':item.certify==='completed'?'수료 완료':'';
             const meta = item.learnFrom&&item.learnTo ? `학습 ${item.learnFrom} ~ ${item.learnTo}` : item.mod ? `수정 ${item.mod}` : '';
             return `<div class="course-row${isDone?' done-card':''}" onclick="go('editor')">
-              <div class="type-icon"><img src="${KIND_IMG[item.kind]||'./images/동영상.png'}" alt="${item.kind}"/></div>
+              <div class="type-icon"><img src="${getItemIcon(item)}" alt="${item.kind}"/></div>
               <div class="cinfo">
                 <div class="ctitle">${esc(item.title)}</div>
                 <div class="cmeta">${meta}${certTxt?` · ${certTxt}`:''}</div>
@@ -2341,24 +2345,31 @@ const TYPE_DEFAULTS = {
     ]},
   ],
   micro: [
-    { title:'1강', contents:[
-      {type:'동영상', title:'핵심 포인트 1'},
-      {type:'동영상', title:'핵심 포인트 2'},
+    { title:'토픽 1. 왜 알아야 하는가', contents:[
+      {type:'유튜브', title:'[3분] 핵심 개념 한눈에 보기'},
+      {type:'퀴즈',  title:'빠른 이해도 체크'},
     ]},
-    { title:'2강', contents:[
-      {type:'동영상', title:'핵심 포인트 3'},
-      {type:'동영상', title:'핵심 포인트 4'},
+    { title:'토픽 2. 이렇게 적용한다', contents:[
+      {type:'유튜브', title:'[4분] 실전 적용 사례'},
+      {type:'퀴즈',  title:'빠른 이해도 체크'},
+    ]},
+    { title:'토픽 3. 자주 묻는 질문', contents:[
+      {type:'유튜브', title:'[2분] FAQ 핵심 정리'},
     ]},
   ],
   'micro+': [
-    { title:'1강', contents:[
-      {type:'동영상', title:'핵심 포인트 1'},
-      {type:'아티클', title:'보충 읽기 자료'},
+    { title:'토픽 1. 핵심 개념 잡기', contents:[
+      {type:'유튜브', title:'[3분] 핵심 개념 소개'},
+      {type:'아티클', title:'읽기 자료 — 개념 정리'},
     ]},
-    { title:'2강', contents:[
-      {type:'동영상', title:'핵심 포인트 2'},
-      {type:'아티클', title:'심화 읽기 자료'},
-      {type:'첨부파일', title:'실습 자료 다운로드'},
+    { title:'토픽 2. 실전 활용법', contents:[
+      {type:'유튜브', title:'[4분] 실전 활용 가이드'},
+      {type:'아티클', title:'읽기 자료 — 심화 내용'},
+      {type:'첨부파일', title:'실습 워크시트.pdf'},
+    ]},
+    { title:'토픽 3. 마무리 & 확인', contents:[
+      {type:'유튜브', title:'[2분] 핵심 내용 요약'},
+      {type:'퀴즈',  title:'최종 이해도 확인'},
     ]},
   ],
   online: [
