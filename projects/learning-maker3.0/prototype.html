@@ -290,12 +290,12 @@ input,select,textarea { font-family:inherit; font-size:16px }
 .snav-item.active .snav-label { font-weight:700; color:var(--text-2) }
 .snav-item:hover:not(.active) .snav-info .snav-label { color:var(--text-2) }
 .editor-open-btn {
-  margin-top:20px; width:100%; padding:11px; border-radius:var(--r8);
-  background:#1A1A1A; color:#fff; border:none;
+  margin-top:20px; width:100%; padding:14px; border-radius:var(--r8);
+  background:var(--brand); color:#fff; border:none;
   font-size:13px; font-weight:700; cursor:pointer;
   transition:background var(--tr), opacity var(--tr);
 }
-.editor-open-btn:not(:disabled):hover { background:#333 }
+.editor-open-btn:not(:disabled):hover { background:var(--brand-strong) }
 .editor-open-btn:disabled { background:#D1D1D6; color:#8E8E93; cursor:not-allowed }
 
 /* ─── Right Content Box ───────────────────────────────────── */
@@ -417,6 +417,19 @@ input,select,textarea { font-family:inherit; font-size:16px }
   font-size:15px; font-weight:800; color:var(--text); letter-spacing:-.3px;
 }
 .toc-frame-course-name .placeholder { font-weight:400; color:var(--text-3) }
+.toc-frame-course-editable {
+  border-radius:var(--r6); padding:3px 6px; margin:-3px -6px;
+  outline:none; cursor:text; min-width:80px;
+  transition:background var(--tr), box-shadow var(--tr);
+}
+.toc-frame-course-editable:empty::before {
+  content: attr(data-placeholder);
+  font-weight:400; color:var(--text-3); pointer-events:none;
+}
+.toc-frame-course-editable:hover { background:var(--surface-2); }
+.toc-frame-course-editable:focus {
+  background:var(--surface); box-shadow:0 0 0 2px var(--brand);
+}
 
 /* 제작 유형 배지 (TOC 헤더 우측) */
 .toc-type-badge {
@@ -1009,7 +1022,7 @@ input,select,textarea { font-family:inherit; font-size:16px }
 /* 신규 등록 폼 */
 .creg-form { padding:16px; display:flex; flex-direction:column; gap:14px; overflow-y:auto; flex:1 }
 .creg-field { display:flex; flex-direction:column; gap:6px }
-.creg-label { font-size:12px; font-weight:700; color:var(--text-2) }
+.creg-label { font-size:14px; font-weight:700; color:var(--text-2) }
 .creg-label .req { color:var(--danger); margin-left:2px }
 .creg-input {
   width:100%; padding:9px 12px; font-size:13px;
@@ -1291,14 +1304,28 @@ input,select,textarea { font-family:inherit; font-size:16px }
 .thumb-reupload-btn:hover { border-color:var(--brand); color:var(--brand) }
 
 /* 과정 소개 textarea */
+.s5-intro-wrap { position:relative; }
 .s5-intro-textarea {
-  width:100%; min-height:80px; padding:10px 12px;
+  width:100%; min-height:230px; padding:10px 12px;
   border:1.5px solid var(--border-md); border-radius:var(--r8);
   font-size:13px; color:var(--text); background:var(--surface);
   resize:vertical; outline:none; font-family:inherit; line-height:1.6;
   transition:border-color var(--tr);
 }
 .s5-intro-textarea:focus { border-color:var(--brand) }
+.ai-write-btn-inline {
+  position:absolute; top:8px; right:8px;
+  display:inline-flex; align-items:center; gap:5px;
+  padding:5px 11px; border-radius:var(--r8); border:none;
+  background:linear-gradient(135deg,#6366f1,#8b5cf6,#ec4899);
+  color:#fff; font-size:12px; font-weight:700; cursor:pointer;
+  opacity:0; pointer-events:none;
+  transition:opacity var(--tr), filter var(--tr);
+  user-select:none;
+}
+.ai-write-btn-inline:hover { filter:brightness(1.12) }
+.s5-intro-wrap:hover .ai-write-btn-inline,
+.s5-intro-wrap:focus-within .ai-write-btn-inline { opacity:1; pointer-events:auto; }
 
 /* 카테고리 pills */
 .s5-cat-pills { display:flex; flex-wrap:wrap; gap:6px }
@@ -1453,6 +1480,249 @@ input,select,textarea { font-family:inherit; font-size:16px }
   transition:background var(--tr);
 }
 .lm-pt-confirm:hover { background:var(--brand-strong) }
+
+/* ─── 오프라인 회차 UI ──────────────────────────────── */
+.offline-session-header {
+  display:flex; align-items:center; justify-content:space-between;
+}
+.offline-session-title { font-size:14px; font-weight:700; color:var(--text-2) }
+.offline-session-add-btn {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:6px 12px; border-radius:var(--r8);
+  border:1.5px dashed var(--border-strong);
+  background:var(--surface); color:var(--text-2);
+  font-size:12px; font-weight:600; cursor:pointer;
+  transition:border-color var(--tr), background var(--tr), color var(--tr);
+}
+.offline-session-add-btn:hover { border-color:var(--brand); background:var(--brand-soft); color:var(--brand) }
+.offline-timeline {
+  position:relative;
+}
+.offline-timeline::before {
+  content:''; position:absolute;
+  left:24px; top:16px; bottom:16px;
+  width:1.5px; background:var(--border-md); border-radius:99px;
+}
+.offline-timeline-item {
+  display:flex; align-items:flex-start; gap:10px; margin-bottom:10px;
+}
+.offline-timeline-item:last-child { margin-bottom:0 }
+.offline-timeline-left {
+  width:50px; flex-shrink:0;
+  display:flex; flex-direction:column; align-items:center;
+  padding-top:11px; gap:4px;
+  position:relative; z-index:1;
+}
+.offline-time-dot {
+  width:10px; height:10px; border-radius:50%; flex-shrink:0;
+  background:var(--brand);
+  border:2px solid var(--surface);
+  box-shadow:0 0 0 1.5px var(--brand);
+}
+.offline-time-dot.no-time {
+  background:var(--surface);
+  box-shadow:0 0 0 1.5px var(--border-strong);
+}
+.offline-time-label {
+  font-size:11px; font-weight:700; color:var(--brand);
+  text-align:center; white-space:nowrap; line-height:1.3;
+}
+.offline-time-label.no-time { color:var(--text-3); font-weight:400 }
+.offline-session-card {
+  flex:1; min-width:0;
+  border:1px solid var(--border); border-radius:var(--r8);
+  background:var(--surface); overflow:hidden;
+}
+.offline-session-card-head {
+  display:flex; align-items:center; gap:8px;
+  padding:10px 12px; background:var(--surface-2);
+  cursor:pointer; user-select:none; transition:background var(--tr);
+}
+.offline-session-card-head:hover { background:var(--surface-3) }
+.offline-session-num {
+  width:22px; height:22px; border-radius:50%; flex-shrink:0;
+  background:var(--brand); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:700;
+}
+.offline-session-name-input {
+  flex:1; min-width:80px; font-size:13px; font-weight:600; color:var(--text);
+  border:none; background:transparent; outline:none;
+  border-bottom:1.5px solid transparent; padding:0;
+  transition:border-color var(--tr);
+}
+.offline-session-name-input:focus { border-bottom-color:var(--brand) }
+.offline-session-meta { display:flex; align-items:center; gap:5px; flex-shrink:0 }
+.offline-session-meta-label { font-size:11px; color:var(--text-3); white-space:nowrap }
+.offline-session-meta-input {
+  padding:4px 7px; font-size:12px; color:var(--text);
+  border:1.5px solid var(--border-md); border-radius:var(--r6);
+  background:var(--surface); outline:none; transition:border-color var(--tr);
+}
+.offline-session-meta-input:focus { border-color:var(--brand) }
+.offline-session-expand-btn {
+  width:22px; height:22px; border-radius:var(--r4); flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; color:var(--text-3); transition:transform var(--tr);
+}
+.offline-session-expand-btn.open { transform:rotate(0deg) }
+.offline-session-expand-btn.closed { transform:rotate(-90deg) }
+.offline-session-del-btn {
+  width:22px; height:22px; border-radius:var(--r4); flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; color:var(--text-3); cursor:pointer;
+  transition:background var(--tr), color var(--tr);
+}
+.offline-session-del-btn:hover { background:var(--danger-soft); color:var(--danger) }
+.offline-session-body { padding:10px 12px; display:flex; flex-direction:column; gap:6px; min-height:0 }
+.oreg-empty-sched { font-size:12px; color:var(--text-3); padding:8px 0; text-align:center; }
+
+/* 좌측 정렬 */
+.oreg-sched-header span { text-align:left; }
+.oreg-sched-row .oreg-field { display:flex; justify-content:flex-start; }
+
+/* 회차별 등록 버튼 영역 */
+.sess-reg-row {
+  display:flex; align-items:center; justify-content:flex-end; gap:8px;
+  padding:8px 14px; border-top:1px solid var(--border-md);
+}
+.sess-confirm-btn {
+  padding:5px 16px; border-radius:var(--r8); border:none;
+  background:var(--brand); color:#fff; font-size:13px; font-weight:700; cursor:pointer;
+  transition:background var(--tr);
+}
+.sess-confirm-btn:hover { background:var(--brand-strong); }
+.sess-confirmed-badge {
+  font-size:13px; font-weight:700; color:#16a34a;
+  display:flex; align-items:center; gap:4px;
+}
+.sess-undo-btn {
+  background:none; border:1.5px solid var(--border-md); padding:4px 12px;
+  border-radius:var(--r6); font-size:12px; cursor:pointer; color:var(--text-2);
+  transition:border-color var(--tr);
+}
+.sess-undo-btn:hover { border-color:var(--brand); color:var(--brand); }
+.offline-session-card.sess-confirmed { border-color:#16a34a; }
+.offline-session-num.confirmed { background:#16a34a; }
+
+/* sticky 버튼 행 */
+.offline-reg-sticky {
+  position:sticky; bottom:0; z-index:10;
+  display:flex; gap:8px; align-items:center;
+  background:var(--surface); padding:10px 0 2px;
+  border-top:1px solid var(--border-md); margin-top:10px;
+}
+.offline-schedule-row {
+  display:grid; grid-template-columns:1fr 1fr; gap:8px;
+  padding:10px 32px 10px 10px; background:var(--surface-2);
+  border-radius:var(--r8); border:1px solid var(--border); position:relative;
+}
+.offline-sched-field { display:flex; flex-direction:column; gap:4px }
+.offline-sched-label { font-size:11px; font-weight:600; color:var(--text-3) }
+.offline-sched-time-wrap { display:flex; align-items:center; gap:5px }
+.offline-sched-input {
+  padding:5px 8px; font-size:12px; color:var(--text);
+  border:1.5px solid var(--border-md); border-radius:var(--r6);
+  background:var(--surface); outline:none; transition:border-color var(--tr); width:100%;
+}
+.offline-sched-input:focus { border-color:var(--brand) }
+.offline-sched-del {
+  position:absolute; top:8px; right:8px;
+  width:20px; height:20px; border-radius:var(--r4);
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; color:var(--text-3); cursor:pointer;
+  transition:background var(--tr), color var(--tr);
+}
+.offline-sched-del:hover { background:var(--danger-soft); color:var(--danger) }
+.offline-sched-add-btn {
+  width:100%; padding:7px; border-radius:var(--r6);
+  border:1.5px dashed var(--border-md); background:transparent;
+  color:var(--text-3); font-size:12px; font-weight:600; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:4px;
+  transition:border-color var(--tr), color var(--tr), background var(--tr);
+}
+.offline-sched-add-btn:hover { border-color:var(--brand); color:var(--brand); background:var(--brand-soft) }
+.offline-register-row { display:flex; justify-content:flex-end; margin-top:14px; padding-top:12px; border-top:1px solid var(--border-md); }
+.offline-register-btn {
+  padding:8px 22px; border-radius:var(--r8); border:none;
+  background:var(--brand); color:#fff; font-size:14px; font-weight:700;
+  cursor:pointer; transition:background var(--tr);
+}
+.offline-register-btn:hover { background:var(--brand-strong) }
+
+/* 등록 완료 뷰 */
+.oreg-session-card {
+  flex:1; min-width:0; border:1.5px solid var(--border-md); border-radius:var(--r12);
+  background:var(--surface); overflow:hidden;
+}
+.oreg-session-head {
+  display:flex; align-items:center; gap:10px; padding:10px 14px;
+  border-bottom:1px solid var(--border-md); background:var(--surface-2);
+}
+.oreg-meta-group { display:flex; align-items:center; gap:4px; }
+.oreg-meta-label { font-size:12px; color:var(--text-3); flex-shrink:0; }
+.oreg-field {
+  display:inline-flex; align-items:center; gap:4px; padding:3px 6px;
+  border-radius:var(--r6); cursor:pointer; transition:background var(--tr); position:relative;
+}
+.oreg-field:hover { background:var(--brand-soft); }
+.oreg-field-name { flex:1; min-width:0; }
+.oreg-name-val { font-size:14px; font-weight:700; color:var(--text-1); }
+.oreg-field-sep { font-size:12px; color:var(--text-3); }
+.oreg-field-val { font-size:13px; color:var(--text-1); white-space:nowrap; }
+.oreg-field.oreg-selected { background:var(--brand-soft); outline:1.5px solid var(--brand); }
+.oreg-field.oreg-editing { background:var(--surface); outline:none; gap:6px; }
+.oreg-del-btn {
+  background:none; border:none; cursor:pointer; color:var(--text-3); font-size:13px;
+  padding:3px 6px; border-radius:var(--r6); transition:color var(--tr); flex-shrink:0;
+  display:none;
+}
+.oreg-del-btn.oreg-del-visible { display:inline-flex; align-items:center; }
+.oreg-del-btn:hover { color:var(--danger,#e53e3e); }
+.oreg-editmode-active { background:var(--brand-soft) !important; border-color:var(--brand) !important; color:var(--brand) !important; font-weight:700; }
+
+/* 미리보기 - 오프라인 회차 */
+.oprv-list { display:flex; flex-direction:column; gap:10px; }
+.oprv-sess { border:1px solid var(--border-md); border-radius:var(--r8); overflow:hidden; }
+.oprv-sess-head { display:flex; align-items:center; gap:8px; padding:8px 12px; background:var(--surface); font-size:13px; flex-wrap:wrap; }
+.oprv-sched-list { padding:6px 12px 8px; background:var(--surface-2); display:flex; flex-direction:column; gap:4px; }
+.oprv-sched-row { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.oprv-tag { font-size:12px; color:var(--text-2); background:var(--surface); border:1px solid var(--border-md); border-radius:99px; padding:2px 8px; white-space:nowrap; }
+.oprv-tag.time { color:var(--brand); border-color:var(--brand); background:var(--brand-soft); font-weight:700; }
+.oreg-schedules { padding:0 14px 10px; }
+.oreg-sched-header {
+  display:grid; grid-template-columns:280px 1fr 1fr 1fr 32px; gap:0;
+  padding:6px 0 4px; border-bottom:1px dashed var(--border-md);
+  font-size:11px; font-weight:600; color:var(--text-3); margin-bottom:2px;
+}
+.oreg-sched-header span { padding:0 6px; }
+.oreg-sched-row {
+  display:grid; grid-template-columns:280px 1fr 1fr 1fr 32px; gap:0;
+  align-items:center; padding:4px 0; border-bottom:1px dashed var(--border-md);
+}
+.oreg-sched-row:last-child { border-bottom:none; }
+.oreg-field-instructor { flex:1; }
+.oreg-field-notes { flex:1; }
+.oreg-sched-edit-row {
+  display:flex; align-items:center; gap:6px; padding:4px 0; flex-wrap:wrap; grid-column:1/-1;
+}
+.oreg-inline-input {
+  border:1.5px solid var(--border-strong); border-radius:var(--r6); padding:4px 8px;
+  font-size:13px; background:var(--surface); color:var(--text-1);
+  outline:none; min-width:0;
+}
+.oreg-inline-input:focus { border-color:var(--brand); }
+.oreg-confirm-btn {
+  padding:4px 12px; border-radius:var(--r6); border:1.5px solid var(--brand);
+  background:var(--brand); color:#fff; font-size:12px; font-weight:700; cursor:pointer;
+  flex-shrink:0;
+}
+.oreg-confirm-btn:hover { background:var(--brand-strong); }
+.offline-session-empty {
+  text-align:center; padding:20px; font-size:13px; color:var(--text-3);
+  border:1.5px dashed var(--border-md); border-radius:var(--r8);
+  background:var(--surface-2); margin-bottom:8px;
+}
 </style>
 </head>
 <body>
@@ -1535,7 +1805,7 @@ const S = {
   contentAddMode: null,
   inlineInsert: null,
   tooltip: null,
-  frameHeight: 820,
+  frameHeight: 670,
   tocEditMode: false,
   selectedTocItems: [],
   s4open: null, s5open: null,
@@ -1552,6 +1822,9 @@ const S = {
   clibImported: false,
   contentEditMode: false,
   contentRegMode: 'new',
+  offlineSessionMap: {},
+  offlineRegisteredMap: {},
+  offlineEditModeMap: {},
   contentSearch: '',
   contentRegTags: [],
   contentRegData: null,
@@ -1728,7 +2001,7 @@ function renderEditor() {
           </div>
           ${(()=>{
             const allOk = SECTIONS.every(s => getSectionStatus(s.id) === 'ok');
-            return `<button id="navOpenBtn" class="editor-open-btn" ${allOk?'':'disabled'} onclick="doOpen()">과정 오픈하기</button>`;
+            return `<button id="navOpenBtn" class="editor-open-btn" ${allOk?'':'disabled'} onclick="doOpen()">🪄 과정 오픈하기</button>`;
           })()}
         </div>
 
@@ -1836,12 +2109,21 @@ function updateLeftCourseTitle() {
   const el = document.getElementById('editorCourseName');
   if (el) el.innerHTML = S.courseName ? esc(S.courseName) : '<span style="color:var(--text-3);font-weight:400">미입력</span>';
   const ft = document.getElementById('frameCourseTitle');
-  if (ft) ft.innerHTML = S.courseName ? esc(S.courseName) : '<span class="placeholder">강의명을 입력하면 여기에 표시됩니다</span>';
+  if (ft && document.activeElement !== ft) ft.textContent = S.courseName || '';
   updateNavStatus();
 }
 function focusCourseNameInput() {
   const inp = document.getElementById('courseNameInput');
   if (inp) { inp.focus(); inp.select(); }
+}
+
+function onFrameCourseTitleInput(el) {
+  const val = el.textContent.trim();
+  S.courseName = val;
+  const inp = document.getElementById('courseNameInput');
+  if (inp) inp.value = val;
+  updateLeftCourseTitle();
+  updateNavStatus();
 }
 
 /* ── Scroll Spy ── */
@@ -2375,9 +2657,12 @@ function renderTocFrame() {
       <div class="toc-frame-body" id="tocFrameBody" style="height:${S.frameHeight}px">
         <!-- 강의명 헤더 (박스 안) -->
         <div class="toc-frame-course-header">
-          <div class="toc-frame-course-name" id="frameCourseTitle">
-            ${S.courseName ? esc(S.courseName) : '<span class="placeholder">강의명을 입력하면 여기에 표시됩니다</span>'}
-          </div>
+          <div class="toc-frame-course-name toc-frame-course-editable" id="frameCourseTitle"
+            contenteditable="true" spellcheck="false"
+            data-placeholder="강의명을 입력하면 여기에 표시됩니다"
+            oninput="onFrameCourseTitleInput(this)"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur()}"
+            >${S.courseName ? esc(S.courseName) : ''}</div>
           <div id="tocTypeBadge">${renderTypeBadgeHTML()}</div>
         </div>
         <!-- 패널 행 -->
@@ -2491,8 +2776,8 @@ function renderContentViewPanel(toc) {
                 <div style="font-size:12px;color:var(--text-3);margin-top:2px">${editContent?.type||''}${editContent?.dur?' · '+editContent.dur:''}</div>
               </div>
             </div>
-            <div style="background:var(--surface-2);border-radius:var(--r8);padding:16px 18px;min-height:120px;font-size:13px;color:var(--text-3);display:flex;align-items:center;justify-content:center">
-              콘텐츠 미리보기 영역
+            <div style="background:var(--surface-2);border-radius:var(--r8);padding:16px 18px;min-height:120px;font-size:13px;color:var(--text-3)">
+              ${editContent?.type === '오프라인' ? renderOfflineSessionsPreview(editContent.id) : `<div style="display:flex;align-items:center;justify-content:center;height:88px">콘텐츠 미리보기 영역</div>`}
             </div>
           </div>
           <div class="creg-actions">
@@ -2521,21 +2806,7 @@ function renderContentViewPanel(toc) {
               <input class="creg-input" data-creg-title placeholder="제목을 입력해 주세요."
                 value="${S.contentRegData ? esc(S.contentRegData.title) : esc(editContent?.title||'')}" />
             </div>
-            <div class="creg-field">
-              <div class="creg-label">내용 <span class="req">*</span></div>
-              <div class="creg-editor-wrap">
-                <div class="creg-toolbar">
-                  <select class="creg-tb-sel"><option>단락</option><option>제목 1</option><option>제목 2</option></select>
-                  <div class="creg-tb-sep"></div>
-                  <button class="creg-tb-btn"><b>B</b></button>
-                  <button class="creg-tb-btn"><i>I</i></button>
-                  <button class="creg-tb-btn"><u>U</u></button>
-                  <div class="creg-tb-sep"></div>
-                  <button class="creg-tb-btn">···</button>
-                </div>
-                <textarea class="creg-textarea" placeholder="${editContent ? esc(editContent.type) : ''} 내용을 입력해 주세요."></textarea>
-              </div>
-            </div>
+            ${renderContentField(editContent)}
             <div class="creg-field">
               <div class="creg-label">썸네일</div>
               <div class="creg-thumb"><div class="creg-thumb-icon">+</div><p>업로드하려는 이미지를 추가해 주세요.</p></div>
@@ -2570,21 +2841,7 @@ function renderContentViewPanel(toc) {
               <input class="creg-input" data-creg-title placeholder="제목을 입력해 주세요."
                 value="${S.contentRegData ? esc(S.contentRegData.title) : ''}" />
             </div>
-            <div class="creg-field">
-              <div class="creg-label">내용 <span class="req">*</span></div>
-              <div class="creg-editor-wrap">
-                <div class="creg-toolbar">
-                  <select class="creg-tb-sel"><option>단락</option><option>제목 1</option><option>제목 2</option></select>
-                  <div class="creg-tb-sep"></div>
-                  <button class="creg-tb-btn"><b>B</b></button>
-                  <button class="creg-tb-btn"><i>I</i></button>
-                  <button class="creg-tb-btn"><u>U</u></button>
-                  <div class="creg-tb-sep"></div>
-                  <button class="creg-tb-btn">···</button>
-                </div>
-                <textarea class="creg-textarea" placeholder="${editContent ? esc(editContent.type) : ''} 내용을 입력해 주세요."></textarea>
-              </div>
-            </div>
+            ${renderContentField(editContent)}
             <div class="creg-field">
               <div class="creg-label">썸네일</div>
               <div class="creg-thumb"><div class="creg-thumb-icon">+</div><p>업로드하려는 이미지를 추가해 주세요.</p></div>
@@ -2649,7 +2906,7 @@ function renderContentAddPanel() {
           <div class="content-type-section">
             <div class="cts-label">콘텐츠</div>
             <div class="upload-type-grid">
-              ${['동영상','이미지','아티클','첨부파일','유튜브','외부링크'].map(typeItem).join('')}
+              ${['동영상','이미지','아티클','유튜브','외부링크'].map(typeItem).join('')}
             </div>
           </div>
           <div class="content-type-section">
@@ -3132,6 +3389,515 @@ function refreshTocFrame() {
 }
 
 /* ══════════════════════════════════════════════════════════
+   콘텐츠 내용 필드 렌더 (오프라인 회차 UI or 일반 에디터)
+══════════════════════════════════════════════════════════ */
+function renderContentField(editContent) {
+  if (editContent?.type === '오프라인') {
+    return `<div class="creg-field" id="offlineSessionsWrap">
+      ${renderOfflineSessions(editContent.id)}
+    </div>`;
+  }
+  const ph = editContent ? esc(editContent.type) : '';
+  return `<div class="creg-field">
+    <div class="creg-label">내용 <span class="req">*</span></div>
+    <div class="creg-editor-wrap">
+      <div class="creg-toolbar">
+        <select class="creg-tb-sel"><option>단락</option><option>제목 1</option><option>제목 2</option></select>
+        <div class="creg-tb-sep"></div>
+        <button class="creg-tb-btn"><b>B</b></button>
+        <button class="creg-tb-btn"><i>I</i></button>
+        <button class="creg-tb-btn"><u>U</u></button>
+        <div class="creg-tb-sep"></div>
+        <button class="creg-tb-btn">···</button>
+      </div>
+      <textarea class="creg-textarea" placeholder="${ph} 내용을 입력해 주세요."></textarea>
+    </div>
+  </div>`;
+}
+
+/* ══════════════════════════════════════════════════════════
+   오프라인 회차 관리
+══════════════════════════════════════════════════════════ */
+function getOfflineSessions(contentId) {
+  if (!S.offlineSessionMap[contentId]) S.offlineSessionMap[contentId] = [];
+  return S.offlineSessionMap[contentId];
+}
+
+function renderOfflineSessions(contentId) {
+  const sessions = getOfflineSessions(contentId);
+  const COL = '280px 1fr 1fr 1fr 32px';
+
+  const sessionsHTML = sessions.map((sess, idx) => {
+    const schedulesHTML = sess.schedules.map(sch => `
+      <div class="oreg-sched-row" style="grid-template-columns:${COL}">
+        <div class="oreg-field oreg-time-field" tabindex="0"
+          data-cid="${contentId}" data-sid="${sess.id}" data-schid="${sch.id}" data-field="time" data-type=""
+          onclick="oregClick(event,this,'${contentId}','${sess.id}','${sch.id}','time','')"
+          ondblclick="oregDblClick(event,this,'${contentId}','${sess.id}','${sch.id}','time','')">
+          <span class="oreg-field-val">${esc(sch.startTime)||'—'}</span>
+          <span class="oreg-field-sep">~</span>
+          <span class="oreg-field-val">${esc(sch.endTime)||'—'}</span>
+        </div>
+        <div class="oreg-field" tabindex="0"
+          data-cid="${contentId}" data-sid="${sess.id}" data-schid="${sch.id}" data-field="instructor" data-type="text"
+          onclick="oregClick(event,this,'${contentId}','${sess.id}','${sch.id}','instructor','text')"
+          ondblclick="oregDblClick(event,this,'${contentId}','${sess.id}','${sch.id}','instructor','text')">
+          <span class="oreg-field-val">${esc(sch.instructor)||'—'}</span>
+        </div>
+        <div class="oreg-field" tabindex="0"
+          data-cid="${contentId}" data-sid="${sess.id}" data-schid="${sch.id}" data-field="location" data-type="text"
+          onclick="oregClick(event,this,'${contentId}','${sess.id}','${sch.id}','location','text')"
+          ondblclick="oregDblClick(event,this,'${contentId}','${sess.id}','${sch.id}','location','text')">
+          <span class="oreg-field-val">${esc(sch.location)||'—'}</span>
+        </div>
+        <div class="oreg-field oreg-field-notes" tabindex="0"
+          data-cid="${contentId}" data-sid="${sess.id}" data-schid="${sch.id}" data-field="notes" data-type="text"
+          onclick="oregClick(event,this,'${contentId}','${sess.id}','${sch.id}','notes','text')"
+          ondblclick="oregDblClick(event,this,'${contentId}','${sess.id}','${sch.id}','notes','text')">
+          <span class="oreg-field-val">${esc(sch.notes)||'—'}</span>
+        </div>
+        <button class="oreg-del-btn oreg-del-visible" onclick="removeOfflineSchedule('${contentId}','${sess.id}','${sch.id}')">✕</button>
+      </div>
+    `).join('');
+
+    const times = sess.schedules.map(s => s.startTime).filter(Boolean).sort();
+    const startTime = times[0] || '';
+    const hasTime = !!startTime;
+
+    return `
+      <div class="offline-timeline-item">
+        <div class="offline-timeline-left">
+          <div class="offline-time-dot${hasTime ? '' : ' no-time'}"></div>
+          <div class="offline-time-label${hasTime ? '' : ' no-time'}">${hasTime ? esc(startTime) : '—'}</div>
+        </div>
+        <div class="offline-session-card">
+          <div class="offline-session-card-head">
+            <div class="offline-session-num">${idx + 1}</div>
+            <div class="oreg-field oreg-field-name"
+              onclick="oregClick(event,this,'${contentId}','${sess.id}',null,'name','text')"
+              ondblclick="oregDblClick(event,this,'${contentId}','${sess.id}',null,'name','text')">
+              <span class="oreg-field-val oreg-name-val">${esc(sess.name)||'—'}</span>
+            </div>
+            <div class="oreg-meta-group">
+              <span class="oreg-meta-label">날짜</span>
+              <div class="oreg-field"
+                onclick="oregClick(event,this,'${contentId}','${sess.id}',null,'date','date')"
+                ondblclick="oregDblClick(event,this,'${contentId}','${sess.id}',null,'date','date')">
+                <span class="oreg-field-val">${esc(sess.date)||'—'}</span>
+              </div>
+            </div>
+            <div class="oreg-meta-group">
+              <span class="oreg-meta-label">정원</span>
+              <div class="oreg-field"
+                onclick="oregClick(event,this,'${contentId}','${sess.id}',null,'capacity','number')"
+                ondblclick="oregDblClick(event,this,'${contentId}','${sess.id}',null,'capacity','number')">
+                <span class="oreg-field-val">${esc(sess.capacity)||'—'}</span>
+              </div>
+              <span class="oreg-meta-label">명</span>
+            </div>
+            <button class="t-add-btn" style="opacity:1;pointer-events:auto" title="일정 추가"
+              onclick="addOfflineSchedule('${contentId}','${sess.id}')">+</button>
+            <div class="offline-session-del-btn" title="회차 삭제"
+              onclick="removeOfflineSession('${contentId}','${sess.id}')">🗑</div>
+          </div>
+          <div class="offline-session-body" style="padding:0">
+            <div class="oreg-schedules">
+              ${sess.schedules.length > 0 ? `
+                <div class="oreg-sched-header" style="grid-template-columns:${COL}">
+                  <span>시간</span><span>강사</span><span>장소</span><span>교육정보</span><span></span>
+                </div>
+                ${schedulesHTML}` : `<div class="oreg-empty-sched">+ 버튼으로 일정을 추가해 주세요.</div>`}
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  return `
+    <div class="offline-session-header">
+      <div class="offline-session-title">오프라인 회차 및 일정 등록</div>
+      <button class="offline-session-add-btn" onclick="addOfflineSession('${contentId}')">⏰ + 회차 추가</button>
+    </div>
+    ${sessions.length === 0
+      ? `<div class="offline-session-empty">⏰ + 회차 추가 버튼으로 회차를 등록해 주세요.</div>`
+      : `<div class="offline-timeline">${sessionsHTML}</div>
+         <div class="offline-register-row">
+           <button class="offline-register-btn" onclick="registerOfflineSessions('${contentId}')">등록하기</button>
+         </div>`}
+  `;
+}
+
+function renderOfflineSessionsRegistered(contentId) {
+  const sessions = getOfflineSessions(contentId);
+  const em = !!S.offlineEditModeMap[contentId];
+
+  const sessionsHTML = sessions.map((sess, idx) => {
+    const schedulesHTML = sess.schedules.map(sch => `
+      <div class="oreg-sched-row" style="grid-template-columns:280px 1fr 1fr 1fr 32px">
+        <div class="oreg-field oreg-time-field" tabindex="0"
+          data-cid="${contentId}" data-sid="${sess.id}" data-schid="${sch.id}" data-field="time" data-type=""
+          onclick="oregClick(event,this,'${contentId}','${sess.id}','${sch.id}','time','')"
+          ondblclick="oregDblClick(event,this,'${contentId}','${sess.id}','${sch.id}','time','')">
+          <span class="oreg-field-val">${esc(sch.startTime)||'—'}</span>
+          <span class="oreg-field-sep">~</span>
+          <span class="oreg-field-val">${esc(sch.endTime)||'—'}</span>
+        </div>
+        <div class="oreg-field" tabindex="0"
+          data-cid="${contentId}" data-sid="${sess.id}" data-schid="${sch.id}" data-field="instructor" data-type="text"
+          onclick="oregClick(event,this,'${contentId}','${sess.id}','${sch.id}','instructor','text')"
+          ondblclick="oregDblClick(event,this,'${contentId}','${sess.id}','${sch.id}','instructor','text')">
+          <span class="oreg-field-val">${esc(sch.instructor)||'—'}</span>
+        </div>
+        <div class="oreg-field" tabindex="0"
+          data-cid="${contentId}" data-sid="${sess.id}" data-schid="${sch.id}" data-field="location" data-type="text"
+          onclick="oregClick(event,this,'${contentId}','${sess.id}','${sch.id}','location','text')"
+          ondblclick="oregDblClick(event,this,'${contentId}','${sess.id}','${sch.id}','location','text')">
+          <span class="oreg-field-val">${esc(sch.location)||'—'}</span>
+        </div>
+        <div class="oreg-field oreg-field-notes" tabindex="0"
+          data-cid="${contentId}" data-sid="${sess.id}" data-schid="${sch.id}" data-field="notes" data-type="text"
+          onclick="oregClick(event,this,'${contentId}','${sess.id}','${sch.id}','notes','text')"
+          ondblclick="oregDblClick(event,this,'${contentId}','${sess.id}','${sch.id}','notes','text')">
+          <span class="oreg-field-val">${esc(sch.notes)||'—'}</span>
+        </div>
+        ${em ? `<button class="oreg-del-btn oreg-del-visible" onclick="removeOfflineScheduleReg('${contentId}','${sess.id}','${sch.id}')">✕</button>` : '<span></span>'}
+      </div>
+    `).join('');
+
+    const times = sess.schedules.map(s => s.startTime).filter(Boolean).sort();
+    const startTime = times[0] || '';
+    const hasTime = !!startTime;
+
+    return `
+      <div class="offline-timeline-item">
+        <div class="offline-timeline-left">
+          <div class="offline-time-dot${hasTime ? '' : ' no-time'}"></div>
+          <div class="offline-time-label${hasTime ? '' : ' no-time'}">${hasTime ? esc(startTime) : '—'}</div>
+        </div>
+        <div class="oreg-session-card">
+          <div class="oreg-session-head">
+            <div class="offline-session-num">${idx + 1}</div>
+            <div class="oreg-field oreg-field-name"
+              onclick="oregClick(event,this,'${contentId}','${sess.id}',null,'name','text')"
+              ondblclick="oregDblClick(event,this,'${contentId}','${sess.id}',null,'name','text')">
+              <span class="oreg-field-val oreg-name-val">${esc(sess.name)||'—'}</span>
+            </div>
+            <div class="oreg-meta-group">
+              <span class="oreg-meta-label">날짜</span>
+              <div class="oreg-field"
+                onclick="oregClick(event,this,'${contentId}','${sess.id}',null,'date','date')"
+                ondblclick="oregDblClick(event,this,'${contentId}','${sess.id}',null,'date','date')">
+                <span class="oreg-field-val">${esc(sess.date)||'—'}</span>
+              </div>
+            </div>
+            <div class="oreg-meta-group">
+              <span class="oreg-meta-label">정원</span>
+              <div class="oreg-field"
+                onclick="oregClick(event,this,'${contentId}','${sess.id}',null,'capacity','number')"
+                ondblclick="oregDblClick(event,this,'${contentId}','${sess.id}',null,'capacity','number')">
+                <span class="oreg-field-val">${esc(sess.capacity)||'—'}</span>
+              </div>
+              <span class="oreg-meta-label">명</span>
+            </div>
+            <button class="t-add-btn" style="opacity:1;pointer-events:auto;margin-left:4px" title="일정 추가"
+              onclick="addOfflineScheduleReg('${contentId}','${sess.id}')">+</button>
+            ${em ? `<button class="oreg-del-btn oreg-del-visible oreg-sess-del" onclick="removeOfflineSessionReg('${contentId}','${sess.id}')">🗑</button>` : ''}
+          </div>
+          <div class="oreg-schedules">
+            ${sess.schedules.length > 0 ? `
+              <div class="oreg-sched-header" style="grid-template-columns:280px 1fr 1fr 1fr 32px">
+                <span>시간</span><span>강사</span><span>장소</span><span>교육정보</span><span></span>
+              </div>
+              ${schedulesHTML}` : `<div class="oreg-empty-sched">+ 버튼으로 일정을 추가해 주세요.</div>`}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  return `
+    <div class="offline-session-header">
+      <div class="offline-session-title">오프라인 회차 및 일정</div>
+    </div>
+    <div class="offline-timeline">${sessionsHTML}</div>
+    <div class="offline-reg-sticky">
+      <button class="offline-session-add-btn" onclick="addOfflineSessionReg('${contentId}')">⏰ + 회차 추가</button>
+      <button class="offline-session-add-btn${em?' oreg-editmode-active':''}" onclick="toggleOfflineEditMode('${contentId}')">${em?'✓ 편집 완료':'편집'}</button>
+    </div>
+  `;
+}
+
+function addOfflineSession(contentId) {
+  const sessions = getOfflineSessions(contentId);
+  const today = new Date().toISOString().split('T')[0];
+  sessions.push({
+    id: 'os' + Date.now(),
+    name: sessions.length + 1 + '회차',
+    date: today, capacity: '10', schedules: []
+  });
+  refreshOfflineSessions(contentId);
+}
+
+function removeOfflineSession(contentId, sessionId) {
+  S.offlineSessionMap[contentId] = getOfflineSessions(contentId).filter(s => s.id !== sessionId);
+  refreshOfflineSessions(contentId);
+}
+
+function toggleOfflineSession(contentId, sessionId) {
+  const sess = getOfflineSessions(contentId).find(s => s.id === sessionId);
+  if (sess) { sess.expanded = !sess.expanded; refreshOfflineSessions(contentId); }
+}
+
+function updateOfflineSessionField(contentId, sessionId, field, value) {
+  const sess = getOfflineSessions(contentId).find(s => s.id === sessionId);
+  if (sess) sess[field] = value;
+}
+
+function addHour(t) {
+  if (!t) return '';
+  const [h, m] = t.split(':').map(Number);
+  return String((h + 1) % 24).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+}
+
+function addOfflineSchedule(contentId, sessionId) {
+  const sessions = getOfflineSessions(contentId);
+  const sess = sessions.find(s => s.id === sessionId);
+  if (!sess) return;
+  let defaultStart = '09:00', defaultEnd = '10:00';
+  if (sess.schedules.length > 0) {
+    const prev = sess.schedules[sess.schedules.length - 1];
+    defaultStart = prev.endTime || '09:00';
+    defaultEnd = addHour(defaultStart);
+  } else {
+    const sessIdx = sessions.indexOf(sess);
+    if (sessIdx > 0) {
+      const prevSess = sessions[sessIdx - 1];
+      const lastSch = prevSess.schedules[prevSess.schedules.length - 1];
+      if (lastSch?.endTime) { defaultStart = lastSch.endTime; defaultEnd = addHour(defaultStart); }
+    }
+  }
+  sess.schedules.push({ id: 'sch' + Date.now(), startTime: defaultStart, endTime: defaultEnd, instructor: '', location: '', notes: '' });
+  refreshOfflineSessions(contentId);
+}
+
+function removeOfflineSchedule(contentId, sessionId, schedId) {
+  const sess = getOfflineSessions(contentId).find(s => s.id === sessionId);
+  if (sess) sess.schedules = sess.schedules.filter(s => s.id !== schedId);
+  refreshOfflineSessions(contentId);
+}
+
+function updateOfflineScheduleField(contentId, sessionId, schedId, field, value) {
+  const sess = getOfflineSessions(contentId).find(s => s.id === sessionId);
+  const sch = sess?.schedules.find(s => s.id === schedId);
+  if (sch) sch[field] = value;
+}
+
+function refreshOfflineSessions(contentId) {
+  const wrap = document.getElementById('offlineSessionsWrap');
+  if (!wrap) return;
+  wrap.innerHTML = S.offlineRegisteredMap[contentId]
+    ? renderOfflineSessionsRegistered(contentId)
+    : renderOfflineSessions(contentId);
+}
+
+function renderOfflineSessionsPreview(contentId) {
+  const sessions = getOfflineSessions(contentId);
+  if (!S.offlineRegisteredMap[contentId] || sessions.length === 0) {
+    return `<div style="display:flex;align-items:center;justify-content:center;height:88px;color:var(--text-3)">등록된 회차 정보가 없습니다.</div>`;
+  }
+  const rows = sessions.map((sess, idx) => {
+    const schedRows = sess.schedules.map(sch => `
+      <div class="oprv-sched-row">
+        <span class="oprv-tag time">${esc(sch.startTime)||'—'} ~ ${esc(sch.endTime)||'—'}</span>
+        ${sch.instructor ? `<span class="oprv-tag">👤 ${esc(sch.instructor)}</span>` : ''}
+        ${sch.location ? `<span class="oprv-tag">📍 ${esc(sch.location)}</span>` : ''}
+        ${sch.notes ? `<span class="oprv-tag">📋 ${esc(sch.notes)}</span>` : ''}
+      </div>
+    `).join('');
+    return `
+      <div class="oprv-sess">
+        <div class="oprv-sess-head">
+          <span class="offline-session-num" style="width:20px;height:20px;font-size:11px">${idx+1}</span>
+          <span style="font-weight:700;color:#111">${esc(sess.name)||'(이름 없음)'}</span>
+          <span style="margin-left:auto;display:flex;align-items:center;gap:10px;color:var(--text-3)">
+            ${sess.date ? `<span>📅 ${esc(sess.date)}</span>` : ''}
+            ${sess.capacity ? `<span>👥 ${esc(sess.capacity)}명</span>` : ''}
+          </span>
+        </div>
+        ${sess.schedules.length > 0 ? `<div class="oprv-sched-list">${schedRows}</div>` : ''}
+      </div>`;
+  }).join('');
+  return `<div class="oprv-list">${rows}</div>`;
+}
+
+
+function registerOfflineSessions(contentId) {
+  const sessions = getOfflineSessions(contentId);
+  if (sessions.length === 0) return;
+  S.offlineRegisteredMap[contentId] = true;
+  refreshOfflineSessions(contentId);
+}
+
+function unregisterOfflineSessions(contentId) {
+  S.offlineRegisteredMap[contentId] = false;
+  refreshOfflineSessions(contentId);
+}
+
+function addOfflineSessionReg(contentId) {
+  S.offlineRegisteredMap[contentId] = false;
+  S.offlineEditModeMap[contentId] = false;
+  addOfflineSession(contentId);
+}
+
+function toggleOfflineEditMode(contentId) {
+  S.offlineEditModeMap[contentId] = !S.offlineEditModeMap[contentId];
+  refreshOfflineSessions(contentId);
+}
+
+function removeOfflineSessionReg(contentId, sessionId) {
+  S.offlineSessionMap[contentId] = getOfflineSessions(contentId).filter(s => s.id !== sessionId);
+  refreshOfflineSessions(contentId);
+}
+
+function addOfflineScheduleReg(contentId, sessionId) {
+  const sessions = getOfflineSessions(contentId);
+  const sess = sessions.find(s => s.id === sessionId);
+  if (!sess) return;
+  let defaultStart = '09:00', defaultEnd = '10:00';
+  if (sess.schedules.length > 0) {
+    const prev = sess.schedules[sess.schedules.length - 1];
+    defaultStart = prev.endTime || '09:00';
+    defaultEnd = addHour(defaultStart);
+  } else {
+    const sessIdx = sessions.indexOf(sess);
+    if (sessIdx > 0) {
+      const prevSess = sessions[sessIdx - 1];
+      const lastSch = prevSess.schedules[prevSess.schedules.length - 1];
+      if (lastSch?.endTime) { defaultStart = lastSch.endTime; defaultEnd = addHour(defaultStart); }
+    }
+  }
+  sess.schedules.push({ id: 'sch' + Date.now(), startTime: defaultStart, endTime: defaultEnd, instructor: '', location: '', notes: '' });
+  refreshOfflineSessions(contentId);
+}
+
+function removeOfflineScheduleReg(contentId, sessionId, schedId) {
+  const sess = getOfflineSessions(contentId).find(s => s.id === sessionId);
+  if (sess) sess.schedules = sess.schedules.filter(s => s.id !== schedId);
+  refreshOfflineSessions(contentId);
+}
+
+let _oregSelected = null;
+
+function oregClick(ev, el, contentId, sessId, schedId, field, type) {
+  ev.stopPropagation();
+  if (_oregSelected === el) {
+    _oregSelected = null;
+    el.classList.remove('oreg-selected');
+    oregStartEdit(el, contentId, sessId, schedId, field, type);
+  } else {
+    if (_oregSelected) _oregSelected.classList.remove('oreg-selected');
+    _oregSelected = el;
+    el.classList.add('oreg-selected');
+  }
+}
+
+function oregDblClick(ev, el, contentId, sessId, schedId, field, type) {
+  ev.stopPropagation();
+  ev.preventDefault();
+  if (_oregSelected) { _oregSelected.classList.remove('oreg-selected'); _oregSelected = null; }
+  oregStartEdit(el, contentId, sessId, schedId, field, type);
+}
+
+function oregStartEdit(el, contentId, sessId, schedId, field, type) {
+  el.classList.add('oreg-editing');
+  if (field === 'time') {
+    const sch = getOfflineSessions(contentId).find(s=>s.id===sessId)?.schedules.find(s=>s.id===schedId);
+    if (!sch) return;
+    el.innerHTML = `
+      <input class="oreg-inline-input" type="time" style="width:130px" value="${esc(sch.startTime)}"
+        oninput="updateOfflineScheduleField('${contentId}','${sessId}','${schedId}','startTime',this.value)"/>
+      <span style="color:var(--text-3);font-size:12px;flex-shrink:0">~</span>
+      <input class="oreg-inline-input" type="time" style="width:130px" value="${esc(sch.endTime)}"
+        oninput="updateOfflineScheduleField('${contentId}','${sessId}','${schedId}','endTime',this.value)"/>`;
+    const [startInp, endInp] = el.querySelectorAll('input');
+    startInp?.focus();
+    let moving = false;
+    const restore = () => setTimeout(() => {
+      if (!moving && !el.contains(document.activeElement)) refreshOfflineSessions(contentId);
+    }, 80);
+    el.querySelectorAll('input').forEach(i => i.addEventListener('blur', restore));
+    endInp?.addEventListener('keydown', e => {
+      if (e.key === 'Tab' && !e.shiftKey) {
+        e.preventDefault();
+        const row = el.closest('.oreg-sched-row');
+        if (!row) return;
+        const allFields = [...row.querySelectorAll('.oreg-field')];
+        const nextField = allFields[allFields.indexOf(el) + 1];
+        if (nextField) {
+          moving = true;
+          const {cid, sid, schid, field: nf, type: nt} = nextField.dataset;
+          el.querySelectorAll('input').forEach(i => i.removeEventListener('blur', restore));
+          refreshOfflineSessions(contentId);
+          setTimeout(() => {
+            const freshEl = document.querySelector(`.oreg-field[data-sid="${sid}"][data-schid="${schid||''}"][data-field="${nf}"]`);
+            if (freshEl) oregStartEdit(freshEl, cid||contentId, sid, schid||null, nf, nt||'text');
+          }, 0);
+        }
+      }
+    });
+    return;
+  }
+  const sess = getOfflineSessions(contentId).find(s=>s.id===sessId);
+  const sch = schedId ? sess?.schedules.find(s=>s.id===schedId) : null;
+  const currentVal = sch ? (sch[field]||'') : (sess?.[field]||'');
+  const input = document.createElement('input');
+  input.className = 'oreg-inline-input';
+  input.type = type || 'text';
+  input.value = currentVal;
+  if (type === 'number') input.style.width = '52px';
+  if (type === 'date') input.style.width = '130px';
+  el.innerHTML = '';
+  el.appendChild(input);
+  input.focus();
+  const saveData = () => {
+    if (sch) updateOfflineScheduleField(contentId, sessId, schedId, field, input.value);
+    else updateOfflineSessionField(contentId, sessId, field, input.value);
+  };
+  const save = () => { saveData(); refreshOfflineSessions(contentId); };
+  input.addEventListener('blur', save);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { input.blur(); return; }
+    if (e.key === 'Escape') { refreshOfflineSessions(contentId); return; }
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const row = el.closest('.oreg-sched-row');
+      if (row) {
+        const allFields = [...row.querySelectorAll('.oreg-field')];
+        const curIdx = allFields.indexOf(el);
+        const nextField = allFields[curIdx + (e.shiftKey ? -1 : 1)];
+        if (nextField) {
+          const {cid, sid, schid, field: nf, type: nt} = nextField.dataset;
+          input.removeEventListener('blur', save);
+          saveData();
+          refreshOfflineSessions(contentId);
+          setTimeout(() => {
+            const freshEl = document.querySelector(`.oreg-field[data-sid="${sid}"][data-schid="${schid||''}"][data-field="${nf}"]`);
+            if (freshEl) oregStartEdit(freshEl, cid||contentId, sid, schid||null, nf, nt||'text');
+          }, 0);
+        } else {
+          input.blur();
+        }
+      } else {
+        input.blur();
+      }
+    }
+  });
+}
+
+document.addEventListener('click', () => {
+  if (_oregSelected) { _oregSelected.classList.remove('oreg-selected'); _oregSelected = null; }
+});
+
+/* ══════════════════════════════════════════════════════════
    Step 4 — 신청·학습 설정
 ══════════════════════════════════════════════════════════ */
 function renderS4() {
@@ -3339,14 +4105,16 @@ function renderS5() {
     </div>
     <!-- 과정 소개 -->
     <div class="s5-meta-row">
-      <div class="s5-meta-lbl" style="flex-direction:column;align-items:flex-start;justify-content:flex-start;padding-top:14px;gap:8px">
-        <span>과정 소개</span>
-        <button class="ai-write-btn" title="AI로 작성하기" onclick="toast('AI 작성 기능은 준비 중입니다.','success')">✦</button>
-      </div>
+      <div class="s5-meta-lbl">과정 소개</div>
       <div class="s5-meta-body">
-        <textarea class="s5-intro-textarea"
-          placeholder="수강생에게 보여질 과정 소개를 입력해 주세요."
-          oninput="S.courseIntro=this.value">${esc(S.courseIntro)}</textarea>
+        <div class="s5-intro-wrap">
+          <textarea class="s5-intro-textarea"
+            placeholder="수강생에게 보여질 과정 소개를 입력해 주세요."
+            oninput="S.courseIntro=this.value">${esc(S.courseIntro)}</textarea>
+          <button class="ai-write-btn-inline" title="AI로 작성하기"
+            onmousedown="event.preventDefault()"
+            onclick="toast('AI 작성 기능은 준비 중입니다.','success')">✦ AI</button>
+        </div>
       </div>
     </div>
     <!-- 카테고리 -->
