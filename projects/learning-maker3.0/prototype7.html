@@ -1692,7 +1692,7 @@ input,select,textarea { font-family:inherit; font-size:16px }
 .oreg-schedules { padding:0 14px 10px; }
 .oreg-sched-header {
   display:grid; grid-template-columns:280px 1fr 1fr 1fr 32px; gap:0;
-  padding:6px 0 4px; border-bottom:1px solid var(--border-md);
+  padding:6px 0 4px; border-bottom:1px dashed var(--border-md);
   font-size:11px; font-weight:600; color:var(--text-3); margin-bottom:2px;
 }
 .oreg-sched-header span { padding:0 6px; }
@@ -3605,8 +3605,8 @@ function renderOfflineSessionsRegistered(contentId) {
           </div>
           <div class="oreg-schedules">
             ${sess.schedules.length > 0 ? `
-              <div class="oreg-sched-header" style="grid-template-columns:280px 1fr 1fr 1fr ${em?'32px':''}">
-                <span>시간</span><span>강사</span><span>장소</span><span>교육정보</span>${em?'<span></span>':''}
+              <div class="oreg-sched-header" style="grid-template-columns:280px 1fr 1fr 1fr 32px">
+                <span>시간</span><span>강사</span><span>장소</span><span>교육정보</span><span></span>
               </div>
               ${schedulesHTML}` : `<div class="oreg-empty-sched">+ 버튼으로 일정을 추가해 주세요.</div>`}
           </div>
@@ -3717,9 +3717,11 @@ function renderOfflineSessionsPreview(contentId) {
       <div class="oprv-sess">
         <div class="oprv-sess-head">
           <span class="offline-session-num" style="width:20px;height:20px;font-size:11px">${idx+1}</span>
-          <span style="font-weight:700;color:var(--text-1)">${esc(sess.name)||'(이름 없음)'}</span>
-          ${sess.date ? `<span style="color:var(--text-3)">📅 ${esc(sess.date)}</span>` : ''}
-          ${sess.capacity ? `<span style="color:var(--text-3)">👥 ${esc(sess.capacity)}명</span>` : ''}
+          <span style="font-weight:700;color:#111">${esc(sess.name)||'(이름 없음)'}</span>
+          <span style="margin-left:auto;display:flex;align-items:center;gap:10px;color:var(--text-3)">
+            ${sess.date ? `<span>📅 ${esc(sess.date)}</span>` : ''}
+            ${sess.capacity ? `<span>👥 ${esc(sess.capacity)}명</span>` : ''}
+          </span>
         </div>
         ${sess.schedules.length > 0 ? `<div class="oprv-sched-list">${schedRows}</div>` : ''}
       </div>`;
