@@ -3211,8 +3211,25 @@ function toggleTocEditMode() {
 }
 function toggleTocSelect(id) {
   const idx = S.selectedTocItems.indexOf(id);
-  if (idx >= 0) S.selectedTocItems.splice(idx, 1);
-  else S.selectedTocItems.push(id);
+  const adding = idx < 0;
+  if (adding) S.selectedTocItems.push(id);
+  else S.selectedTocItems.splice(idx, 1);
+
+  // 챕터 선택 시 하위 콘텐츠 동시 선택/해제
+  if (id.startsWith('toc-')) {
+    const tocId = id.slice(4);
+    const toc = S.toc.find(t => t.id === tocId);
+    if (toc) {
+      toc.contents.forEach(c => {
+        const cid = 'content-' + c.id;
+        const ci = S.selectedTocItems.indexOf(cid);
+        if (adding && ci < 0) S.selectedTocItems.push(cid);
+        if (!adding && ci >= 0) S.selectedTocItems.splice(ci, 1);
+      });
+    }
+  }
+
+  refreshTocTree();
   const delBtn = document.getElementById('tocDeleteBtn');
   if (delBtn) {
     delBtn.className = `toc-delete-btn${S.selectedTocItems.length>0?' visible':''}`;
