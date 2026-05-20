@@ -917,12 +917,11 @@ input,select,textarea { font-family:inherit; font-size:16px }
 /* ─── Type Tooltip ────────────────────────────────────────── */
 .type-tooltip {
   position:fixed; z-index:9999;
-  background:var(--surface); border:1px solid var(--border);
-  border-radius:var(--r12); box-shadow:0 8px 28px rgba(0,0,0,.16);
-  width:160px; padding:6px; overflow:hidden;
+  background:var(--surface); border:1.5px solid var(--border-strong);
+  border-radius:var(--r12); box-shadow:0 4px 12px rgba(0,0,0,.08);
+  width:260px; padding:8px;
 }
-.tt-items { display:flex; flex-direction:column; gap:2px }
-.tt-collapsed { max-height:calc(6*34px); overflow:hidden }
+.tt-items { display:grid; grid-template-columns:1fr 1fr; gap:2px }
 .tt-item {
   display:flex; align-items:center; gap:8px;
   padding:5px 8px; border-radius:var(--r8); cursor:pointer;
@@ -932,24 +931,6 @@ input,select,textarea { font-family:inherit; font-size:16px }
 .tt-ico { width:22px; height:22px; border-radius:6px; overflow:hidden; flex-shrink:0 }
 .tt-ico img { width:100%; height:100%; object-fit:cover }
 .tt-item > span { font-size:12px; font-weight:600; color:var(--text-2) }
-.tt-more {
-  position:relative; height:40px;
-  display:flex; align-items:flex-end; justify-content:center; padding-bottom:5px;
-}
-.tt-grad {
-  position:absolute; left:0; right:0; bottom:0; height:50px;
-  background:linear-gradient(to bottom, transparent, var(--surface));
-  pointer-events:none;
-}
-.tt-expand {
-  position:relative; z-index:1;
-  width:24px; height:24px; border-radius:50%;
-  background:var(--surface-2); border:1px solid var(--border-strong);
-  display:flex; align-items:center; justify-content:center;
-  font-size:13px; color:var(--text-2); cursor:pointer;
-  transition:background .12s;
-}
-.tt-expand:hover { background:var(--surface-3) }
 
 /* ─── Settings Card ───────────────────────────────────────── */
 .settings-card {
@@ -1682,11 +1663,11 @@ input,select,textarea { font-family:inherit; font-size:16px }
 .oreg-editmode-active { background:var(--brand-soft) !important; border-color:var(--brand) !important; color:var(--brand) !important; font-weight:700; }
 
 /* 미리보기 - 오프라인 회차 */
-.oprv-list { display:flex; flex-direction:column; gap:10px; }
-.oprv-sess { border:1px solid var(--border-md); border-radius:var(--r8); overflow:hidden; }
-.oprv-sess-head { display:flex; align-items:center; gap:8px; padding:8px 12px; background:var(--surface); font-size:13px; flex-wrap:wrap; }
-.oprv-sched-list { padding:6px 12px 8px; background:var(--surface-2); display:flex; flex-direction:column; gap:4px; }
-.oprv-sched-row { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.oprv-list { display:flex; flex-direction:column; gap:8px; }
+.oprv-sess { background:#fff; border:1px solid var(--border-md); border-radius:var(--r12); overflow:hidden; }
+.oprv-sess-head { display:flex; align-items:center; gap:8px; padding:10px 14px; background:#fff; font-size:13px; flex-wrap:wrap; border-bottom:1px dashed var(--border-md); }
+.oprv-sched-list { padding:10px 14px 12px; background:#fff; display:flex; flex-direction:column; gap:6px; }
+.oprv-sched-row { display:flex; align-items:center; gap:6px; flex-wrap:wrap; padding:2px 0; }
 .oprv-tag { font-size:12px; color:var(--text-2); background:var(--surface); border:1px solid var(--border-md); border-radius:99px; padding:2px 8px; white-space:nowrap; }
 .oprv-tag.time { color:var(--brand); border-color:var(--brand); background:var(--brand-soft); font-weight:700; }
 .oreg-schedules { padding:0 14px 10px; }
@@ -2735,7 +2716,7 @@ function renderContentViewPanel(toc) {
                   insertGap(null),
                   ...toc.contents.map(c => `
                     <div class="fcontent-row ${S.activeContentId===c.id?'active':''}"
-                      onclick="openContentEdit('${toc.id}','${c.id}')"
+                      onclick="fcContentClick(event,'${toc.id}','${c.id}')"
                       draggable="true"
                       ondragstart="contentDragStart(event,'${toc.id}','${c.id}')"
                       ondragover="event.preventDefault();contentDragOver(event,'${toc.id}','${c.id}')"
@@ -2972,7 +2953,7 @@ function renderTocTree() {
                   const cSelId = 'content-' + c.id;
                   return `
                 <div class="tree-child-row ${S.activeContentId===c.id?'active':''}"
-                  onclick="event.stopPropagation();openContentEdit('${t.id}','${c.id}')"
+                  onclick="fcContentClick(event,'${t.id}','${c.id}')"
                   draggable="true"
                   ondragstart="contentDragStart(event,'${t.id}','${c.id}')"
                   ondragover="event.preventDefault();contentDragOver(event,'${t.id}','${c.id}')"
@@ -3184,7 +3165,20 @@ function selectContent(tocId, cId) {
   S.activeTocId = tocId;
   S.activeContentId = cId;
   S.contentAddMode = null;
+  S.contentEditMode = false;
   refreshTocFrame();
+}
+let _fcLastClick = {id: null, time: 0};
+function fcContentClick(e, tocId, cId) {
+  e.stopPropagation();
+  const now = Date.now();
+  if (_fcLastClick.id === cId && now - _fcLastClick.time < 400) {
+    _fcLastClick = {id: null, time: 0};
+    openContentEdit(tocId, cId);
+  } else {
+    _fcLastClick = {id: cId, time: now};
+    selectContent(tocId, cId);
+  }
 }
 function openContentEdit(tocId, cId) {
   const toc = S.toc.find(t=>t.id===tocId);
@@ -4186,18 +4180,15 @@ function openTypeTooltip(e, tocId, afterId) {
     closeTypeTooltip(); return;
   }
   const rect = e.currentTarget.getBoundingClientRect();
-  S.tooltip = {tocId, afterId, x: rect.right + 8, y: rect.top - 4, expanded: false};
+  S.tooltip = {tocId, afterId, x: rect.right + 8, y: rect.top - 4};
   renderTypeTooltip();
+  document.addEventListener('scroll', closeTypeTooltip, {capture: true, once: true});
 }
 function closeTypeTooltip() {
+  document.removeEventListener('scroll', closeTypeTooltip, {capture: true});
   S.tooltip = null;
   const el = document.getElementById('typeTooltip');
   if (el) el.remove();
-}
-function expandTypeTooltip() {
-  if (!S.tooltip) return;
-  S.tooltip.expanded = true;
-  renderTypeTooltip();
 }
 function addContentFromTooltip(tocId, afterId, label) {
   const toc = S.toc.find(t => t.id === tocId); if (!toc) return;
@@ -4217,22 +4208,20 @@ function renderTypeTooltip() {
   const el = document.getElementById('typeTooltip');
   if (el) el.remove();
   if (!S.tooltip) return;
-  const {tocId, afterId, x, y, expanded} = S.tooltip;
+  const {tocId, afterId, x, y} = S.tooltip;
   const div = document.createElement('div');
   div.id = 'typeTooltip';
   div.className = 'type-tooltip';
   div.style.cssText = `left:${x}px;top:${y}px`;
   div.onclick = e => e.stopPropagation();
-  const list = expanded ? ALL_TYPE_LIST : ALL_TYPE_LIST.slice(0,6);
   div.innerHTML = `
-    <div class="tt-items ${expanded?'':'tt-collapsed'}">
-      ${list.map(lbl=>`
+    <div class="tt-items">
+      ${ALL_TYPE_LIST.map(lbl=>`
         <div class="tt-item" onclick="addContentFromTooltip('${tocId}','${afterId}','${lbl}')">
           <div class="tt-ico"><img src="${TYPE_IMG[lbl]||'./images/PDF.png'}" alt="${lbl}"/></div>
           <span>${lbl}</span>
         </div>`).join('')}
     </div>
-    ${!expanded ? `<div class="tt-more"><div class="tt-grad"></div><button class="tt-expand" onclick="expandTypeTooltip()">▾</button></div>` : ''}
   `;
   document.body.appendChild(div);
   requestAnimationFrame(()=>{
