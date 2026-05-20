@@ -2591,7 +2591,6 @@ function selectType(id) {
         </div>
         <h3>${t.label}</h3>
         <p>${t.sub}</p>
-        <div class="ctags">${t.tags.map(tag=>`<span class="ctag">${tag}</span>`).join('')}</div>
       </div>
     `).join('');
     const label = TYPES.find(t=>t.id===id)?.label || EXTRA_TYPES[id]?.label || id;
