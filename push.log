@@ -699,3 +699,41 @@ remote: This repository moved. Please use the new location:
 remote:   git@github.com:andy-room/toystory-agents.git        
 To github.com:soonyeons/toystory-agents.git
    d4058fe..2f06b3e  main -> main
+[main e59b140] auto: 2026-05-19 17:00 자동 저장
+ Committer: hunet_syhong <syhong@hunet-soon.local>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file:
+
+    git config --global --edit
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 20 files changed, 23953 insertions(+)
+ create mode 100644 projects/.DS_Store
+ create mode 100644 projects/learning-maker3.0/.DS_Store
+ create mode 100644 projects/learning-maker3.0/images/PDF.png
+ create mode 100644 "projects/learning-maker3.0/images/\353\217\231\354\230\201\354\203\201.png"
+ create mode 100644 "projects/learning-maker3.0/images/\354\204\244\353\254\270.png"
+ create mode 100644 "projects/learning-maker3.0/images/\354\213\234\355\227\230.png"
+ create mode 100644 "projects/learning-maker3.0/images/\354\225\204\355\213\260\355\201\264.png"
+ create mode 100644 "projects/learning-maker3.0/images/\354\234\240\355\212\234\353\270\214.png"
+ create mode 100644 "projects/learning-maker3.0/images/\354\235\264\353\257\270\354\247\200.png"
+ create mode 100644 "projects/learning-maker3.0/images/\355\200\264\354\246\210.png"
+ create mode 100644 "projects/learning-maker3.0/\353\237\254\353\213\235\353\251\224\354\235\264\354\273\244_\352\260\234\354\204\240\354\225\210_v0.2.html"
+ create mode 100644 "projects/learning-maker3.0/\353\237\254\353\213\235\353\251\224\354\235\264\354\273\244_\352\260\234\354\204\240\354\225\210_v0.3.html"
+ create mode 100644 "projects/learning-maker3.0/\353\237\254\353\213\235\353\251\224\354\235\264\354\273\244_\352\260\234\354\204\240\354\225\210_v0.4.html"
+ create mode 100644 "projects/learning-maker3.0/\353\237\254\353\213\235\353\251\224\354\235\264\354\273\244_\352\260\234\354\204\240\354\225\210_v0.5.html"
+ create mode 100644 "projects/learning-maker3.0/\353\237\254\353\213\235\353\251\224\354\235\264\354\273\244_\352\260\234\354\204\240\354\225\210_v0.6.html"
+ create mode 100644 "projects/learning-maker3.0/\353\237\254\353\213\235\353\251\224\354\235\264\354\273\244_\352\260\234\354\204\240\354\225\210_v0.8.html"
+ create mode 100644 "projects/learning-maker3.0/\353\237\254\353\213\235\353\251\224\354\235\264\354\273\244_\352\260\234\354\204\240\354\225\210_v0.9.html"
+ create mode 100644 "projects/learning-maker3.0/\353\237\254\353\213\235\353\251\224\354\235\264\354\273\244_\352\260\234\354\204\240\354\225\210_v1.0.html"
+ create mode 100644 "projects/learning-maker3.0/\353\237\254\353\213\235\353\251\224\354\235\264\354\273\244_\355\224\204\353\241\234\355\206\240\355\203\200\354\236\205_v0.1.html"
+remote: This repository moved. Please use the new location:        
+remote:   git@github.com:andy-room/toystory-agents.git        
+To github.com:soonyeons/toystory-agents.git
+   2f06b3e..e59b140  main -> main

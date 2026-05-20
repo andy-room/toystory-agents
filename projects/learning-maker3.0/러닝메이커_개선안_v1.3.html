@@ -1,0 +1,2007 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>러닝메이커 — 개선안 v0.4 (HDS)</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/static/woff2/SUIT.css">
+<style>
+/* ─── HDS Tokens ──────────────────────────────────────────── */
+/* Atomic palette reference:
+   gray: 100=#F7F7F8 … 1800=#0F0F10
+   blue: 100=#F5F9FF, 200=#EBF3FF, 700=#0066FF, 800=#0052CC
+   role: success=#00BF40, warning=#FF9200, error=#FA2E43, info=#0066FF
+*/
+:root {
+  /* Background — background/primary, alternative */
+  --bg:           #F7F7F8;   /* gray-100 */
+  --surface:      #FFFFFF;   /* white */
+  --surface-2:    #F4F4F5;   /* gray-200 */
+  --surface-3:    #EAEBEC;   /* gray-300 */
+
+  /* Line — line/layout, outline, strong, bold */
+  --border:       #EAEBEC;   /* gray-300  line/layout */
+  --border-md:    #DBDCDF;   /* gray-500  line/outline */
+  --border-strong:#C2C4C8;   /* gray-600  line/strong */
+
+  /* Typography — black-100, black-60, black-45 */
+  --text:         #171719;   /* gray-1700 */
+  --text-2:       #46474C;   /* gray-1200 */
+  --text-3:       #878A93;   /* gray-900  */
+
+  /* Brand — brand/company-primary = blue-700 */
+  --brand:        #0066FF;   /* blue-700 */
+  --brand-soft:   #EBF3FF;   /* blue-200 */
+  --brand-strong: #0052CC;   /* blue-800 */
+
+  /* CTA */
+  --cta:          #171719;   /* gray-1700 */
+  --cta-text:     #FFFFFF;
+
+  /* Role */
+  --danger:       #FA2E43;   /* role/error   = red-700  */
+  --danger-soft:  #FFF7F7;   /* red-100 */
+  --success:      #00BF40;   /* role/success = green-700 */
+  --warn:         #FF9200;   /* role/warning = orange-700 */
+
+  /* Shadow */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.05);
+
+  /* Radius — HDS: xs=4, sm=8, md=12, lg=16, xl=20 */
+  --r4:4px; --r6:6px; --r8:8px; --r12:12px; --r16:16px; --r20:20px;
+
+  /* Layout */
+  --nav-w: 216px;
+  --header-h: 52px;
+  --content-max: 1080px;
+  --left-nav-w: 192px;
+  --tr: 120ms ease;
+}
+[data-theme="dark"] {
+  /* Background */
+  --bg:           #171719;   /* gray-1700 */
+  --surface:      #1B1C1E;   /* gray-1600 */
+  --surface-2:    #212225;   /* gray-1500 */
+  --surface-3:    #292A2D;   /* gray-1400 */
+
+  /* Line */
+  --border:       #292A2D;   /* gray-1400 */
+  --border-md:    #333438;   /* gray-1300 */
+  --border-strong:#46474C;   /* gray-1200 */
+
+  /* Typography */
+  --text:         #F7F7F8;   /* gray-100  */
+  --text-2:       #C2C4C8;   /* gray-600  */
+  --text-3:       #70737C;   /* gray-1000 */
+
+  /* Brand */
+  --brand-soft:   rgba(0,102,255,0.14);
+
+  /* CTA */
+  --cta:          #F7F7F8;   /* gray-100  */
+  --cta-text:     #171719;   /* gray-1700 */
+
+  /* Shadow */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.5);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.06);
+
+  /* Role — danger-soft darker */
+  --danger-soft:  rgba(250,46,67,0.12);
+}
+
+/* ─── Reset ───────────────────────────────────────────────── */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0 }
+html,body { height:100%; font-size:16px }
+body { font-family:'Pretendard',system-ui,sans-serif; background:var(--bg); color:var(--text);
+  -webkit-font-smoothing:antialiased; line-height:1.5 }
+button { font-family:inherit; cursor:pointer; border:none; background:none }
+a { color:inherit; text-decoration:none }
+input,select,textarea { font-family:inherit; font-size:16px }
+
+/* ─── Topbar ──────────────────────────────────────────────── */
+.topbar {
+  position:fixed; top:0; left:0; right:0; height:var(--header-h);
+  background:#171a21; color:#fff; z-index:100;
+  display:flex; align-items:center; padding:0 20px; gap:16px;
+  border-bottom:1px solid #000;
+}
+.topbar .logo { display:flex; align-items:center; gap:8px; font-weight:800; font-size:15px; letter-spacing:-0.3px }
+.topbar .logo .l { color:#fff }
+.topbar .logo .n { color:#0066FF }
+.topbar .tag { background:#242930; color:#9ca3af; font-size:11px; padding:2px 8px; border-radius:999px }
+.topbar .spacer { flex:1 }
+.topbar .user { display:flex; align-items:center; gap:12px; font-size:13px }
+.topbar .user .name { color:#e5e7eb; font-weight:500 }
+.theme-btn {
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12);
+  color:#d1d5db; padding:5px 12px; border-radius:var(--r6); font-size:12px; cursor:pointer;
+  transition:background var(--tr);
+}
+.theme-btn:hover { background:rgba(255,255,255,0.15); color:#fff }
+
+/* ─── Nav Sidebar ─────────────────────────────────────────── */
+.nav-sidebar {
+  position:fixed; top:var(--header-h); left:0; bottom:0; width:var(--nav-w);
+  background:var(--surface); border-right:1px solid var(--border); z-index:90;
+  display:flex; flex-direction:column; overflow-y:auto;
+}
+.nav-studio {
+  margin:12px 10px 8px; padding:10px 12px;
+  border:1px solid var(--border-md); border-radius:var(--r8);
+  display:flex; align-items:center; justify-content:space-between;
+  background:var(--surface-2); cursor:pointer; transition:background var(--tr);
+}
+.nav-studio:hover { background:var(--surface-3) }
+.nav-studio .lbl { display:flex; align-items:center; gap:8px; font-size:12px; font-weight:600; color:var(--text-2) }
+.nav-studio .ext { font-size:11px; color:var(--text-3) }
+.nav-menu { padding:4px 8px 24px }
+.nav-group { margin-bottom:2px }
+.nav-item {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:9px 10px; border-radius:var(--r6); color:var(--text-2);
+  font-weight:600; font-size:13px; cursor:pointer; user-select:none;
+  transition:background var(--tr), color var(--tr);
+}
+.nav-item:hover { background:var(--surface-2); color:var(--text) }
+.nav-item.active { background:var(--brand-soft); color:var(--brand-strong) }
+.nav-item .lhs { display:flex; align-items:center; gap:8px }
+.nav-item .caret { font-size:10px; color:var(--text-3); transition:transform .18s }
+.nav-group.open .nav-item .caret { transform:rotate(180deg) }
+.nav-sub { padding:2px 8px 4px 32px; display:none }
+.nav-group.open .nav-sub { display:block }
+.nav-sub a {
+  display:block; padding:7px 10px; border-radius:var(--r6);
+  color:var(--text-2); font-size:12px; transition:background var(--tr), color var(--tr);
+}
+.nav-sub a:hover { background:var(--surface-2); color:var(--text) }
+.nav-sub a.active { background:var(--surface-3); color:var(--text); font-weight:600 }
+
+/* ─── Main Wrapper ────────────────────────────────────────── */
+.main-wrap { margin-left:var(--nav-w); padding-top:var(--header-h); min-height:100vh }
+
+/* ─── Dashboard ───────────────────────────────────────────── */
+.dash-page { padding:40px 48px 100px; max-width:1040px }
+.dash-header { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:28px }
+.dash-header h1 { font-size:24px; font-weight:800; letter-spacing:-0.4px }
+.dash-header p { font-size:13px; color:var(--text-3); margin-top:3px }
+.tab-bar { display:flex; gap:2px; border-bottom:1px solid var(--border-md); margin-bottom:20px }
+.tab {
+  padding:9px 16px; font-size:13px; font-weight:600; color:var(--text-3);
+  border-bottom:2px solid transparent; margin-bottom:-1px; cursor:pointer;
+  transition:color var(--tr), border-color var(--tr);
+}
+.tab:hover { color:var(--text-2) }
+.tab.active { color:var(--text); border-bottom-color:var(--text) }
+.tab .cnt { display:inline-block; margin-left:6px; background:var(--surface-3); color:var(--text-2);
+  font-size:11px; font-weight:700; padding:1px 6px; border-radius:999px }
+.tab.active .cnt { background:var(--text); color:var(--bg) }
+.course-list { display:flex; flex-direction:column; gap:8px }
+.course-row {
+  display:flex; align-items:center; gap:16px;
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--r8);
+  padding:14px 18px; cursor:pointer;
+  transition:border-color var(--tr), box-shadow var(--tr);
+}
+.course-row:hover { border-color:var(--border-strong); box-shadow:var(--shadow-sm) }
+/* HDS: blue=online, green=offline, violet=hybrid, orange=warning/single */
+.type-badge { flex-shrink:0; font-size:11px; font-weight:700; padding:3px 8px; border-radius:var(--r4) }
+.type-badge.online  { background:#EBF3FF; color:#0052CC }  /* blue-200 / blue-800 */
+.type-badge.offline { background:#EBFAF0; color:#007326 }  /* green-200 / green-900 */
+.type-badge.hybrid  { background:#F3F0FE; color:#3D2791 }  /* violet-200 / violet-900 */
+.type-badge.single  { background:#FFF9F5; color:#993800 }  /* red-orange-100 / red-orange-900 */
+[data-theme="dark"] .type-badge.online  { background:rgba(0,102,255,.18); color:#66A3FF }
+[data-theme="dark"] .type-badge.offline { background:rgba(0,191,64,.15);  color:#66D98C }
+[data-theme="dark"] .type-badge.hybrid  { background:rgba(101,65,242,.18);color:#A38DF7 }
+[data-theme="dark"] .type-badge.single  { background:rgba(153,56,0,.2);   color:#FF9E66 }
+.course-row .cinfo { flex:1; min-width:0 }
+.course-row .ctitle { font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+.course-row .cmeta { font-size:12px; color:var(--text-3); margin-top:2px }
+.status-pill { flex-shrink:0; font-size:11px; font-weight:600; padding:3px 10px; border-radius:999px }
+.status-pill.create  { background:var(--surface-2); color:var(--text-2) }
+.status-pill.edit    { background:#EBF3FF; color:#0052CC }   /* blue */
+.status-pill.ready   { background:#EBFAF0; color:#007326 }   /* green */
+.status-pill.ongoing { background:#FFF9F5; color:#993800 }   /* red-orange */
+.status-pill.done    { background:var(--surface-3); color:var(--text-3) }
+[data-theme="dark"] .status-pill.edit    { background:rgba(0,102,255,.18); color:#66A3FF }
+[data-theme="dark"] .status-pill.ready   { background:rgba(0,191,64,.15);  color:#66D98C }
+[data-theme="dark"] .status-pill.ongoing { background:rgba(153,56,0,.2);   color:#FF9E66 }
+
+/* ════════════════════════════════════════════════════════════
+   COURSE EDITOR — Two Box Layout
+════════════════════════════════════════════════════════════ */
+.editor-page {
+  padding:32px 40px 120px;
+  display:flex; justify-content:center;
+}
+.editor-container {
+  width:100%; max-width:1800px;
+  display:grid;
+  grid-template-columns: 280px 1fr;
+  gap:0 20px;
+  align-items:start;
+}
+
+/* ─── Left Sticky Nav Box ─────────────────────────────────── */
+.editor-left-nav {
+  position:sticky; top:calc(var(--header-h) + 32px);
+  height:calc(100vh - var(--header-h) - 64px);
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r16);
+  padding:28px 20px 24px;
+  box-shadow:var(--shadow-sm);
+  overflow-y:auto;
+}
+.editor-course-name {
+  font-size:12px; font-weight:700; color:var(--text-3);
+  letter-spacing:0.5px; text-transform:uppercase; margin-bottom:4px;
+}
+.editor-course-title {
+  font-size:14px; font-weight:700; color:var(--text);
+  margin-bottom:24px; line-height:1.4; word-break:break-all;
+  cursor:pointer; padding:6px 8px; border-radius:var(--r6);
+  border:1px solid transparent;
+  transition:background var(--tr), border-color var(--tr);
+}
+.editor-course-title:hover { background:var(--surface-2); border-color:var(--border-md) }
+/* ─── Step Nav — Neutral Gray ────────────────────────────── */
+.section-nav { display:flex; flex-direction:column; gap:0; position:relative }
+.section-nav::before {
+  content:''; position:absolute;
+  left:12px; top:26px; bottom:26px; width:1px;
+  background:var(--border); border-radius:99px; /* 더 흐린 라인 */
+}
+.snav-item {
+  display:flex; align-items:flex-start; gap:10px;
+  padding-bottom:14px; cursor:pointer; position:relative;
+}
+.snav-item:last-child { padding-bottom:0 }
+/* 기본 원형 — 모든 상태 동일한 밝은 그레이 배경 */
+.snav-num {
+  width:25px; height:25px; border-radius:999px; flex-shrink:0;
+  background:#EDEDF0; border:none;
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:800; color:#9898A6;
+  position:relative; z-index:1;
+  transition:background var(--tr), box-shadow var(--tr), color var(--tr);
+}
+.snav-info { flex:1; padding-top:4px; min-width:0 }
+.snav-label {
+  font-size:13px; font-weight:600; color:var(--text-3); line-height:1.3;
+}
+.snav-summary {
+  font-size:11px; color:var(--text-3); margin-top:2px; line-height:1.4;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:160px;
+}
+/* ok / no: 배경 동일, 심볼만 다름 (색상 무변화) */
+.snav-item.ok .snav-num, .snav-item.no .snav-num { background:#EDEDF0; color:#9898A6 }
+/* active: 살짝 진한 그레이 + 테두리 */
+.snav-item.active .snav-num {
+  background:#E2E2E8; color:#5A5A6E;
+  box-shadow:0 0 0 3px rgba(0,0,0,0.06);
+}
+.snav-item.active .snav-label { font-weight:700; color:var(--text-2) }
+.snav-item:hover:not(.active) .snav-num { background:#E5E5EA; color:#7070808 }
+.editor-open-btn {
+  margin-top:28px; width:100%; padding:10px; border-radius:var(--r8);
+  background:var(--cta); color:var(--cta-text);
+  font-size:13px; font-weight:700; cursor:pointer;
+  transition:opacity var(--tr);
+}
+.editor-open-btn:hover { opacity:.85 }
+
+/* ─── Right Content Box ───────────────────────────────────── */
+.editor-sections {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r16);
+  box-shadow:var(--shadow-sm);
+  padding:0 48px;
+  display:flex; flex-direction:column; gap:0;
+}
+
+/* Each section block */
+.esec {
+  padding:48px 0;
+  border-bottom:1px solid var(--border);
+}
+.esec:last-child { border-bottom:none; padding-bottom:56px }
+.esec-header { margin-bottom:28px }
+.esec-num { font-size:11px; font-weight:700; color:var(--text-3); letter-spacing:0.5px; margin-bottom:6px }
+.esec-title { font-size:18px; font-weight:800; letter-spacing:-0.3px; margin-bottom:6px }
+.esec-desc { font-size:13px; color:var(--text-2); line-height:1.6 }
+
+/* ─── Fields ──────────────────────────────────────────────── */
+.field { margin-bottom:20px }
+.flabel { font-size:12px; font-weight:600; color:var(--text-2); margin-bottom:6px; display:block }
+.flabel .req { color:var(--brand) }
+.input {
+  width:100%; padding:10px 14px; border:1px solid var(--border-strong);
+  border-radius:var(--r6); background:var(--surface); color:var(--text);
+  outline:none; transition:border-color var(--tr), box-shadow var(--tr);
+}
+.input:focus { border-color:var(--brand); box-shadow:0 0 0 3px rgba(0,102,255,.1) }
+.input.lg { padding:13px 16px; font-size:15px; font-weight:600 }
+.hint { font-size:12px; color:var(--text-3); margin-top:6px; line-height:1.5 }
+
+/* ─── Type Cards ──────────────────────────────────────────── */
+.type-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px }
+.type-card {
+  border:1.5px solid transparent; border-radius:var(--r12);
+  padding:20px 18px; cursor:pointer;
+  background:var(--surface); /* pastel bg applied inline */
+  transition:border-color var(--tr), box-shadow var(--tr), filter var(--tr);
+  display:flex; flex-direction:column; gap:6px; position:relative;
+}
+.type-card:hover { border-color:rgba(0,0,0,.08); box-shadow:var(--shadow-md); filter:brightness(0.97) }
+.type-card.selected {
+  border-color:var(--brand);
+  box-shadow:0 0 0 3px rgba(0,102,255,.12), var(--shadow-sm);
+  filter:brightness(0.96);
+}
+/* 아이콘 그룹 */
+.t-icon-group {
+  display:flex; align-items:center; margin-bottom:6px;
+}
+.t-ico-img {
+  width:36px; height:36px; border-radius:10px; overflow:hidden;
+  border:2.5px solid rgba(255,255,255,0.85);
+  flex-shrink:0; background:#fff;
+  box-shadow:0 1px 4px rgba(0,0,0,0.10);
+}
+.t-ico-img:not(:first-child) { margin-left:-10px }
+.t-ico-img img { width:100%; height:100%; object-fit:cover; display:block }
+.type-card h3 { font-size:13px; font-weight:700; color:var(--text); margin-top:2px }
+.type-card p { font-size:12px; color:var(--text-2); line-height:1.5; flex:1 }
+.type-check {
+  position:absolute; top:12px; right:12px;
+  width:20px; height:20px; border-radius:999px;
+  background:var(--brand); color:#fff; font-size:11px;
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; transform:scale(0.5); transition:opacity var(--tr), transform var(--tr);
+}
+.type-card.selected .type-check { opacity:1; transform:scale(1) }
+.ctags { display:flex; flex-wrap:wrap; gap:4px; margin-top:4px }
+.ctag {
+  font-size:11px; padding:2px 7px; border-radius:var(--r4);
+  background:rgba(0,0,0,.07); color:var(--text-2);
+}
+.type-card.selected .ctag { background:rgba(0,102,255,.14); color:var(--brand-strong) }
+.type-extra-row { display:flex; gap:10px; margin-top:12px }
+.type-extra-card {
+  flex:1; border:1.5px dashed var(--border-strong); border-radius:var(--r8);
+  padding:14px 16px; cursor:pointer; background:var(--surface);
+  display:flex; align-items:center; gap:12px;
+  transition:border-color var(--tr), background var(--tr);
+}
+.type-extra-card:hover { border-color:var(--brand); background:var(--brand-soft) }
+.extra-plus-icon {
+  width:36px; height:36px; border-radius:10px; flex-shrink:0;
+  background:#EBEBEF; border:1.5px solid #DCDCE4;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 1px 3px rgba(0,0,0,0.07);
+}
+.type-extra-card:hover .extra-plus-icon { background:#E0E0EA; border-color:#C8C8D4 }
+.type-extra-card .extra-info h4 { font-size:13px; font-weight:700; color:var(--text) }
+.type-extra-card .extra-info p { font-size:12px; color:var(--text-2); margin-top:2px }
+
+/* ════════════════════════════════════════════════════════════
+   목차·콘텐츠 FRAME
+════════════════════════════════════════════════════════════ */
+.toc-frame {
+  background:transparent;
+}
+
+/* Course name header (replaces browser mock bar) */
+.toc-frame-course-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 0 12px 0;
+}
+.toc-frame-course-name {
+  font-size:15px; font-weight:800; color:var(--text); letter-spacing:-.3px;
+}
+.toc-frame-course-name .placeholder { font-weight:400; color:var(--text-3) }
+
+/* Frame body: TOC left + Content right */
+.toc-frame-body {
+  display:flex;
+  flex-direction:column;
+  height:520px;
+  transition:height .25s ease;
+  background:var(--surface-2);
+  border-radius:var(--r20);
+  padding:20px;
+  gap:12px;
+}
+.toc-frame-body.expanded { height:720px }
+.toc-panels {
+  display:flex;
+  flex:1;
+  gap:12px;
+  min-height:0;
+}
+
+/* TOC panel — floating card */
+.frame-toc {
+  width:270px; flex-shrink:0;
+  border:1px solid var(--border);
+  border-radius:var(--r12);
+  box-shadow:var(--shadow-sm);
+  display:flex; flex-direction:column;
+  background:var(--surface);
+  overflow:hidden;
+}
+.frame-toc-head {
+  padding:11px 12px 10px;
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  flex-shrink:0;
+}
+.frame-toc-head .ftit { font-size:13px; font-weight:700; color:var(--text-2) }
+.frame-toc-items { flex:1; overflow-y:auto; padding:6px 6px }
+.frame-toc-foot {
+  padding:8px 6px;
+  border-top:1px solid var(--border);
+  flex-shrink:0;
+}
+.toc-add-btn {
+  width:100%; padding:7px; border-radius:var(--r6);
+  border:1.5px dashed var(--border-strong);
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  font-size:13px; font-weight:600; color:var(--text-3); cursor:pointer;
+  transition:border-color var(--tr), color var(--tr), background var(--tr);
+}
+.toc-add-btn:hover { border-color:var(--brand); color:var(--brand); background:var(--brand-soft) }
+
+/* ── Tree Structure ─────────────────────────────────────── */
+/* ─── TOC Tree — 타임라인 버블 스타일 ──────────────────────── */
+.tree-toc-node { margin-bottom:8px }
+
+/* Chapter row — section header */
+.tree-toc-row {
+  display:flex; align-items:center; gap:6px;
+  padding:4px 6px 4px 4px;
+  border-radius:var(--r6); cursor:pointer;
+  border:1px solid transparent;
+  transition:background var(--tr), border-color var(--tr);
+  position:relative;
+}
+.tree-toc-row:hover { background:var(--surface-3) }
+.tree-toc-row.active { background:transparent; border-color:transparent }
+.tree-toc-row .t-toggle {
+  width:14px; height:14px; display:flex; align-items:center; justify-content:center;
+  font-size:10px; color:var(--text-3); flex-shrink:0;
+  border-radius:3px; transition:transform var(--tr);
+}
+.tree-toc-row .t-toggle.open { transform:rotate(0deg) }
+.tree-toc-row .t-toggle.closed { transform:rotate(-90deg) }
+.tree-toc-row .t-name {
+  flex:1; font-size:11px; font-weight:700; color:var(--text-3);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;
+  letter-spacing:0.2px; text-transform:uppercase;
+}
+.tree-toc-row.active .t-name { color:var(--text); font-weight:900 }
+.tree-toc-row .t-cnt {
+  font-size:10px; color:var(--text-3); flex-shrink:0;
+  background:var(--surface-3); padding:1px 5px; border-radius:999px;
+}
+.tree-toc-row.active .t-cnt { background:rgba(0,102,255,.15); color:var(--brand) }
+.tree-toc-row .t-actions {
+  display:none; align-items:center; gap:2px; flex-shrink:0; margin-left:2px;
+}
+.tree-toc-row:hover .t-actions { display:flex }
+.t-btn {
+  width:20px; height:20px; border-radius:4px; display:flex; align-items:center; justify-content:center;
+  font-size:12px; color:var(--text-3); cursor:pointer;
+  transition:background var(--tr), color var(--tr);
+}
+.t-btn:hover { background:var(--surface); color:var(--text) }
+.t-btn.del:hover { background:#fef2f2; color:var(--danger) }
+
+/* Content rows — icon bubble timeline */
+.tree-children {
+  padding-left:6px; margin-top:4px; margin-left:2px;
+  position:relative;
+}
+/* Vertical line: tree-children padding(6) + child-row padding(6) + icon half(13) = 25px */
+.tree-children::before {
+  content:''; position:absolute;
+  left:25px; top:17px; bottom:17px;
+  width:1.5px; background:var(--border-md); border-radius:99px;
+}
+/* 편집모드: 체크박스(14px) 기준 — padding(6) + row-padding(6) + checkbox-half(7) = 19px */
+.frame-toc-items.edit-mode .tree-children::before { left:19px }
+.tree-child-row {
+  display:flex; align-items:center; gap:9px;
+  padding:4px 8px 4px 6px;
+  border-radius:var(--r8); cursor:pointer;
+  transition:background var(--tr); border:1px solid transparent;
+  margin-bottom:5px; position:relative;
+}
+.tree-child-row::before { display:none }
+.tree-child-row:hover { background:var(--surface-3) }
+.tree-child-row.active { background:rgba(0,102,255,.08); border-color:rgba(0,102,255,.15) }
+/* Icon bubble */
+.tree-child-row .c-ico-sm {
+  width:26px; height:26px; flex-shrink:0;
+  border-radius:8px; overflow:hidden;
+  border:2.5px solid var(--surface);
+  box-shadow:0 1px 5px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04);
+  background:var(--surface-2);
+  position:relative; z-index:1;
+  display:block;
+}
+.tree-child-row .c-ico-sm img {
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+.tree-child-row .c-name {
+  flex:1; font-size:12px; font-weight:500; color:var(--text-2);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;
+}
+/* 편집모드 체크박스 */
+.toc-check { width:14px; height:14px; accent-color:var(--brand); cursor:pointer; flex-shrink:0; }
+/* 목차 hover + 버튼 */
+.t-add-btn {
+  width:20px; height:20px; border-radius:5px;
+  background:var(--brand-soft); color:var(--brand); border:none;
+  display:flex; align-items:center; justify-content:center;
+  font-size:15px; font-weight:700; cursor:pointer; flex-shrink:0;
+  transition:background var(--tr), opacity var(--tr);
+  line-height:1;
+  opacity:0; pointer-events:none; /* 항상 공간 차지, 보이지 않을 뿐 */
+}
+.t-add-btn:hover { background:var(--brand); color:#fff }
+.tree-toc-row:hover .t-add-btn { opacity:1; pointer-events:auto }
+/* 편집 버튼 */
+.toc-edit-btn {
+  font-size:11px; font-weight:700; padding:4px 10px; border-radius:var(--r6);
+  border:1px solid var(--border-strong); background:var(--surface); color:var(--text-2);
+  cursor:pointer; transition:all var(--tr);
+}
+.toc-edit-btn:hover { background:var(--surface-2); color:var(--text) }
+.toc-edit-btn.active { background:var(--brand); color:#fff; border-color:var(--brand) }
+/* 선택 삭제 버튼 */
+.toc-delete-btn {
+  font-size:11px; font-weight:700; padding:4px 10px; border-radius:var(--r6);
+  border:1px solid rgba(220,38,38,.25); background:var(--danger-soft); color:var(--danger);
+  cursor:pointer; transition:all var(--tr); display:none;
+}
+.toc-delete-btn.visible { display:inline-flex; align-items:center; gap:4px }
+
+/* ─── Drag & Drop ──────────────────────────────────────── */
+.tree-toc-row[draggable="true"] { cursor:grab }
+.tree-toc-row[draggable="true"]:active { cursor:grabbing }
+.tree-child-row[draggable="true"] { cursor:grab }
+.tree-child-row[draggable="true"]:active { cursor:grabbing }
+.tree-toc-row.dragging,
+.tree-child-row.dragging { opacity:0.3; }
+/* 드롭 위치 표시: 상단에 파란 구분선 */
+.tree-toc-node.drag-over > .tree-toc-row {
+  border-top:2px solid var(--brand);
+  margin-top:-1px;
+}
+.tree-child-row.drag-over {
+  border-top:2px solid var(--brand);
+  margin-top:-1px;
+}
+
+/* Inline name edit */
+.tree-name-input {
+  flex:1; font-size:13px; font-weight:700; color:var(--text);
+  border:none; outline:none; background:transparent;
+  border-bottom:1.5px solid var(--brand); min-width:0; padding:0;
+}
+
+/* Content panel + Sliding edit */
+.frame-content {
+  flex:1; min-width:0; overflow:hidden;
+  display:flex; flex-direction:column;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r12);
+  box-shadow:var(--shadow-sm);
+}
+.fc-slider {
+  display:flex; flex:1; width:200%;
+  transition:transform .28s cubic-bezier(.4,0,.2,1);
+}
+.fc-slider.editing { transform:translateX(-50%) }
+.fc-panel { width:50%; display:flex; flex-direction:column; overflow:hidden; }
+.frame-content-head {
+  padding:11px 16px;
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:6px;
+  background:var(--surface); flex-shrink:0;
+}
+.frame-content-head .ctit { font-size:13px; font-weight:700; color:var(--text) }
+.frame-content-head .ctit .tref { font-weight:400; color:var(--text-3); margin-left:6px; font-size:12px }
+.frame-content-items { flex:1; overflow-y:auto; padding:10px 12px; display:flex; flex-direction:column; gap:6px }
+/* Back button for edit panel */
+.back-btn {
+  display:flex; align-items:center; gap:4px;
+  font-size:12px; font-weight:700; color:var(--text-2);
+  padding:4px 8px; border-radius:var(--r6); cursor:pointer; flex-shrink:0;
+  transition:background var(--tr), color var(--tr);
+}
+.back-btn:hover { background:var(--surface-2); color:var(--text) }
+/* Edit form */
+.fc-edit-body { flex:1; overflow-y:auto; padding:16px 14px; }
+.fc-edit-form .ef-row { margin-bottom:14px }
+.fc-edit-form .ef-lbl { font-size:12px; font-weight:600; color:var(--text-2); margin-bottom:5px }
+.fc-edit-form .ef-val { font-size:13px; color:var(--text) }
+.fc-edit-form .ef-input {
+  width:100%; padding:8px 10px;
+  border:1px solid var(--border-strong); border-radius:var(--r6);
+  background:var(--surface); color:var(--text); font-size:13px;
+  transition:border-color var(--tr), box-shadow var(--tr);
+}
+.fc-edit-form .ef-input:focus { outline:none; border-color:var(--brand); box-shadow:0 0 0 3px rgba(0,102,255,.08) }
+.fcontent-row {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 12px; border:1px solid var(--border); border-radius:var(--r8);
+  background:var(--surface); transition:border-color var(--tr), box-shadow var(--tr);
+  cursor:pointer;
+}
+.fcontent-row:hover { border-color:var(--brand); box-shadow:var(--shadow-xs) }
+.fcontent-row .cicon {
+  width:30px; height:30px; border-radius:var(--r6);
+  background:var(--surface-2); display:flex; align-items:center; justify-content:center;
+  font-size:15px; flex-shrink:0;
+}
+.fcontent-row .cinfo { flex:1; min-width:0 }
+.fcontent-row .ctitle { font-size:14px; font-weight:600; color:var(--text);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+.fcontent-row .cmeta { font-size:12px; color:var(--text-3); margin-top:2px }
+.fcontent-row .cact { display:flex; gap:4px; flex-shrink:0 }
+.frame-content-empty {
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  color:var(--text-3); gap:10px; padding:24px;
+}
+.frame-content-empty .eico { font-size:28px }
+.frame-content-empty .ettl { font-size:14px; font-weight:600; color:var(--text-2) }
+.frame-content-empty p { font-size:13px; color:var(--text-3); text-align:center; line-height:1.6 }
+
+/* Content Add Mode (inline) */
+.frame-content-add {
+  flex:1; display:flex; flex-direction:column;
+}
+.content-add-header {
+  display:flex; align-items:center; gap:12px;
+  padding:11px 16px; border-bottom:1px solid var(--border);
+  background:var(--surface-2);
+}
+.content-add-header .back-btn {
+  display:flex; align-items:center; gap:5px;
+  font-size:12px; font-weight:700; color:var(--text-2);
+  padding:5px 8px; border-radius:var(--r6);
+  transition:background var(--tr), color var(--tr);
+}
+.content-add-header .back-btn:hover { background:var(--surface-3); color:var(--text) }
+.content-add-header .add-title { font-size:12px; font-weight:700; color:var(--text) }
+.content-add-body { flex:1; overflow-y:auto; padding:16px }
+.upload-type-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:16px }
+.upload-type-item {
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  padding:16px 10px; border:1px solid var(--border-strong); border-radius:var(--r12);
+  background:var(--surface); cursor:pointer;
+  transition:border-color var(--tr), box-shadow var(--tr);
+  text-align:center;
+}
+.upload-type-item:hover { border-color:var(--brand); box-shadow:0 0 0 3px rgba(0,102,255,.08) }
+.upload-type-item > div { width:40px!important; height:40px!important; border-radius:10px!important }
+.upload-type-item .ulbl { font-size:11px; font-weight:700; color:var(--text-2) }
+.upload-drop {
+  border:2px dashed var(--border-strong); border-radius:var(--r8);
+  padding:28px 16px; text-align:center; cursor:pointer;
+  transition:border-color var(--tr), background var(--tr);
+  background:var(--surface);
+}
+.upload-drop:hover { border-color:var(--brand); background:var(--brand-soft) }
+.upload-drop .dico { font-size:24px; margin-bottom:8px }
+.upload-drop .dtitle { font-size:13px; font-weight:700; color:var(--text); margin-bottom:4px }
+.upload-drop .dsub { font-size:11px; color:var(--text-3) }
+
+/* ─── Setting Accordion ───────────────────────────────────── */
+.setting-list { display:flex; flex-direction:column; gap:4px }
+.setting-block {
+  border:1px solid var(--border); border-radius:var(--r8);
+  overflow:hidden; background:var(--surface);
+}
+.setting-block.open { border-color:var(--brand); box-shadow:0 0 0 3px rgba(0,102,255,.07) }
+.setting-row {
+  display:flex; align-items:flex-start; gap:16px; padding:16px 18px;
+  cursor:pointer; transition:background var(--tr);
+}
+.setting-row:hover { background:var(--surface-2) }
+.setting-row .skey { font-size:13px; font-weight:700; color:var(--text); width:160px; flex-shrink:0; padding-top:1px }
+.setting-row .sval { flex:1; font-size:13px; color:var(--text-2); line-height:1.5 }
+.setting-row .sval .em { color:var(--text); font-weight:700 }
+.setting-row .sval .desc { font-size:12px; color:var(--text-3); margin-top:3px }
+.setting-row .sedit { font-size:12px; font-weight:600; color:var(--text-3); white-space:nowrap;
+  padding:4px 8px; border-radius:var(--r4); transition:background var(--tr), color var(--tr) }
+.setting-row .sedit:hover { background:var(--surface-3); color:var(--text) }
+.setting-body { padding:0 18px 18px; border-top:1px solid var(--border) }
+.opt-row {
+  display:flex; align-items:flex-start; gap:12px; padding:12px; margin-top:12px;
+  border:1.5px solid var(--border-md); border-radius:var(--r8); cursor:pointer;
+  transition:border-color var(--tr), background var(--tr);
+}
+.opt-row.selected { border-color:var(--brand); background:var(--brand-soft) }
+.opt-row input[type=radio] { margin-top:2px; accent-color:var(--brand); flex-shrink:0 }
+.opt-content .otit { font-size:13px; font-weight:700; color:var(--text) }
+.opt-content .odesc { font-size:12px; color:var(--text-2); margin-top:3px; line-height:1.5 }
+.opt-content .octrl { margin-top:10px; display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600 }
+.edit-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:16px }
+.inline-num { width:70px; padding:6px 10px; border-radius:var(--r4); border:1px solid var(--border-strong); background:var(--surface); color:var(--text) }
+.period-row { display:flex; align-items:center; gap:8px; margin-top:10px; font-size:13px }
+.period-lbl { font-size:12px; font-weight:600; color:var(--text-2); width:60px }
+.toggle-row { display:flex; align-items:center; gap:12px; padding:12px 0 }
+.toggle-switch { display:flex; align-items:center; gap:10px; cursor:pointer; user-select:none }
+.toggle-switch input { position:absolute; opacity:0; width:0; height:0 }
+.ttrack { width:40px; height:22px; border-radius:999px; background:var(--border-strong); position:relative; transition:background .2s; flex-shrink:0 }
+.toggle-switch input:checked + .ttrack { background:var(--brand) }
+.tthumb { position:absolute; top:3px; left:3px; width:16px; height:16px; border-radius:999px; background:#fff; transition:transform .15s; box-shadow:0 1px 3px rgba(0,0,0,.2) }
+.toggle-switch input:checked + .ttrack .tthumb { transform:translateX(18px) }
+.tlabel { font-size:13px; font-weight:600; color:var(--text) }
+
+/* ─── Open Checklist ──────────────────────────────────────── */
+.open-checks { display:flex; flex-direction:column; gap:8px; margin-bottom:28px }
+.open-check-item {
+  display:flex; align-items:center; gap:12px;
+  padding:14px 16px; border:1px solid var(--border); border-radius:var(--r8); background:var(--surface);
+}
+.open-check-item.ok   { border-color:rgba(0,191,64,.3);  background:#EBFAF0 }  /* green-200 */
+.open-check-item.warn { border-color:rgba(255,146,0,.3); background:#FFFBF5 }  /* orange-100 */
+.open-check-item.err  { border-color:rgba(250,46,67,.3);  background:var(--danger-soft) }
+[data-theme="dark"] .open-check-item.ok   { background:rgba(0,191,64,.1) }
+[data-theme="dark"] .open-check-item.warn { background:rgba(255,146,0,.1) }
+[data-theme="dark"] .open-check-item.err  { background:rgba(250,46,67,.1) }
+.cico { width:24px; height:24px; border-radius:999px; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0 }
+.open-check-item.ok   .cico { background:var(--success); color:#fff }
+.open-check-item.warn .cico { background:var(--warn); color:#fff }
+.open-check-item.err  .cico { background:var(--danger); color:#fff }
+.cbody { flex:1 }
+.cbody .clbl { font-size:13px; font-weight:700; color:var(--text) }
+.cbody .cdesc { font-size:12px; color:var(--text-2); margin-top:2px }
+.cbody .clink { font-size:12px; color:var(--brand); font-weight:600; cursor:pointer; display:inline-block; margin-top:2px }
+.cbody .clink:hover { text-decoration:underline }
+
+/* ─── Buttons ─────────────────────────────────────────────── */
+.btn {
+  display:inline-flex; align-items:center; justify-content:center; gap:6px;
+  padding:8px 14px; border-radius:var(--r6); border:1px solid var(--border-strong);
+  background:var(--surface); color:var(--text-2); font-size:13px; font-weight:600;
+  cursor:pointer; transition:background var(--tr), border-color var(--tr), color var(--tr), transform 60ms;
+  white-space:nowrap;
+}
+.btn:hover { border-color:var(--border-strong); color:var(--text); background:var(--surface-2) }
+.btn:active { transform:translateY(1px) }
+.btn-primary { background:var(--cta); color:var(--cta-text); border-color:var(--cta) }
+.btn-primary:hover { opacity:.88; background:var(--cta); color:var(--cta-text) }
+.btn-brand { background:var(--brand); color:#fff; border-color:var(--brand) }
+.btn-brand:hover { background:var(--brand-strong); border-color:var(--brand-strong); color:#fff }
+.btn-ghost { background:transparent; border-color:transparent; color:var(--text-2) }
+.btn-ghost:hover { background:var(--surface-2) }
+.btn-sm { padding:5px 10px; font-size:12px }
+.btn-xs { padding:4px 8px; font-size:11px; font-weight:700 }
+.btn-icon { padding:5px; border-radius:var(--r6); color:var(--text-3); display:inline-flex; align-items:center }
+.btn-icon:hover { background:var(--surface-2); color:var(--text) }
+.btn-block { width:100%; justify-content:center }
+
+/* ─── Toast ───────────────────────────────────────────────── */
+.toast-wrap { position:fixed; bottom:24px; right:24px; z-index:999; display:flex; flex-direction:column; gap:8px; pointer-events:none }
+.toast {
+  display:flex; align-items:center; gap:10px; padding:12px 16px;
+  border-radius:var(--r8); background:var(--cta); color:var(--cta-text);
+  font-size:13px; font-weight:600; pointer-events:auto;
+  box-shadow:var(--shadow-md); max-width:320px;
+  animation:toastIn .18s ease;
+}
+.toast.success { background:#00BF40; color:#fff }
+.toast.warn    { background:#FF9200; color:#fff }
+.toast.error   { background:#FA2E43; color:#fff }
+@keyframes toastIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+/* ─── Modal ───────────────────────────────────────────────── */
+.modal-mask { position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:200; display:none; align-items:center; justify-content:center }
+.modal-mask.open { display:flex }
+.modal { background:var(--surface); border-radius:var(--r12); padding:28px; min-width:380px; max-width:500px; box-shadow:var(--shadow-md) }
+.modal h3 { font-size:16px; font-weight:800; margin-bottom:8px }
+.modal p { font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:4px }
+.modal-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:20px }
+
+/* ─── Misc ────────────────────────────────────────────────── */
+.divider { border:none; border-top:1px solid var(--border); margin:32px 0 }
+.empty-state { text-align:center; padding:64px 24px; color:var(--text-3) }
+.empty-state .eico { font-size:32px; margin-bottom:10px }
+.empty-state .ettl { font-size:14px; font-weight:700; color:var(--text-2); margin-bottom:6px }
+.empty-state p { font-size:13px; line-height:1.6 }
+</style>
+</head>
+<body>
+
+<!-- ══ Topbar ══ -->
+<header class="topbar">
+  <a class="logo" href="#/dashboard"><span class="l">LABS</span><span class="n">New EDMS</span></a>
+  <span class="tag">개선안 v0.4 · HDS</span>
+  <div class="spacer"></div>
+  <div class="user">
+    <span class="name">이재길 님</span>
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙 다크모드</button>
+  </div>
+</header>
+
+<!-- ══ Nav Sidebar ══ -->
+<aside class="nav-sidebar">
+  <div class="nav-studio" onclick="toast('LABS Studio (프로토타입)')">
+    <span class="lbl">◉ LABS Studio</span><span class="ext">↗</span>
+  </div>
+  <nav class="nav-menu" id="navMenu">
+    <div class="nav-group" data-g="employees">
+      <div class="nav-item" onclick="toggleNav('employees')"><span class="lhs">👤 임직원</span><span class="caret">▾</span></div>
+      <div class="nav-sub"><a href="#/placeholder">임직원 관리</a></div>
+    </div>
+    <div class="nav-group" data-g="enroll">
+      <div class="nav-item" onclick="toggleNav('enroll')"><span class="lhs">📝 수강신청</span><span class="caret">▾</span></div>
+      <div class="nav-sub"><a href="#/placeholder">신청 가능 과정</a><a href="#/placeholder">신청 이력</a></div>
+    </div>
+    <div class="nav-group" data-g="learning">
+      <div class="nav-item" onclick="toggleNav('learning')"><span class="lhs">📖 학습</span><span class="caret">▾</span></div>
+      <div class="nav-sub"><a href="#/placeholder">학습중 과정</a><a href="#/placeholder">학습완료 과정</a></div>
+    </div>
+    <div class="nav-group open" data-g="lm">
+      <div class="nav-item active" onclick="toggleNav('lm')"><span class="lhs">⚙️ 러닝메이커</span><span class="caret">▾</span></div>
+      <div class="nav-sub">
+        <a href="#/dashboard" id="navDash">러닝메이커 보드</a>
+        <a href="#/editor" id="navEditor">새 과정 만들기</a>
+      </div>
+    </div>
+  </nav>
+</aside>
+
+<!-- ══ Main ══ -->
+<div class="main-wrap" id="mainWrap">
+  <div id="view"></div>
+</div>
+
+<!-- ══ Toast / Modal ══ -->
+<div class="toast-wrap" id="toastWrap"></div>
+<div class="modal-mask" id="modalMask" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3 id="mTitle"></h3>
+    <p id="mBody"></p>
+    <div class="modal-actions" id="mActions"></div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   State
+══════════════════════════════════════════════════════════ */
+const S = {
+  courseName: '',
+  courseDesc: '',
+  courseCategory: '리더십',
+  creationType: null,
+  toc: [
+    { id:'t1', title:'오리엔테이션', contents:[
+      {id:'c1',icon:'🎬',type:'동영상',title:'과정 소개 영상',dur:'05:32'},
+      {id:'c2',icon:'📎',type:'PDF',title:'학습 가이드.pdf',dur:''}
+    ]},
+    { id:'t2', title:'1장. 핵심 개념 이해', contents:[
+      {id:'c3',icon:'🎬',type:'동영상',title:'핵심 개념 영상',dur:'12:40'},
+      {id:'c4',icon:'❓',type:'퀴즈',title:'이해도 확인 퀴즈',dur:''}
+    ]},
+    { id:'t3', title:'2장. 실전 적용', contents:[] }
+  ],
+  activeTocId: 't1',
+  activeContentId: null,
+  contentAddMode: null,
+  frameExpanded: false,
+  tocEditMode: false,
+  selectedTocItems: [],
+  s4open: null, s5open: null,
+  enroll: {
+    immediate:true, days:365,
+    applyFrom:'', applyTo:'', learnFrom:'', learnTo:'',
+    capacity:'제한없음', completion:'immediate', progress:80
+  },
+  extra: { sequential:false, progressLock:false, speedLock:false, captureBlock:false }
+};
+
+const TYPES = [
+  {id:'online',  bg:'#EDF3FF', imgs:['./images/동영상.png','./images/아티클.png','./images/시험.png'],
+    label:'온라인 과정',       sub:'동영상 중심의 이러닝 과정을 제작합니다.',           kind:'online',  tags:['동영상','아티클','시험','과제','설문']},
+  {id:'offline', bg:'#EDFAF3', imgs:['./images/설문.png','./images/퀴즈.png'],
+    label:'오프라인 교육',      sub:'오프라인 일정과 회차를 빠르게 구성합니다.',         kind:'offline', tags:['오프라인']},
+  {id:'blended', bg:'#F2EFFE', imgs:['./images/동영상.png','./images/아티클.png','./images/설문.png'],
+    label:'블렌디드 러닝',      sub:'오프라인에 사전·사후 온라인 콘텐츠를 추가합니다.', kind:'offline', tags:['오프라인','동영상','설문']},
+  {id:'hybrid',  bg:'#FFF3EC', imgs:['./images/동영상.png','./images/시험.png','./images/퀴즈.png'],
+    label:'혼합 학습',          sub:'온·오프라인 콘텐츠를 자유롭게 결합합니다.',         kind:'hybrid',  tags:['오프라인','동영상','토론','시험']},
+  {id:'single',  bg:'#FFFBEC', imgs:['./images/동영상.png','./images/PDF.png','./images/아티클.png'],
+    label:'단일 콘텐츠',        sub:'콘텐츠 1개로 빠르게 과정을 만듭니다.',             kind:'online',  tags:['동영상 또는 PDF 또는 아티클']},
+  {id:'single+', bg:'#ECFBF8', imgs:['./images/동영상.png','./images/이미지.png','./images/퀴즈.png'],
+    label:'단일 콘텐츠 + 자료', sub:'핵심 콘텐츠 1개에 부가자료를 추가합니다.',         kind:'online',  tags:['동영상','이미지','퀴즈','설문']},
+];
+
+const SECTIONS = [
+  {id:'sec-info',   label:'과정 정보'},
+  {id:'sec-type',   label:'제작 유형'},
+  {id:'sec-toc',    label:'목차·콘텐츠'},
+  {id:'sec-enroll', label:'신청·학습 설정'},
+  {id:'sec-extra',  label:'부가 설정'},
+  {id:'sec-open',   label:'오픈'},
+];
+
+const DASH_DATA = [
+  {title:'생생경영학', kind:'online', status:'create', mod:'오늘'},
+  {title:'AI 마스터 전문교육과정', kind:'online', status:'create', mod:'어제'},
+  {title:'AI 리터러시 교육', kind:'hybrid', status:'edit', mod:'3일 전'},
+  {title:'2026년 2차 DVP Ⅳ 과정', kind:'offline', status:'ready', learnFrom:'2026-06-01', learnTo:'2026-07-31'},
+  {title:'CNA(11기)', kind:'online', status:'ready', learnFrom:'2026-05-20', learnTo:'2026-06-30'},
+  {title:'신입사원 Jump Up 과정', kind:'hybrid', status:'ready', learnFrom:'2026-07-01', learnTo:'2026-08-31'},
+  {title:'경영능력 평가 양성과정', kind:'online', status:'ready', learnFrom:'2026-05-15', learnTo:'2026-06-30'},
+  {title:'데이터기반 문제해결 기본과정', kind:'online', status:'ongoing', learnFrom:'2026-04-15', learnTo:'2026-06-15'},
+  {title:'경력사원 입문교육', kind:'offline', status:'done', certify:'completed'},
+  {title:'2025년 7차 DVP Ⅱ 과정', kind:'offline', status:'done', certify:'processing'},
+  {title:'2025년 데이터기반 문제해결(3차)', kind:'online', status:'done', certify:'completed'},
+];
+
+/* ══════════════════════════════════════════════════════════
+   Router
+══════════════════════════════════════════════════════════ */
+function go(path) { location.hash = '/' + path }
+window.addEventListener('hashchange', route);
+window.addEventListener('load', route);
+
+function route() {
+  const h = location.hash.replace(/^#\/?/, '') || 'dashboard';
+  const navDash = document.getElementById('navDash');
+  const navEditor = document.getElementById('navEditor');
+  if (navDash) navDash.classList.remove('active');
+  if (navEditor) navEditor.classList.remove('active');
+  if (h === 'dashboard' || h === '') { navDash?.classList.add('active'); renderDashboard(); }
+  else if (h === 'editor') { navEditor?.classList.add('active'); renderEditor(); }
+  else if (h === 'placeholder') { renderPlaceholder(); }
+  else renderDashboard();
+}
+
+/* ══════════════════════════════════════════════════════════
+   Dashboard
+══════════════════════════════════════════════════════════ */
+let dashTab = 'all';
+function renderDashboard() {
+  const kl = {online:'온라인', offline:'오프라인', hybrid:'혼합 학습'};
+  const sl = {create:'과정 생성', edit:'콘텐츠 편집', ready:'오픈 예정', ongoing:'학습 중', done:'학습 완료'};
+  const tabs = [
+    {id:'all', label:'전체', items:DASH_DATA},
+    {id:'active', label:'진행중', items:DASH_DATA.filter(d=>['create','edit','ready','ongoing'].includes(d.status))},
+    {id:'done', label:'학습 완료', items:DASH_DATA.filter(d=>d.status==='done')},
+  ];
+  const cur = tabs.find(t=>t.id===dashTab)||tabs[0];
+  document.getElementById('view').innerHTML = `
+    <div class="dash-page">
+      <div class="dash-header">
+        <div><h1>러닝메이커 보드</h1>
+          <p>과정의 전체 생애주기를 한눈에 관리하세요.</p></div>
+        <button class="btn btn-primary" onclick="startNew()">+ 새 과정 만들기</button>
+      </div>
+      <div class="tab-bar">
+        ${tabs.map(t=>`<div class="tab ${t.id===dashTab?'active':''}" onclick="setDashTab('${t.id}')">${t.label}<span class="cnt">${t.items.length}</span></div>`).join('')}
+      </div>
+      <div class="course-list">
+        ${cur.items.length===0 ? `<div class="empty-state"><div class="eico">📋</div><div class="ettl">과정이 없습니다</div><p>새 과정을 만들어 시작해보세요.</p></div>` :
+          cur.items.map(item=>{
+            const certTxt = item.certify==='processing'?'수료 처리 중':item.certify==='completed'?'수료 완료':'';
+            const meta = item.learnFrom&&item.learnTo ? `학습 ${item.learnFrom} ~ ${item.learnTo}` : item.mod ? `수정 ${item.mod}` : '';
+            return `<div class="course-row" onclick="go('editor')">
+              <span class="type-badge ${item.kind}">${kl[item.kind]||item.kind}</span>
+              <div class="cinfo">
+                <div class="ctitle">${esc(item.title)}</div>
+                <div class="cmeta">${meta}${certTxt?` · ${certTxt}`:''}</div>
+              </div>
+              <span class="status-pill ${item.status}">${sl[item.status]||item.status}</span>
+              <button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();go('editor')">편집</button>
+            </div>`;
+          }).join('')}
+      </div>
+    </div>`;
+}
+function setDashTab(id) { dashTab=id; renderDashboard() }
+function startNew() { S.courseName=''; S.creationType=null; go('editor') }
+
+/* ══════════════════════════════════════════════════════════
+   Editor — Single Scroll Page
+══════════════════════════════════════════════════════════ */
+function renderEditor() {
+  document.getElementById('view').innerHTML = `
+    <div class="editor-page">
+      <div class="editor-container">
+        <!-- Left Sticky Nav -->
+        <div class="editor-left-nav" id="editorLeftNav">
+          <div class="editor-course-name">과정명</div>
+          <div class="editor-course-title" id="editorCourseName" onclick="focusCourseNameInput()">
+            ${esc(S.courseName) || '<span style="color:var(--text-3);font-weight:400">미입력</span>'}
+          </div>
+          <div class="section-nav" id="sectionNav">
+            ${SECTIONS.map((sec,i)=>{
+              const st = getSectionStatus(sec.id);
+              const sm = getSectionSummary(sec.id);
+              return `
+                <div class="snav-item ${i===0?'active':''} ${st}" data-target="${sec.id}" onclick="scrollToSection('${sec.id}')">
+                  <div class="snav-num">${getSnavSymbol(sec.id, i)}</div>
+                  <div class="snav-info">
+                    <div class="snav-label">${sec.label}</div>
+                    <div class="snav-summary">${sm}</div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+
+        <!-- Right Scroll Sections -->
+        <div class="editor-sections" id="editorSections">
+
+          <!-- 1. 과정 정보 -->
+          <section class="esec" id="sec-info">
+            <div class="esec-header">
+              <div class="esec-num">01</div>
+              <div class="esec-title">과정 정보</div>
+              <div class="esec-desc">제작할 과정의 기본 정보를 입력하세요.</div>
+            </div>
+            <div class="field" style="max-width:520px">
+              <label class="flabel">과정명 <span class="req">*</span></label>
+              <input class="input lg" id="courseNameInput" placeholder="예: 신입사원 리더십 과정"
+                value="${esc(S.courseName)}" autofocus
+                oninput="S.courseName=this.value; updateLeftCourseTitle()"
+                onkeydown="if(event.key==='Enter')document.getElementById('courseDescInput')?.focus()" />
+              <div class="hint">2자 이상 입력해주세요.</div>
+            </div>
+          </section>
+
+          <!-- 2. 제작 유형 -->
+          <section class="esec" id="sec-type">
+            <div class="esec-header">
+              <div class="esec-num">02</div>
+              <div class="esec-title">제작 유형</div>
+              <div class="esec-desc">어떤 방식으로 과정을 만드시나요? 유형에 따라 콘텐츠 구성 방식이 달라집니다.</div>
+            </div>
+            <div class="type-grid">
+              ${TYPES.map(t=>`
+                <div class="type-card ${S.creationType===t.id?'selected':''}" onclick="selectType('${t.id}')"
+                  style="background:${t.bg}">
+                  <div class="type-check">✓</div>
+                  <div class="t-icon-group">
+                    ${t.imgs.slice(0,3).map(src=>`<div class="t-ico-img"><img src="${src}" alt=""/></div>`).join('')}
+                  </div>
+                  <h3>${t.label}</h3>
+                  <p>${t.sub}</p>
+                  <div class="ctags">${t.tags.map(tag=>`<span class="ctag">${tag}</span>`).join('')}</div>
+                </div>
+              `).join('')}
+            </div>
+            <div class="type-extra-row" style="margin-top:12px">
+              <div class="type-extra-card" onclick="toast('이전 제작과정 불러오기 (프로토타입)')">
+                <div class="extra-plus-icon">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <path d="M9 3.5v11M3.5 9h11" stroke="#9A9AA8" stroke-width="2.2" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div class="extra-info"><h4>이전 과정 불러오기</h4><p>기존에 만든 과정을 기반으로 수정·재활용합니다.</p></div>
+              </div>
+              <div class="type-extra-card" onclick="toast('프리패키지드 코스 (프로토타입)')">
+                <div class="extra-plus-icon">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <path d="M9 3.5v11M3.5 9h11" stroke="#9A9AA8" stroke-width="2.2" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div class="extra-info"><h4>프리패키지드 코스</h4><p>LABS가 설계한 구성을 가져와 수정합니다.</p></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3. 목차·콘텐츠 -->
+          <section class="esec" id="sec-toc">
+            <div class="esec-header">
+              <div class="esec-num">03</div>
+              <div class="esec-title">목차 · 콘텐츠</div>
+              <div class="esec-desc">학습 목차를 구성하고 각 목차에 콘텐츠를 추가하세요.</div>
+            </div>
+            <div id="tocFrameWrap">${renderTocFrame()}</div>
+          </section>
+
+          <!-- 4. 신청·학습 설정 -->
+          <section class="esec" id="sec-enroll">
+            <div class="esec-header">
+              <div class="esec-num">04</div>
+              <div class="esec-title">신청 · 학습 설정</div>
+              <div class="esec-desc">과정이 오픈된 후에는 변경이 어렵습니다. 꼼꼼히 확인해주세요.</div>
+            </div>
+            <div id="s4Wrap">${renderS4()}</div>
+          </section>
+
+          <!-- 5. 부가 설정 -->
+          <section class="esec" id="sec-extra">
+            <div class="esec-header">
+              <div class="esec-num">05</div>
+              <div class="esec-title">부가 설정</div>
+              <div class="esec-desc">학습 방식과 동영상 옵션을 설정하세요.</div>
+            </div>
+            <div id="s5Wrap">${renderS5()}</div>
+          </section>
+
+          <!-- 6. 오픈 -->
+          <section class="esec" id="sec-open">
+            <div class="esec-header">
+              <div class="esec-num">06</div>
+              <div class="esec-title">오픈</div>
+              <div class="esec-desc">항목을 확인하고 모두 준비되면 과정을 오픈하세요.</div>
+            </div>
+            <div id="s6Wrap">${renderS6()}</div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+  `;
+  initScrollSpy();
+}
+
+/* ── 과정명 타이틀 업데이트 ── */
+function updateLeftCourseTitle() {
+  const el = document.getElementById('editorCourseName');
+  if (el) el.innerHTML = S.courseName ? esc(S.courseName) : '<span style="color:var(--text-3);font-weight:400">미입력</span>';
+  const ft = document.getElementById('frameCourseTitle');
+  if (ft) ft.innerHTML = S.courseName ? esc(S.courseName) : '<span class="placeholder">강의명을 입력하면 여기에 표시됩니다</span>';
+  updateNavStatus();
+}
+function focusCourseNameInput() {
+  const inp = document.getElementById('courseNameInput');
+  if (inp) { inp.focus(); inp.select(); }
+}
+
+/* ── Scroll Spy ── */
+function initScrollSpy() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const id = entry.target.id;
+      document.querySelectorAll('.snav-item').forEach(item => {
+        item.classList.remove('active');  // ok/no는 건드리지 않음
+        if (item.dataset.target === id) item.classList.add('active');
+      });
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  SECTIONS.forEach(sec => {
+    const el = document.getElementById(sec.id);
+    if (el) observer.observe(el);
+  });
+}
+
+/* ── 네비게이션 심볼 (숫자 / 체크 / X) ── */
+const SVG_CHECK = `<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6.2L4.8 9L10 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const SVG_X     = `<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 2L9 9M9 2L2 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+function getSnavSymbol(secId, idx) {
+  const s = getSectionStatus(secId);
+  if (s === 'ok') return SVG_CHECK;
+  if (s === 'no') return SVG_X;
+  return String(idx + 1);
+}
+
+/* ── 네비게이션 상태 업데이트 ── */
+function getSectionStatus(secId) {
+  switch(secId) {
+    case 'sec-info':
+      return S.courseName.trim().length >= 2 ? 'ok' : 'no';
+    case 'sec-type':
+      return S.creationType ? 'ok' : '';
+    case 'sec-toc': {
+      if (!S.toc.length) return '';
+      return S.toc.every(t => t.contents.length > 0) ? 'ok' : 'no';
+    }
+    case 'sec-enroll':
+      return (S.enroll.immediate || (S.enroll.learnFrom && S.enroll.learnTo)) ? 'ok' : '';
+    case 'sec-extra':
+      return 'ok';
+    case 'sec-open': {
+      const hasToc = S.toc.some(t => t.contents.length > 0);
+      const hasPeriod = S.enroll.immediate || (S.enroll.learnFrom && S.enroll.learnTo);
+      return (S.courseName.trim().length >= 2 && S.creationType && hasToc && hasPeriod) ? 'ok' : 'no';
+    }
+    default: return '';
+  }
+}
+function getSectionSummary(secId) {
+  switch(secId) {
+    case 'sec-info':
+      return S.courseName.trim() ? esc(S.courseName.length > 16 ? S.courseName.slice(0,16)+'…' : S.courseName) : '과정명 미입력';
+    case 'sec-type':
+      return S.creationType ? (TYPES.find(t=>t.id===S.creationType)?.label || S.creationType) : '유형 미선택';
+    case 'sec-toc': {
+      const tc = S.toc.length;
+      const cc = S.toc.reduce((s,t)=>s+t.contents.length, 0);
+      if (!tc) return '목차 없음';
+      const noCont = S.toc.filter(t=>t.contents.length===0).length;
+      if (noCont) return `${tc}개 목차 · 콘텐츠 없는 ${noCont}개`;
+      return `${tc}개 목차 · ${cc}개 콘텐츠`;
+    }
+    case 'sec-enroll': {
+      if (S.enroll.immediate) return `즉시 학습 · ${S.enroll.days}일`;
+      if (S.enroll.learnFrom && S.enroll.learnTo) return `${S.enroll.learnFrom} ~`;
+      return '기간 미설정';
+    }
+    case 'sec-extra': {
+      const parts = [];
+      if (S.extra.sequential) parts.push('순서학습');
+      if (S.extra.progressLock) parts.push('진도제한');
+      if (S.extra.speedLock) parts.push('배속고정');
+      if (S.extra.captureBlock) parts.push('캡처방지');
+      return parts.length ? parts.join(' · ') : '기본 설정';
+    }
+    case 'sec-open': {
+      const hasToc = S.toc.some(t=>t.contents.length>0);
+      const hasPeriod = S.enroll.immediate || (S.enroll.learnFrom && S.enroll.learnTo);
+      const allOk = S.courseName.trim().length>=2 && S.creationType && hasToc && hasPeriod;
+      return allOk ? '오픈 준비 완료' : '미완성 항목 있음';
+    }
+    default: return '';
+  }
+}
+function updateNavStatus() {
+  document.querySelectorAll('.snav-item').forEach(item => {
+    const secId = item.dataset.target;
+    const status = getSectionStatus(secId);
+    item.classList.remove('ok','no');
+    if (status) item.classList.add(status);
+    const idx = SECTIONS.findIndex(s => s.id === secId);
+    const numEl = item.querySelector('.snav-num');
+    if (numEl) numEl.innerHTML = getSnavSymbol(secId, idx);
+    const sum = item.querySelector('.snav-summary');
+    if (sum) sum.innerHTML = getSectionSummary(secId);
+  });
+}
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+/* ── Type select ── */
+function selectType(id) {
+  S.creationType = id;
+  document.querySelectorAll('.type-card').forEach(c => {
+    c.classList.toggle('selected', c.onclick?.toString().includes(`'${id}'`));
+  });
+  // re-render type grid in place
+  const secType = document.getElementById('sec-type');
+  if (secType) {
+    secType.querySelector('.type-grid').innerHTML = TYPES.map(t=>`
+      <div class="type-card ${S.creationType===t.id?'selected':''}" onclick="selectType('${t.id}')"
+        style="background:${t.bg}">
+        <div class="type-check">✓</div>
+        <div class="t-icon-group">
+          ${t.imgs.slice(0,3).map(src=>`<div class="t-ico-img"><img src="${src}" alt=""/></div>`).join('')}
+        </div>
+        <h3>${t.label}</h3>
+        <p>${t.sub}</p>
+        <div class="ctags">${t.tags.map(tag=>`<span class="ctag">${tag}</span>`).join('')}</div>
+      </div>
+    `).join('');
+    toast(`"${TYPES.find(t=>t.id===id)?.label}" 선택됨`, 'success');
+    updateNavStatus();
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   목차·콘텐츠 Frame
+══════════════════════════════════════════════════════════ */
+const TYPE_IMG = {
+  '동영상': './images/동영상.png',
+  'PDF':   './images/PDF.png',
+  '아티클': './images/아티클.png',
+  '퀴즈':  './images/퀴즈.png',
+  '설문':  './images/설문.png',
+  '시험':  './images/시험.png',
+  '이미지': './images/이미지.png',
+  '유튜브': './images/유튜브.png',
+};
+
+function getTypeIcon(type) {
+  const src = TYPE_IMG[type];
+  if (src) return `<div style="width:36px;height:36px;border-radius:9px;overflow:hidden;flex-shrink:0"><img src="${src}" alt="${type}" style="width:100%;height:100%;object-fit:cover"/></div>`;
+  return `<div style="width:36px;height:36px;border-radius:9px;background:#F3F4F6;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px">📄</div>`;
+}
+
+function renderTocFrame() {
+  const toc = S.toc.find(t=>t.id===S.activeTocId);
+  const contentPanel = S.contentAddMode ? renderContentAddPanel() : renderContentViewPanel(toc);
+  return `
+    <div class="toc-frame">
+      <!-- Frame Body (강의명 헤더 + 패널 포함) -->
+      <div class="toc-frame-body ${S.frameExpanded?'expanded':''}" id="tocFrameBody">
+        <!-- 강의명 헤더 (박스 안) -->
+        <div class="toc-frame-course-header">
+          <div class="toc-frame-course-name" id="frameCourseTitle">
+            ${S.courseName ? esc(S.courseName) : '<span class="placeholder">강의명을 입력하면 여기에 표시됩니다</span>'}
+          </div>
+          <button class="btn btn-xs btn-ghost" onclick="toggleFrameExpand()"
+            title="${S.frameExpanded?'기본 크기로':'크게 보기'}">
+            ${S.frameExpanded ? '⊟ 축소' : '⊞ 확장'}
+          </button>
+        </div>
+        <!-- 패널 행 -->
+        <div class="toc-panels">
+          <!-- TOC Tree Panel (Left) -->
+          <div class="frame-toc">
+            <div class="frame-toc-head">
+              <span class="ftit">학습 구성</span>
+              <div style="display:flex;gap:6px;align-items:center">
+                <button class="toc-delete-btn ${S.tocEditMode && S.selectedTocItems.length>0?'visible':''}"
+                  id="tocDeleteBtn" onclick="deleteSelectedTocItems()">
+                  🗑 삭제 (${S.selectedTocItems.length})
+                </button>
+                <button class="toc-edit-btn ${S.tocEditMode?'active':''}" onclick="toggleTocEditMode()">
+                  ${S.tocEditMode ? '완료' : '편집'}
+                </button>
+              </div>
+            </div>
+            <div class="frame-toc-items ${S.tocEditMode?'edit-mode':''}" id="tocTreeItems">
+              ${renderTocTree()}
+            </div>
+            <div class="frame-toc-foot">
+              <button class="toc-add-btn" onclick="addToc()">+ 목차 추가</button>
+            </div>
+          </div>
+          <!-- Content Panel (Right) -->
+          ${contentPanel}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderContentViewPanel(toc) {
+  const editContent = S.activeContentId
+    ? (toc?.contents.find(c => c.id === S.activeContentId) || null)
+    : null;
+  const isEditing = !!(editContent);
+
+  return `
+    <div class="frame-content" id="frameContent">
+      <div class="fc-slider ${isEditing ? 'editing' : ''}">
+        <!-- 목록 패널 -->
+        <div class="fc-panel">
+          <div class="frame-content-head">
+            <span class="ctit">콘텐츠 <span class="tref">${toc ? esc(toc.title) : ''}</span></span>
+          </div>
+          <div class="frame-content-items" id="frameContentItems">
+            ${toc && toc.contents.length > 0
+              ? toc.contents.map(c => `
+                <div class="fcontent-row" onclick="openContentEdit('${toc.id}','${c.id}')">
+                  ${getTypeIcon(c.type)}
+                  <div class="cinfo">
+                    <div class="ctitle">${esc(c.title)}</div>
+                    <div class="cmeta">${c.type}${c.dur ? ' · ' + c.dur : ''}</div>
+                  </div>
+                  <div class="cact">
+                    <button class="btn-icon" title="삭제"
+                      onclick="event.stopPropagation();removeContent('${toc.id}','${c.id}')">🗑</button>
+                  </div>
+                </div>
+              `).join('')
+              : ``
+            }
+          </div>
+        </div>
+        <!-- 편집 패널 -->
+        <div class="fc-panel">
+          <div class="frame-content-head">
+            <button class="back-btn" onclick="closeContentEdit()">← 목록</button>
+            <span class="ctit">${editContent ? esc(editContent.title) : ''}</span>
+          </div>
+          <div class="fc-edit-body">
+            ${editContent ? `
+              <div class="fc-edit-form">
+                <div class="ef-row">
+                  <div class="ef-lbl">콘텐츠명</div>
+                  <input class="ef-input" value="${esc(editContent.title)}"
+                    onblur="updateContentTitle('${toc?.id}','${editContent.id}',this.value)"
+                    onkeydown="if(event.key==='Enter')this.blur()" />
+                </div>
+                <div class="ef-row">
+                  <div class="ef-lbl">유형</div>
+                  <div class="ef-val">${editContent.icon} ${editContent.type}</div>
+                </div>
+                ${editContent.dur ? `
+                <div class="ef-row">
+                  <div class="ef-lbl">재생 시간</div>
+                  <div class="ef-val">${editContent.dur}</div>
+                </div>` : ''}
+                <div class="ef-row" style="margin-top:24px">
+                  <button class="btn btn-sm" style="color:var(--danger);border-color:rgba(220,38,38,.25)"
+                    onclick="removeContent('${toc?.id}','${editContent.id}');closeContentEdit()">
+                    🗑 콘텐츠 삭제
+                  </button>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderContentAddPanel() {
+  const toc = S.toc.find(t=>t.id===S.activeTocId);
+  const modeTitle = {upload:'새 파일 업로드', library:'라이브러리 검색', online:'온라인 과정 추가'}[S.contentAddMode]||'콘텐츠 추가';
+  return `
+    <div class="frame-content" id="frameContent">
+      <div class="content-add-header">
+        <button class="back-btn" onclick="closeContentAdd()">← 돌아가기</button>
+        <span class="add-title">${modeTitle}</span>
+        ${toc ? `<span style="font-size:11px;color:var(--text-3)">· ${esc(toc.title)}</span>` : ''}
+      </div>
+      <div class="frame-content-add">
+        <div class="content-add-body">
+          <div class="upload-type-grid">
+            ${['동영상','PDF','아티클','유튜브','퀴즈','설문','시험','이미지'].map(lbl=>`
+              <div class="upload-type-item" onclick="addContent('${lbl}','')">
+                <div style="width:40px;height:40px;border-radius:10px;overflow:hidden;flex-shrink:0">
+                  <img src="./images/${lbl}.png" alt="${lbl}" style="width:100%;height:100%;object-fit:cover"/>
+                </div>
+                <span class="ulbl">${lbl}</span>
+              </div>
+            `).join('')}
+          </div>
+          <div class="upload-drop" onclick="toast('파일 선택 (프로토타입)')">
+            <div class="dico">📤</div>
+            <div class="dtitle">여기에 파일을 드래그하거나 클릭하여 업로드</div>
+            <div class="dsub">MP4 · PDF · PPTX · DOCX 등 · 최대 2GB</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ── 트리 확장 상태 ── */
+const TOC_EXPANDED = {};  // tocId → true/false
+
+function getSmallTypeIcon(type) {
+  const src = TYPE_IMG[type];
+  if (src) return `<img src="${src}" alt="${type}"/>`;
+  return `<span style="font-size:13px;line-height:26px;display:block;text-align:center">📄</span>`;
+}
+
+function renderTocTree() {
+  if (!S.toc.length) return `<div style="padding:16px;text-align:center;font-size:13px;color:var(--text-3)">목차가 없습니다</div>`;
+  return S.toc.map((t, ti) => {
+    const expanded = TOC_EXPANDED[t.id] !== false;
+    const isActive = S.activeTocId === t.id;
+    const tocSelId = 'toc-' + t.id;
+    return `
+      <div class="tree-toc-node" id="tnode-${t.id}"
+        ${!S.tocEditMode ? `
+          ondragover="event.preventDefault();tocDragOver('${t.id}')"
+          ondragleave="tocDragLeave('${t.id}')"
+          ondrop="event.preventDefault();tocDrop('${t.id}')"
+        ` : ''}>
+        <div class="tree-toc-row ${isActive?'active':''}"
+          onclick="selectToc('${t.id}')"
+          ${!S.tocEditMode ? `
+            draggable="true"
+            ondragstart="tocDragStart(event,'${t.id}')"
+            ondragend="dragCleanup()"
+          ` : ''}>
+          ${S.tocEditMode ? `<input type="checkbox" class="toc-check"
+            onclick="event.stopPropagation();toggleTocSelect('${tocSelId}')"
+            ${S.selectedTocItems.includes(tocSelId)?'checked':''}/>` : ''}
+          <span class="t-toggle ${expanded?'open':'closed'}"
+            onclick="event.stopPropagation();toggleTocExpand('${t.id}')">▾</span>
+          <span class="t-name" ondblclick="event.stopPropagation();startRenameToc('${t.id}')"
+            id="tname-${t.id}" title="더블클릭하여 이름 수정">${esc(t.title)}</span>
+          ${!S.tocEditMode ? `
+            <button class="t-add-btn" title="콘텐츠 추가"
+              onclick="event.stopPropagation();selectToc('${t.id}');openContentAdd('upload')">+</button>
+          ` : ''}
+        </div>
+        ${expanded ? `
+          <div class="tree-children" id="tchildren-${t.id}">
+            ${t.contents.length === 0
+              ? `<div style="padding:6px 8px 6px 14px;font-size:11px;color:var(--text-3);font-style:italic">콘텐츠 없음</div>`
+              : t.contents.map((c, ci) => {
+                  const cSelId = 'content-' + c.id;
+                  return `
+                <div class="tree-child-row ${S.activeContentId===c.id?'active':''}"
+                  onclick="event.stopPropagation();openContentEdit('${t.id}','${c.id}')"
+                  ${!S.tocEditMode ? `
+                    draggable="true"
+                    ondragstart="contentDragStart(event,'${t.id}','${c.id}')"
+                    ondragover="event.preventDefault();contentDragOver(event,'${t.id}','${c.id}')"
+                    ondragleave="event.currentTarget.classList.remove('drag-over')"
+                    ondrop="event.preventDefault();contentDrop('${t.id}','${c.id}')"
+                    ondragend="dragCleanup()"
+                  ` : ''}>
+                  ${S.tocEditMode ? `<input type="checkbox" class="toc-check"
+                    onclick="event.stopPropagation();toggleTocSelect('${cSelId}')"
+                    ${S.selectedTocItems.includes(cSelId)?'checked':''}/>` : ''}
+                  <span class="c-ico-sm">${getSmallTypeIcon(c.type)}</span>
+                  <span class="c-name" title="${esc(c.title)}">${esc(c.title)}</span>
+                </div>`;
+                }).join('')
+            }
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════════════════════
+   드래그 & 드롭 순서 편집
+══════════════════════════════════════════════════════════ */
+const DRAG = {};
+
+/* 목차 드래그 */
+function tocDragStart(e, tocId) {
+  DRAG.type = 'toc';
+  DRAG.fromId = tocId;
+  e.dataTransfer.effectAllowed = 'move';
+  setTimeout(() => e.target.classList.add('dragging'), 0);
+}
+function tocDragOver(toId) {
+  if (DRAG.type !== 'toc' || DRAG.fromId === toId) return;
+  document.querySelectorAll('.tree-toc-node').forEach(n => n.classList.remove('drag-over'));
+  document.getElementById('tnode-' + toId)?.classList.add('drag-over');
+}
+function tocDragLeave(toId) {
+  document.getElementById('tnode-' + toId)?.classList.remove('drag-over');
+}
+function tocDrop(toId) {
+  if (DRAG.type !== 'toc' || DRAG.fromId === toId) return;
+  const fi = S.toc.findIndex(t => t.id === DRAG.fromId);
+  const ti = S.toc.findIndex(t => t.id === toId);
+  if (fi < 0 || ti < 0) return;
+  const [item] = S.toc.splice(fi, 1);
+  S.toc.splice(ti, 0, item);
+  dragCleanup();
+  refreshTocFrame();
+  toast('순서를 변경했습니다.', 'success');
+}
+
+/* 콘텐츠 드래그 (같은 목차 내) */
+function contentDragStart(e, tocId, cId) {
+  DRAG.type = 'content';
+  DRAG.tocId = tocId;
+  DRAG.fromId = cId;
+  e.dataTransfer.effectAllowed = 'move';
+  setTimeout(() => e.target.classList.add('dragging'), 0);
+}
+function contentDragOver(e, tocId, cId) {
+  if (DRAG.type !== 'content' || DRAG.tocId !== tocId || DRAG.fromId === cId) return;
+  document.querySelectorAll('.tree-child-row').forEach(r => r.classList.remove('drag-over'));
+  e.currentTarget.classList.add('drag-over');
+}
+function contentDrop(tocId, cId) {
+  if (DRAG.type !== 'content' || DRAG.tocId !== tocId || DRAG.fromId === cId) return;
+  const toc = S.toc.find(t => t.id === tocId);
+  if (!toc) return;
+  const fi = toc.contents.findIndex(c => c.id === DRAG.fromId);
+  const ti = toc.contents.findIndex(c => c.id === cId);
+  if (fi < 0 || ti < 0) return;
+  const [item] = toc.contents.splice(fi, 1);
+  toc.contents.splice(ti, 0, item);
+  dragCleanup();
+  refreshTocFrame();
+  toast('순서를 변경했습니다.', 'success');
+}
+
+function dragCleanup() {
+  DRAG.type = null; DRAG.fromId = null; DRAG.tocId = null;
+  document.querySelectorAll('.dragging,.drag-over').forEach(el => {
+    el.classList.remove('dragging','drag-over');
+  });
+}
+
+function toggleTocEditMode() {
+  S.tocEditMode = !S.tocEditMode;
+  S.selectedTocItems = [];
+  const wrap = document.getElementById('tocFrameWrap');
+  if (wrap) wrap.innerHTML = renderTocFrame();
+}
+function toggleTocSelect(id) {
+  const idx = S.selectedTocItems.indexOf(id);
+  if (idx >= 0) S.selectedTocItems.splice(idx, 1);
+  else S.selectedTocItems.push(id);
+  const delBtn = document.getElementById('tocDeleteBtn');
+  if (delBtn) {
+    delBtn.className = `toc-delete-btn${S.selectedTocItems.length>0?' visible':''}`;
+    delBtn.innerHTML = `🗑 삭제 (${S.selectedTocItems.length})`;
+  }
+}
+function deleteSelectedTocItems() {
+  if (!S.selectedTocItems.length) return;
+  S.selectedTocItems.forEach(sid => {
+    if (sid.startsWith('toc-')) {
+      const id = sid.slice(4);
+      S.toc = S.toc.filter(t => t.id !== id);
+      if (S.activeTocId === id) S.activeTocId = S.toc[0]?.id || null;
+    } else if (sid.startsWith('content-')) {
+      const id = sid.slice(8);
+      S.toc.forEach(t => { t.contents = t.contents.filter(c => c.id !== id); });
+    }
+  });
+  S.selectedTocItems = [];
+  S.tocEditMode = false;
+  const wrap = document.getElementById('tocFrameWrap');
+  if (wrap) wrap.innerHTML = renderTocFrame();
+  toast('선택 항목을 삭제했습니다.');
+  updateNavStatus();
+}
+function toggleTocExpand(id) {
+  TOC_EXPANDED[id] = TOC_EXPANDED[id] === false ? true : false;
+  refreshTocTree();
+}
+function expandAllTocTree() {
+  S.toc.forEach(t => { TOC_EXPANDED[t.id] = true });
+  refreshTocTree();
+}
+function collapseAllTocTree() {
+  S.toc.forEach(t => { TOC_EXPANDED[t.id] = false });
+  refreshTocTree();
+}
+function refreshTocTree() {
+  const el = document.getElementById('tocTreeItems');
+  if (el) el.innerHTML = renderTocTree();
+}
+
+/* ── TOC 이동 ── */
+function moveTocUp(idx) {
+  if (idx === 0) return;
+  [S.toc[idx-1], S.toc[idx]] = [S.toc[idx], S.toc[idx-1]];
+  refreshTocFrame(); toast('목차를 위로 이동했습니다.');
+}
+function moveTocDown(idx) {
+  if (idx >= S.toc.length-1) return;
+  [S.toc[idx], S.toc[idx+1]] = [S.toc[idx+1], S.toc[idx]];
+  refreshTocFrame(); toast('목차를 아래로 이동했습니다.');
+}
+function deleteToc(id) {
+  if (S.toc.length <= 1) { toast('최소 1개 목차가 필요합니다.','warn'); return; }
+  S.toc = S.toc.filter(t => t.id !== id);
+  if (S.activeTocId === id) S.activeTocId = S.toc[0]?.id || null;
+  refreshTocFrame(); toast('목차가 삭제됐습니다.');
+}
+/* ── 목차명 인라인 편집 ── */
+function startRenameToc(id) {
+  const span = document.getElementById('tname-'+id);
+  if (!span) return;
+  const toc = S.toc.find(t=>t.id===id);
+  if (!toc) return;
+  const input = document.createElement('input');
+  input.className = 'tree-name-input';
+  input.value = toc.title;
+  span.replaceWith(input);
+  input.focus(); input.select();
+  const save = () => {
+    const v = input.value.trim() || toc.title;
+    toc.title = v;
+    refreshTocFrame();
+  };
+  input.addEventListener('blur', save);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+    if (e.key === 'Escape') { input.removeEventListener('blur', save); refreshTocFrame(); }
+  });
+}
+
+/* ── 콘텐츠 이동 ── */
+function moveContentUp(tocId, idx) {
+  const toc = S.toc.find(t=>t.id===tocId); if (!toc || idx===0) return;
+  [toc.contents[idx-1], toc.contents[idx]] = [toc.contents[idx], toc.contents[idx-1]];
+  refreshTocFrame(); toast('콘텐츠를 위로 이동했습니다.');
+}
+function moveContentDown(tocId, idx) {
+  const toc = S.toc.find(t=>t.id===tocId); if (!toc || idx>=toc.contents.length-1) return;
+  [toc.contents[idx], toc.contents[idx+1]] = [toc.contents[idx+1], toc.contents[idx]];
+  refreshTocFrame(); toast('콘텐츠를 아래로 이동했습니다.');
+}
+function selectContent(tocId, cId) {
+  S.activeTocId = tocId;
+  S.activeContentId = cId;
+  S.contentAddMode = null;
+  refreshTocFrame();
+}
+function openContentEdit(tocId, cId) {
+  S.activeTocId = tocId;
+  S.activeContentId = cId;
+  S.contentAddMode = null;
+  refreshTocFrame();
+}
+function closeContentEdit() {
+  S.activeContentId = null;
+  refreshTocFrame();
+}
+function updateContentTitle(tocId, cId, val) {
+  const toc = S.toc.find(t => t.id === tocId);
+  if (!toc) return;
+  const c = toc.contents.find(c => c.id === cId);
+  if (c) c.title = val.trim() || c.title;
+  refreshTocTree();
+  // Update the header title in the edit panel without full re-render
+  const ctit = document.querySelector('#frameContent .fc-panel:last-child .ctit');
+  if (ctit) ctit.textContent = c?.title || '';
+}
+
+function toggleFrameExpand() {
+  S.frameExpanded = !S.frameExpanded;
+  refreshTocFrame();
+}
+function selectToc(id) {
+  S.activeTocId = id;
+  S.activeContentId = null;
+  S.contentAddMode = null;
+  refreshTocFrame();
+}
+function addToc() {
+  const id = 't'+Date.now();
+  S.toc.push({id, title:'새 목차 '+(S.toc.length+1), contents:[]});
+  TOC_EXPANDED[id] = true;
+  S.activeTocId = id; S.contentAddMode = null; refreshTocFrame();
+  toast('목차가 추가됐습니다.','success'); updateNavStatus();
+  // 추가 직후 이름 편집 모드 진입
+  setTimeout(()=>startRenameToc(id), 80);
+}
+function openContentAdd(mode) { S.contentAddMode = mode||'upload'; refreshTocFrame() }
+function closeContentAdd() { S.contentAddMode = null; refreshTocFrame() }
+function addContent(label, icon) {
+  const toc = S.toc.find(t=>t.id===S.activeTocId); if (!toc) return;
+  toc.contents.push({id:'c'+Date.now(), icon, type:label, title:label+' '+(toc.contents.length+1), dur:''});
+  closeContentAdd(); toast(`${label} 콘텐츠가 추가됐습니다.`,'success');
+  updateNavStatus();
+}
+function removeContent(tocId, cId) {
+  const toc = S.toc.find(t=>t.id===tocId); if (!toc) return;
+  toc.contents = toc.contents.filter(c=>c.id!==cId);
+  refreshTocFrame();
+  updateNavStatus();
+}
+function refreshTocFrame() {
+  const wrap = document.getElementById('tocFrameWrap'); if (wrap) wrap.innerHTML = renderTocFrame();
+}
+
+/* ══════════════════════════════════════════════════════════
+   Step 4 — 신청·학습 설정
+══════════════════════════════════════════════════════════ */
+function renderS4() {
+  const e=S.enroll;
+  const rows = [
+    { key:'period', label:'신청 및 학습기간',
+      summary: e.immediate ? `<span class="em">즉시 학습</span> · 신청일부터 <span class="em">${e.days}일</span>간` : `<span class="em">기간 학습</span> · ${e.learnFrom||'?'} ~ ${e.learnTo||'?'}`,
+      body: renderPanelPeriod },
+    { key:'capacity', label:'모집 정원', summary:`<span class="em">${e.capacity}</span>`, body: renderPanelCapacity },
+    { key:'completion', label:'수료 방식',
+      summary:`<span class="em">${e.completion==='immediate'?'즉시 수료':'기간 종료 후 수료'}</span><div class="desc">${e.completion==='immediate'?'수료조건 달성 즉시 처리됩니다.':'학습기간 종료 후 일괄 처리됩니다.'}</div>`,
+      body: renderPanelCompletion },
+    { key:'progress', label:'수료 조건', summary:`진도율 <span class="em">${e.progress}%</span> 이상`, body: renderPanelProgress },
+  ];
+  return `<div class="setting-list">${rows.map(r=>`
+    <div class="setting-block ${S.s4open===r.key?'open':''}">
+      <div class="setting-row" onclick="toggleS4('${r.key}')">
+        <div class="skey">${r.label}</div>
+        <div class="sval">${r.summary}</div>
+        <button class="sedit">${S.s4open===r.key?'접기 ▲':'편집 ▼'}</button>
+      </div>
+      ${S.s4open===r.key?`<div class="setting-body">${r.body()}</div>`:''}
+    </div>
+  `).join('')}</div>`;
+}
+function toggleS4(k) { S.s4open=S.s4open===k?null:k; refreshS4() }
+function refreshS4() { const w=document.getElementById('s4Wrap'); if(w) w.innerHTML=renderS4() }
+function renderPanelPeriod() {
+  const e=S.enroll;
+  return `
+    ${makeOptRow('lp','immediate',e.immediate,'즉시 학습','신청 즉시 학습을 시작합니다.',
+      `<div class="octrl">신청일부터 <input type="number" class="inline-num" id="lpDays" value="${e.days}" min="1" max="365" ${e.immediate?'':'disabled'}/> 일간 학습</div>`)}
+    ${makeOptRow('lp','period',!e.immediate,'기간 학습','신청 기간과 학습 기간을 설정합니다.',
+      `<div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
+        <div class="period-row"><span class="period-lbl">신청기간</span><input type="date" class="input" id="lpAF" value="${e.applyFrom}" ${e.immediate?'disabled':''}/><span>~</span><input type="date" class="input" id="lpAT" value="${e.applyTo}" ${e.immediate?'disabled':''}/></div>
+        <div class="period-row"><span class="period-lbl">학습기간</span><input type="date" class="input" id="lpLF" value="${e.learnFrom}" ${e.immediate?'disabled':''}/><span>~</span><input type="date" class="input" id="lpLT" value="${e.learnTo}" ${e.immediate?'disabled':''}/></div>
+       </div>`)}
+    <div class="edit-actions">
+      <button class="btn" onclick="toggleS4('period')">취소</button>
+      <button class="btn btn-primary" onclick="savePeriod()">저장</button>
+    </div>`;
+}
+function onLPChange() {
+  const im=document.querySelector('input[name="lp"]:checked')?.value==='immediate';
+  document.getElementById('lpDays').disabled=!im;
+  ['lpAF','lpAT','lpLF','lpLT'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=im});
+  document.querySelectorAll('.opt-row').forEach(r=>{const ck=r.querySelector('input[type=radio]');if(ck)r.classList.toggle('selected',ck.checked)});
+}
+function savePeriod() {
+  const im=document.querySelector('input[name="lp"]:checked')?.value==='immediate';
+  S.enroll.immediate=im; S.enroll.days=+document.getElementById('lpDays')?.value||365;
+  S.enroll.applyFrom=document.getElementById('lpAF')?.value||''; S.enroll.applyTo=document.getElementById('lpAT')?.value||'';
+  S.enroll.learnFrom=document.getElementById('lpLF')?.value||''; S.enroll.learnTo=document.getElementById('lpLT')?.value||'';
+  S.s4open=null; refreshS4(); toast('저장됐습니다.','success'); updateNavStatus();
+}
+function renderPanelCapacity() {
+  const nl=S.enroll.capacity==='제한없음'; const num=nl?'':S.enroll.capacity.replace(/[^0-9]/g,'');
+  return `<div style="display:flex;align-items:center;gap:12px;padding:12px 0;flex-wrap:wrap">
+    <input type="number" class="inline-num" id="capNum" min="1" value="${num}" ${nl?'disabled':''}/><b>명</b>
+    <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">
+      <input type="checkbox" id="capNL" ${nl?'checked':''} onchange="document.getElementById('capNum').disabled=this.checked" style="accent-color:var(--brand)"/>제한없음</label></div>
+    <div class="edit-actions">
+      <button class="btn" onclick="toggleS4('capacity')">취소</button>
+      <button class="btn btn-primary" onclick="saveCapacity()">저장</button></div>`;
+}
+function saveCapacity() {
+  const nl=document.getElementById('capNL').checked;
+  S.enroll.capacity=nl?'제한없음':(+document.getElementById('capNum').value||0)+'명';
+  S.s4open=null; refreshS4(); toast('저장됐습니다.','success'); updateNavStatus();
+}
+function renderPanelCompletion() {
+  return `
+    ${makeOptRow('comp','immediate',S.enroll.completion==='immediate','즉시 수료','수료조건 달성 즉시 처리됩니다.')}
+    ${makeOptRow('comp','end',S.enroll.completion==='end','기간 종료 후 수료','학습기간 종료 후 일괄 처리됩니다.')}
+    <div class="edit-actions">
+      <button class="btn" onclick="toggleS4('completion')">취소</button>
+      <button class="btn btn-primary" onclick="S.enroll.completion=document.querySelector('input[name=comp]:checked')?.value||'immediate';S.s4open=null;refreshS4();toast('저장됐습니다.','success')">저장</button></div>`;
+}
+function renderPanelProgress() {
+  return `<div style="display:flex;align-items:center;gap:16px;padding:16px 0;flex-wrap:wrap">
+    <span style="font-size:13px;font-weight:600">진도율</span>
+    <input type="range" id="progR" min="0" max="100" step="10" value="${S.enroll.progress}"
+      oninput="document.getElementById('progV').textContent=this.value+'%'" style="flex:1;min-width:160px;accent-color:var(--brand)"/>
+    <span id="progV" style="font-size:18px;font-weight:800;min-width:52px">${S.enroll.progress}%</span></div>
+    <div class="edit-actions">
+      <button class="btn" onclick="toggleS4('progress')">취소</button>
+      <button class="btn btn-primary" onclick="S.enroll.progress=+document.getElementById('progR').value;S.s4open=null;refreshS4();toast('저장됐습니다.','success')">저장</button></div>`;
+}
+
+/* ══════════════════════════════════════════════════════════
+   Step 5 — 부가 설정
+══════════════════════════════════════════════════════════ */
+function renderS5() {
+  const rows = [
+    {key:'sequential', label:'학습 순서', summary:`<span class="em">${S.extra.sequential?'순서대로 학습':'자율 학습'}</span><div class="desc">${S.extra.sequential?'등록된 목차 순서대로만 학습합니다.':'학습자가 자유롭게 순서를 선택합니다.'}</div>`, bodyFn:()=>togglePanel5('sequential','순서대로','자율')},
+    {key:'progressLock', label:'진도바 이동 제한', summary:`<span class="em">${S.extra.progressLock?'사용':'미사용'}</span><div class="desc">동영상 프로그레스바 임의 이동 제한</div>`, bodyFn:()=>togglePanel5('progressLock','제한','허용')},
+    {key:'speedLock', label:'동영상 배속 고정', summary:`<span class="em">${S.extra.speedLock?'사용':'미사용'}</span><div class="desc">1배속으로 고정합니다.</div>`, bodyFn:()=>togglePanel5('speedLock','고정','자유')},
+    {key:'captureBlock', label:'화면 캡처 방지', summary:`<span class="em">${S.extra.captureBlock?'사용':'미사용'}</span><div class="desc">캡처 프로그램 방어로 저작권 보호</div>`, bodyFn:()=>togglePanel5('captureBlock','적용','미적용')},
+  ];
+  return `<div class="setting-list">${rows.map(r=>`
+    <div class="setting-block ${S.s5open===r.key?'open':''}">
+      <div class="setting-row" onclick="toggleS5('${r.key}')">
+        <div class="skey">${r.label}</div><div class="sval">${r.summary}</div>
+        <button class="sedit">${S.s5open===r.key?'접기 ▲':'편집 ▼'}</button>
+      </div>
+      ${S.s5open===r.key?`<div class="setting-body">${r.bodyFn()}</div>`:''}
+    </div>
+  `).join('')}</div>`;
+}
+function toggleS5(k) { S.s5open=S.s5open===k?null:k; document.getElementById('s5Wrap').innerHTML=renderS5() }
+function togglePanel5(key,onL,offL) {
+  const v=S.extra[key];
+  return `<div class="toggle-row">
+    <label class="toggle-switch">
+      <input type="checkbox" id="sw${key}" ${v?'checked':''} onchange="document.getElementById('swlbl${key}').textContent=this.checked?'${onL}':'${offL}'"/>
+      <span class="ttrack"><span class="tthumb"></span></span>
+      <span class="tlabel" id="swlbl${key}">${v?onL:offL}</span>
+    </label></div>
+    <div class="edit-actions">
+      <button class="btn" onclick="toggleS5('${key}')">취소</button>
+      <button class="btn btn-primary" onclick="S.extra['${key}']=document.getElementById('sw${key}').checked;S.s5open=null;document.getElementById('s5Wrap').innerHTML=renderS5();toast('저장됐습니다.','success')">저장</button></div>`;
+}
+
+/* ══════════════════════════════════════════════════════════
+   Step 6 — 오픈
+══════════════════════════════════════════════════════════ */
+function renderS6() {
+  const hasToc = S.toc.some(t=>t.contents.length>0);
+  const hasPeriod = S.enroll.immediate || (S.enroll.learnFrom && S.enroll.learnTo);
+  const checks = [
+    {ok:S.courseName.trim().length>=2, label:'과정명', desc:S.courseName||'미입력', anchor:'sec-info'},
+    {ok:!!S.creationType, label:'제작유형', desc:S.creationType?(TYPES.find(t=>t.id===S.creationType)?.label||S.creationType):'미선택', anchor:'sec-type'},
+    {ok:hasToc, label:'콘텐츠', desc:hasToc?'목차와 콘텐츠가 등록됐습니다.':'콘텐츠가 없습니다.', anchor:'sec-toc'},
+    {ok:hasPeriod, label:'학습기간', desc:S.enroll.immediate?`즉시 학습 · ${S.enroll.days}일간`:`${S.enroll.learnFrom||'미설정'} ~ ${S.enroll.learnTo||'미설정'}`, anchor:'sec-enroll'},
+    {ok:true, label:'모집정원', desc:S.enroll.capacity, anchor:'sec-enroll'},
+    {ok:true, label:'수료방식', desc:S.enroll.completion==='immediate'?'즉시 수료':'기간 종료 후 수료', anchor:'sec-enroll'},
+  ];
+  const allOk = checks.every(c=>c.ok);
+  return `
+    <div class="open-checks">
+      ${checks.map(c=>`
+        <div class="open-check-item ${c.ok?'ok':'err'}">
+          <div class="cico">${c.ok?'✓':'✗'}</div>
+          <div class="cbody">
+            <div class="clbl">${c.label}</div>
+            <div class="cdesc">${c.desc}</div>
+            ${!c.ok?`<span class="clink" onclick="scrollToSection('${c.anchor}')">← 해당 항목으로 이동</span>`:''}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <button class="btn btn-brand" style="min-width:160px;padding:12px 20px;font-size:14px" ${!allOk?'disabled':''} onclick="doOpen()">
+        🚀 과정 오픈하기
+      </button>
+      ${allOk
+        ? `<span style="font-size:13px;color:var(--success);font-weight:600">✓ 모든 항목이 준비됐습니다</span>`
+        : `<span style="font-size:13px;color:var(--danger)">위 오류 항목을 먼저 수정해주세요.</span>`}
+    </div>
+    <hr class="divider">
+    <div style="display:flex;gap:10px">
+      <button class="btn" onclick="toast('임시 저장됐습니다.','success')">임시 저장</button>
+      <button class="btn" onclick="toast('초안으로 저장됐습니다.','success')">초안 저장</button>
+    </div>`;
+}
+function doOpen() {
+  openModal('과정 오픈 확인','과정을 오픈하면 학습자가 수강신청할 수 있습니다. 진행하시겠습니까?','오픈하기',
+    ()=>{ closeModal(); toast('과정이 오픈됐습니다! 🎉','success'); setTimeout(()=>go('dashboard'),1200) });
+}
+
+/* ══════════════════════════════════════════════════════════
+   Helpers
+══════════════════════════════════════════════════════════ */
+function makeOptRow(name, value, checked, title, desc, extra='') {
+  return `<label class="opt-row ${checked?'selected':''}" onclick="void(0)">
+    <input type="radio" name="${name}" value="${value}" ${checked?'checked':''} onchange="
+      document.querySelectorAll('.opt-row').forEach(r=>{const ck=r.querySelector('input[type=radio]');if(ck&&ck.name==='${name}')r.classList.toggle('selected',ck.checked)});
+      ${name==='lp'?'onLPChange()':''}
+    "/>
+    <div class="opt-content">
+      <div class="otit">${title}</div>
+      <div class="odesc">${desc}</div>
+      ${extra}
+    </div>
+  </label>`;
+}
+
+function renderPlaceholder() {
+  document.getElementById('view').innerHTML=`<div style="padding:120px 48px;text-align:center;color:var(--text-3)">
+    <div style="font-size:32px;margin-bottom:12px">🚧</div>
+    <div style="font-size:15px;font-weight:700;color:var(--text-2);margin-bottom:6px">준비 중인 화면입니다</div>
+    <p style="font-size:13px">프로토타입에 포함되지 않은 페이지입니다.</p>
+    <button class="btn" style="margin-top:16px" onclick="go('dashboard')">← 보드로 돌아가기</button>
+  </div>`;
+}
+
+function toggleNav(id) { document.querySelector(`.nav-group[data-g="${id}"]`)?.classList.toggle('open') }
+
+/* ── Toast ── */
+function toast(msg,type='') {
+  const el=document.createElement('div'); el.className='toast '+(type||''); el.textContent=msg;
+  document.getElementById('toastWrap').appendChild(el);
+  setTimeout(()=>{el.style.cssText='opacity:0;transition:opacity .3s';setTimeout(()=>el.remove(),300)},2400);
+}
+/* ── Modal ── */
+function openModal(title,body,actionLabel,onAction) {
+  document.getElementById('mTitle').textContent=title;
+  document.getElementById('mBody').textContent=body;
+  document.getElementById('mActions').innerHTML=`
+    <button class="btn" onclick="closeModal()">취소</button>
+    <button class="btn btn-primary" onclick="(${onAction.toString()})()">${actionLabel}</button>`;
+  document.getElementById('modalMask').classList.add('open');
+}
+function closeModal(e) { if(!e||e.target===document.getElementById('modalMask')) document.getElementById('modalMask').classList.remove('open') }
+
+/* ── Dark mode ── */
+function toggleTheme() {
+  const html=document.documentElement; const isDark=html.getAttribute('data-theme')==='dark';
+  html.setAttribute('data-theme',isDark?'light':'dark');
+  document.getElementById('themeBtn').textContent=isDark?'🌙 다크모드':'☀️ 라이트모드';
+  localStorage.setItem('lm-theme',isDark?'light':'dark');
+}
+(function(){ const s=localStorage.getItem('lm-theme')||'light'; document.documentElement.setAttribute('data-theme',s);
+  const b=document.getElementById('themeBtn'); if(b)b.textContent=s==='dark'?'☀️ 라이트모드':'🌙 다크모드'; })();
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
+</script>
+</body>
+</html>

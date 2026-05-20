@@ -290,12 +290,12 @@ input,select,textarea { font-family:inherit; font-size:16px }
 .snav-item.active .snav-label { font-weight:700; color:var(--text-2) }
 .snav-item:hover:not(.active) .snav-info .snav-label { color:var(--text-2) }
 .editor-open-btn {
-  margin-top:20px; width:100%; padding:11px; border-radius:var(--r8);
-  background:#1A1A1A; color:#fff; border:none;
+  margin-top:20px; width:100%; padding:14px; border-radius:var(--r8);
+  background:var(--brand); color:#fff; border:none;
   font-size:13px; font-weight:700; cursor:pointer;
   transition:background var(--tr), opacity var(--tr);
 }
-.editor-open-btn:not(:disabled):hover { background:#333 }
+.editor-open-btn:not(:disabled):hover { background:var(--brand-strong) }
 .editor-open-btn:disabled { background:#D1D1D6; color:#8E8E93; cursor:not-allowed }
 
 /* ─── Right Content Box ───────────────────────────────────── */
@@ -1728,7 +1728,7 @@ function renderEditor() {
           </div>
           ${(()=>{
             const allOk = SECTIONS.every(s => getSectionStatus(s.id) === 'ok');
-            return `<button id="navOpenBtn" class="editor-open-btn" ${allOk?'':'disabled'} onclick="doOpen()">과정 오픈하기</button>`;
+            return `<button id="navOpenBtn" class="editor-open-btn" ${allOk?'':'disabled'} onclick="doOpen()">🪄 과정 오픈하기</button>`;
           })()}
         </div>
 

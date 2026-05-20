@@ -277,22 +277,26 @@ input,select,textarea { font-family:inherit; font-size:16px }
   font-size:11px; color:var(--text-3); margin-top:2px; line-height:1.4;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:160px;
 }
-/* ok / no: 배경 동일, 심볼만 다름 (색상 무변화) */
-.snav-item.ok .snav-num, .snav-item.no .snav-num { background:#EDEDF0; color:#9898A6 }
+/* ok: 초록, no: 빨강 */
+.snav-item.ok .snav-num  { background:var(--success); color:#fff }
+.snav-item.no .snav-num  { background:var(--danger);  color:#fff }
 /* active: 살짝 진한 그레이 + 테두리 */
 .snav-item.active .snav-num {
   background:#E2E2E8; color:#5A5A6E;
   box-shadow:0 0 0 3px rgba(0,0,0,0.06);
 }
+.snav-item.active.ok .snav-num { background:var(--success); color:#fff; box-shadow:0 0 0 3px rgba(0,191,64,.15) }
+.snav-item.active.no .snav-num { background:var(--danger);  color:#fff; box-shadow:0 0 0 3px rgba(250,46,67,.15) }
 .snav-item.active .snav-label { font-weight:700; color:var(--text-2) }
-.snav-item:hover:not(.active) .snav-num { background:#E5E5EA; color:#7070808 }
+.snav-item:hover:not(.active) .snav-num { background:#E5E5EA; color:#70708 }
 .editor-open-btn {
-  margin-top:28px; width:100%; padding:10px; border-radius:var(--r8);
-  background:var(--cta); color:var(--cta-text);
+  margin-top:20px; width:100%; padding:11px; border-radius:var(--r8);
+  background:#1A1A1A; color:#fff; border:none;
   font-size:13px; font-weight:700; cursor:pointer;
-  transition:opacity var(--tr);
+  transition:background var(--tr), opacity var(--tr);
 }
-.editor-open-btn:hover { opacity:.85 }
+.editor-open-btn:not(:disabled):hover { background:#333 }
+.editor-open-btn:disabled { background:#D1D1D6; color:#8E8E93; cursor:not-allowed }
 
 /* ─── Right Content Box ───────────────────────────────────── */
 .editor-sections {
@@ -938,7 +942,7 @@ input,select,textarea { font-family:inherit; font-size:16px }
 .settings-card {
   background:var(--surface);
   border:1px solid var(--border);
-  border-radius:var(--r20);
+  border-radius:12px;
   overflow:hidden;
 }
 .sc-row {
@@ -984,8 +988,8 @@ input,select,textarea { font-family:inherit; font-size:16px }
 .sc-toggle-row:last-child { border-bottom:none }
 .sc-toggle-info { flex:1 }
 .sc-toggle-lbl { font-size:14px; font-weight:700; color:var(--text) }
-.sc-toggle-desc { font-size:14px; color:var(--text-3); margin-top:2px }
-.sc-state-txt { font-size:14px; font-weight:700; color:var(--text-2); min-width:52px; text-align:right }
+.sc-toggle-desc { font-size:14px; color:var(--text-2); margin-top:2px }
+.sc-state-txt { font-size:14px; font-weight:400; color:var(--text-3); min-width:52px; text-align:right }
 
 /* ── 콘텐츠 등록 패널 ── */
 .creg-mode-bar {
@@ -1120,7 +1124,7 @@ input,select,textarea { font-family:inherit; font-size:16px }
 /* ── 부가 설정 메타 카드 ── */
 .s5-meta-card {
   background:var(--surface); border:1px solid var(--border);
-  border-radius:var(--r20); overflow:hidden; margin-bottom:12px;
+  border-radius:12px; overflow:hidden; margin-bottom:12px;
 }
 .s5-meta-row {
   display:flex; align-items:flex-start;
@@ -1284,14 +1288,15 @@ input,select,textarea { font-family:inherit; font-size:16px }
   padding:4px 10px; border-radius:var(--r6);
   background:var(--brand-soft); color:var(--brand);
   font-size:12px; font-weight:600; cursor:pointer; border:none;
-  transition:background var(--tr);
+  transition:background var(--tr), opacity .2s;
 }
 .lm-period-chip:hover { background:#D6E8FF }
+.lm-period-chip.disabled, .lm-period-set-btn.disabled { opacity:.25; pointer-events:none }
 .lm-period-set-btn {
   margin-left:8px; padding:4px 10px; border-radius:var(--r6);
   border:1.5px solid var(--border-md); background:var(--surface);
   color:var(--text-3); font-size:12px; font-weight:600; cursor:pointer;
-  transition:border-color var(--tr), color var(--tr);
+  transition:border-color var(--tr), color var(--tr), opacity .2s;
 }
 .lm-period-set-btn:hover { border-color:var(--brand); color:var(--brand) }
 .lm-period-tooltip {
@@ -1580,6 +1585,10 @@ function renderEditor() {
               `;
             }).join('')}
           </div>
+          ${(()=>{
+            const allOk = SECTIONS.every(s => getSectionStatus(s.id) === 'ok');
+            return `<button id="navOpenBtn" class="editor-open-btn" ${allOk?'':'disabled'} onclick="doOpen()">과정 오픈하기</button>`;
+          })()}
         </div>
 
         <!-- Right Scroll Sections -->
@@ -1802,6 +1811,9 @@ function updateNavStatus() {
     const sum = item.querySelector('.snav-summary');
     if (sum) sum.innerHTML = getSectionSummary(secId);
   });
+  const allOk = SECTIONS.every(s => getSectionStatus(s.id) === 'ok');
+  const openBtn = document.getElementById('navOpenBtn');
+  if (openBtn) openBtn.disabled = !allOk;
 }
 function scrollToSection(id) {
   const el = document.getElementById(id);
@@ -2765,13 +2777,13 @@ function renderS4() {
             <span class="sc-radio-dot"></span>
             <span class="sc-radio-lbl">기간 학습</span>
           </label>
-          ${!e.immediate ? (e.learnFrom||e.learnTo ? `
-            <button class="lm-period-chip" onclick="S.periodPickerOpen=!S.periodPickerOpen;refreshS4()">
+          ${e.learnFrom||e.learnTo ? `
+            <button class="lm-period-chip ${e.immediate?'disabled':''}" onclick="S.periodPickerOpen=!S.periodPickerOpen;refreshS4()">
               ${e.learnFrom||'?'} ~ ${e.learnTo||'?'} ✎
             </button>` : `
-            <button class="lm-period-set-btn" onclick="S.periodPickerOpen=!S.periodPickerOpen;refreshS4()">
+            <button class="lm-period-set-btn ${e.immediate?'disabled':''}" onclick="S.periodPickerOpen=!S.periodPickerOpen;refreshS4()">
               기간 설정 ▾
-            </button>`) : ''}
+            </button>`}
           ${!e.immediate && S.periodPickerOpen ? `
           <div class="lm-period-tooltip" onclick="event.stopPropagation()">
             <div class="lm-pt-row">
@@ -2907,10 +2919,10 @@ function setCat3(v) {
 
 function renderS5() {
   const toggleRows = [
-    {key:'sequential',   label:'학습 순서',       desc:'등록된 목차 순서대로 학습',           onL:'순서 학습', offL:'자율 학습'},
-    {key:'progressLock', label:'진도바 이동 제한', desc:'동영상 프로그레스바 임의 이동 차단',   onL:'제한',     offL:'허용'},
-    {key:'speedLock',    label:'동영상 배속 고정', desc:'1배속으로 고정',                       onL:'고정',     offL:'자유'},
-    {key:'captureBlock', label:'화면 캡처 방지',   desc:'캡처 프로그램 방어로 저작권 보호',     onL:'적용',     offL:'미적용'},
+    {key:'sequential',   label:'학습 순서',       onDesc:'등록된 목차 순서대로 학습',          offDesc:'학습자가 순서를 자유롭게 선택할 수 있습니다', onL:'순서 학습', offL:'자율 학습'},
+    {key:'progressLock', label:'진도바 이동 제한', onDesc:'동영상 프로그레스바 임의 이동 차단', offDesc:'동영상 프로그레스바 임의 이동이 허용됩니다',  onL:'제한',     offL:'허용'},
+    {key:'speedLock',    label:'동영상 배속 고정', onDesc:'1배속으로 고정',                     offDesc:'학습자가 배속을 자유롭게 조절할 수 있습니다', onL:'고정',     offL:'자유'},
+    {key:'captureBlock', label:'화면 캡처 방지',   onDesc:'캡처 프로그램 방어로 저작권 보호',   offDesc:'화면 캡처가 허용됩니다',                     onL:'적용',     offL:'미적용'},
   ];
   return `
   <!-- 과정 메타 설정 -->
@@ -2987,12 +2999,12 @@ function renderS5() {
       <div class="sc-row" style="${r===toggleRows[toggleRows.length-1]?'border-bottom:none':''}">
         <div class="sc-lbl">${r.label}</div>
         <div class="sc-ctrl" style="justify-content:space-between">
-          <span style="font-size:14px;color:var(--text-3)">${r.desc}</span>
+          <span id="s5desc${r.key}" style="font-size:14px;color:var(--text-2)">${S.extra[r.key]?r.onDesc:r.offDesc}</span>
           <div style="display:flex;align-items:center;gap:10px">
             <span id="s5txt${r.key}" class="sc-state-txt">${S.extra[r.key]?r.onL:r.offL}</span>
             <label class="toggle-switch">
               <input type="checkbox" ${S.extra[r.key]?'checked':''}
-                onchange="S.extra['${r.key}']=this.checked;document.getElementById('s5txt${r.key}').textContent=this.checked?'${r.onL}':'${r.offL}';updateNavStatus()"/>
+                onchange="S.extra['${r.key}']=this.checked;document.getElementById('s5txt${r.key}').textContent=this.checked?'${r.onL}':'${r.offL}';document.getElementById('s5desc${r.key}').textContent=this.checked?'${r.onDesc}':'${r.offDesc}';updateNavStatus()"/>
               <span class="ttrack"><span class="tthumb"></span></span>
             </label>
           </div>
