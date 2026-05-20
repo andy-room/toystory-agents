@@ -1438,12 +1438,12 @@ const S = {
   creationType: null,
   toc: [
     { id:'t1', title:'오리엔테이션', contents:[
-      {id:'c1',icon:'🎬',type:'동영상',title:'과정 소개 영상',dur:'05:32',registered:true},
-      {id:'c2',icon:'📎',type:'PDF',title:'학습 가이드.pdf',dur:'',registered:true}
+      {id:'c1',icon:'🎬',type:'동영상',title:'과정 소개 영상',dur:'05:32'},
+      {id:'c2',icon:'📎',type:'PDF',title:'학습 가이드.pdf',dur:''}
     ]},
     { id:'t2', title:'1장. 핵심 개념 이해', contents:[
-      {id:'c3',icon:'🎬',type:'동영상',title:'핵심 개념 영상',dur:'12:40',registered:true},
-      {id:'c4',icon:'❓',type:'퀴즈',title:'이해도 확인 퀴즈',dur:'',registered:true}
+      {id:'c3',icon:'🎬',type:'동영상',title:'핵심 개념 영상',dur:'12:40'},
+      {id:'c4',icon:'❓',type:'퀴즈',title:'이해도 확인 퀴즈',dur:''}
     ]},
     { id:'t3', title:'2장. 실전 적용', contents:[] }
   ],
@@ -1462,7 +1462,6 @@ const S = {
     capacity:'제한없음', completion:'immediate', progress:80
   },
   extra: { sequential:false, progressLock:false, speedLock:false, captureBlock:false },
-  contentEditMode: false,
   contentRegMode: 'new',
   contentSearch: '',
   contentRegTags: [],
@@ -2173,29 +2172,7 @@ function renderContentViewPanel(toc) {
             <button class="back-btn" onclick="closeContentEdit()">← 목록</button>
             <span class="ctit">${editContent ? esc(editContent.title) : ''}</span>
           </div>
-
-          ${!S.contentEditMode ? `
-          <!-- ─── 미리보기 패널 (등록된 콘텐츠) ─── -->
-          <div class="creg-form" style="gap:20px">
-            <div style="display:flex;align-items:center;gap:10px">
-              ${getTypeIcon(editContent?.type||'')}
-              <div>
-                <div style="font-size:15px;font-weight:700;color:var(--text)">${esc(editContent?.title||'')}</div>
-                <div style="font-size:12px;color:var(--text-3);margin-top:2px">${editContent?.type||''}${editContent?.dur?' · '+editContent.dur:''}</div>
-              </div>
-            </div>
-            <div style="background:var(--surface-2);border-radius:var(--r8);padding:16px 18px;min-height:120px;font-size:13px;color:var(--text-3);display:flex;align-items:center;justify-content:center">
-              콘텐츠 미리보기 영역
-            </div>
-          </div>
-          <div class="creg-actions">
-            <button class="creg-btn-cancel" onclick="closeContentEdit()">닫기</button>
-            <button class="creg-btn-submit" onclick="enterContentEdit()">수정하기</button>
-          </div>
-
-          ` : `
-          <!-- ─── 등록/수정 폼 (신규 or 편집) ─── -->
-          ${editContent && !editContent.registered ? `
+          <!-- 모드 탭 -->
           <div class="creg-mode-bar">
             <label class="creg-radio-lbl ${S.contentRegMode==='new'?'active':''}">
               <input type="radio" name="cregMode" value="new" ${S.contentRegMode==='new'?'checked':''} onchange="setContentRegMode('new')"/>
@@ -2205,33 +2182,40 @@ function renderContentViewPanel(toc) {
               <input type="radio" name="cregMode" value="prev" ${S.contentRegMode==='prev'?'checked':''} onchange="setContentRegMode('prev')"/>
               이전 제작
             </label>
-          </div>` : ''}
-
-          ${S.contentRegMode === 'new' || (editContent && editContent.registered) ? `
+          </div>
+          <!-- 신규 등록 폼 -->
+          ${S.contentRegMode === 'new' ? `
           <div class="creg-form">
             <div class="creg-field">
               <div class="creg-label">제목 <span class="req">*</span></div>
               <input class="creg-input" data-creg-title placeholder="제목을 입력해 주세요."
-                value="${S.contentRegData ? esc(S.contentRegData.title) : esc(editContent?.title||'')}" />
+                value="${S.contentRegData ? esc(S.contentRegData.title) : ''}" />
             </div>
             <div class="creg-field">
               <div class="creg-label">내용 <span class="req">*</span></div>
               <div class="creg-editor-wrap">
                 <div class="creg-toolbar">
-                  <select class="creg-tb-sel"><option>단락</option><option>제목 1</option><option>제목 2</option></select>
+                  <select class="creg-tb-sel">
+                    <option>단락</option>
+                    <option>제목 1</option>
+                    <option>제목 2</option>
+                  </select>
                   <div class="creg-tb-sep"></div>
-                  <button class="creg-tb-btn"><b>B</b></button>
-                  <button class="creg-tb-btn"><i>I</i></button>
-                  <button class="creg-tb-btn"><u>U</u></button>
+                  <button class="creg-tb-btn" title="굵게"><b>B</b></button>
+                  <button class="creg-tb-btn" title="기울임"><i>I</i></button>
+                  <button class="creg-tb-btn" title="밑줄"><u>U</u></button>
                   <div class="creg-tb-sep"></div>
-                  <button class="creg-tb-btn">···</button>
+                  <button class="creg-tb-btn" title="더 보기">···</button>
                 </div>
                 <textarea class="creg-textarea" placeholder="${editContent ? esc(editContent.type) : ''} 내용을 입력해 주세요."></textarea>
               </div>
             </div>
             <div class="creg-field">
               <div class="creg-label">썸네일</div>
-              <div class="creg-thumb"><div class="creg-thumb-icon">+</div><p>업로드하려는 이미지를 추가해 주세요.</p></div>
+              <div class="creg-thumb">
+                <div class="creg-thumb-icon">+</div>
+                <p>업로드하려는 이미지를 추가해 주세요.</p>
+              </div>
               <div class="creg-thumb-hints">
                 <span class="creg-thumb-hint">10MB 이하의 jpg, jpeg, gif, png, bmp 파일을 등록해 주세요.</span>
                 <span class="creg-thumb-hint">썸네일은 1개만 등록하실 수 있습니다.</span>
@@ -2241,9 +2225,11 @@ function renderContentViewPanel(toc) {
               <div class="creg-label">태그 <span style="font-weight:400;color:var(--text-3)">(최대 10개)</span></div>
               <div class="creg-tag-wrap" onclick="this.querySelector('.creg-tag-input').focus()">
                 ${(S.contentRegTags||[]).map(tag=>`
-                  <div class="creg-tag-chip">#${esc(tag)}
-                    <button onclick="event.stopPropagation();removeContentRegTag('${esc(tag)}')">✕</button>
-                  </div>`).join('')}
+                  <div class="creg-tag-chip">
+                    #${esc(tag)}
+                    <button onclick="event.stopPropagation();removeContentRegTag('${esc(tag)}')" title="삭제">✕</button>
+                  </div>
+                `).join('')}
                 <input class="creg-tag-input" placeholder="${(S.contentRegTags||[]).length===0?'#태그를 입력해 주세요.':''}"
                   onkeydown="if(event.key==='Enter'||event.key===','||event.key===' '){event.preventDefault();addContentRegTag(this.value);this.value=''}" />
               </div>
@@ -2251,9 +2237,8 @@ function renderContentViewPanel(toc) {
           </div>
           <div class="creg-actions">
             <button class="creg-btn-cancel" onclick="closeContentEdit()">취소</button>
-            <button class="creg-btn-submit" onclick="registerContent()">${editContent?.registered ? '저장' : '등록'}</button>
+            <button class="creg-btn-submit" onclick="registerContent()">등록</button>
           </div>
-
           ` : S.contentPrevSelected ? `
           <!-- 이전 제작 미리보기 -->
           <div class="creg-form">
@@ -2280,9 +2265,13 @@ function renderContentViewPanel(toc) {
             </div>
             <div class="creg-field">
               <div class="creg-label">썸네일</div>
-              <div class="creg-thumb"><div class="creg-thumb-icon">+</div><p>업로드하려는 이미지를 추가해 주세요.</p></div>
+              <div class="creg-thumb">
+                <div class="creg-thumb-icon">+</div>
+                <p>업로드하려는 이미지를 추가해 주세요.</p>
+              </div>
               <div class="creg-thumb-hints">
                 <span class="creg-thumb-hint">10MB 이하의 jpg, jpeg, gif, png, bmp 파일을 등록해 주세요.</span>
+                <span class="creg-thumb-hint">썸네일은 1개만 등록하실 수 있습니다.</span>
               </div>
             </div>
             <div class="creg-field">
@@ -2301,7 +2290,6 @@ function renderContentViewPanel(toc) {
             <button class="creg-btn-cancel" onclick="closeContentEdit()">취소</button>
             <button class="creg-btn-submit" onclick="registerContent()">등록</button>
           </div>
-
           ` : `
           <!-- 이전 제작 리스트 -->
           <div class="creg-prev-wrap">
@@ -2314,7 +2302,6 @@ function renderContentViewPanel(toc) {
               ${renderPrevContentList(editContent?.id)}
             </div>
           </div>
-          `}
           `}
         </div>
       </div>
@@ -2623,28 +2610,19 @@ function selectContent(tocId, cId) {
   refreshTocFrame();
 }
 function openContentEdit(tocId, cId) {
-  const toc = S.toc.find(t=>t.id===tocId);
-  const c = toc?.contents.find(c=>c.id===cId);
   S.activeTocId = tocId;
   S.activeContentId = cId;
   S.contentAddMode = null;
+  S.contentRegMode = 'new';
   S.contentSearch = '';
   S.contentRegTags = [];
   S.contentRegData = null;
   S.contentRegFromPrev = false;
   S.contentPrevSelected = null;
-  // 이미 등록된 콘텐츠 → 미리보기 / 신규 → 탭 등록 폼
-  S.contentEditMode = c?.registered ? false : true;
-  S.contentRegMode = 'new';
   refreshTocFrame();
 }
 function closeContentEdit() {
   S.activeContentId = null;
-  S.contentEditMode = false;
-  refreshTocFrame();
-}
-function enterContentEdit() {
-  S.contentEditMode = true;
   refreshTocFrame();
 }
 function setContentRegMode(mode) {
@@ -2693,7 +2671,6 @@ function registerContent() {
   const doRegister = () => {
     c.title = formTitle;
     if (S.contentRegData?.dur) c.dur = S.contentRegData.dur;
-    c.registered = true;
     toast(`"${formTitle}" 등록 완료`, 'success');
     closeContentEdit();
   };
@@ -2798,20 +2775,8 @@ function openContentAdd(mode) { S.contentAddMode = mode||'upload'; S.inlineInser
 function closeContentAdd() { S.contentAddMode = null; refreshTocFrame() }
 function addContent(label, icon) {
   const toc = S.toc.find(t=>t.id===S.activeTocId); if (!toc) return;
-  const newC = {id:'c'+Date.now(), icon, type:label, title:label+' '+(toc.contents.length+1), dur:'', registered:false};
-  toc.contents.push(newC);
-  closeContentAdd();
-  // 신규 콘텐츠는 바로 등록 폼(탭)으로 이동
-  S.activeTocId = toc.id;
-  S.activeContentId = newC.id;
-  S.contentAddMode = null;
-  S.contentEditMode = true;
-  S.contentRegMode = 'new';
-  S.contentRegTags = [];
-  S.contentRegData = null;
-  S.contentRegFromPrev = false;
-  S.contentPrevSelected = null;
-  refreshTocFrame();
+  toc.contents.push({id:'c'+Date.now(), icon, type:label, title:label+' '+(toc.contents.length+1), dur:''});
+  closeContentAdd(); toast(`${label} 콘텐츠가 추가됐습니다.`,'success');
   updateNavStatus();
 }
 function removeContent(tocId, cId) {
