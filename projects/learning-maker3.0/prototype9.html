@@ -123,12 +123,31 @@ input,select,textarea { font-family:inherit; font-size:16px }
 }
 .theme-btn:hover { background:rgba(255,255,255,0.15); color:#fff }
 
+/* ─── Nav Toggle Button ───────────────────────────────────── */
+.nav-toggle-btn {
+  display:flex; flex-direction:column; justify-content:center; gap:4px;
+  width:32px; height:32px; padding:6px; border-radius:var(--r6);
+  background:transparent; cursor:pointer; flex-shrink:0;
+  transition:background var(--tr);
+}
+.nav-toggle-btn:hover { background:rgba(255,255,255,.10) }
+.nav-toggle-btn span {
+  display:block; width:100%; height:2px; border-radius:1px;
+  background:#d1d5db; transition:transform .22s, opacity .22s, width .22s;
+  transform-origin:left center;
+}
+body.nav-collapsed .nav-toggle-btn span:nth-child(1) { transform:translateY(3px) rotate(45deg) }
+body.nav-collapsed .nav-toggle-btn span:nth-child(2) { opacity:0; width:0 }
+body.nav-collapsed .nav-toggle-btn span:nth-child(3) { transform:translateY(-3px) rotate(-45deg) }
+
 /* ─── Nav Sidebar ─────────────────────────────────────────── */
 .nav-sidebar {
   position:fixed; top:var(--header-h); left:0; bottom:0; width:var(--nav-w);
   background:var(--surface); border-right:1px solid var(--border); z-index:90;
   display:flex; flex-direction:column; overflow-y:auto;
+  transition:transform .25s cubic-bezier(.4,0,.2,1);
 }
+body.nav-collapsed .nav-sidebar { transform:translateX(-100%) }
 .nav-studio {
   margin:12px 10px 8px; padding:10px 12px;
   border:1px solid var(--border-md); border-radius:var(--r8);
@@ -161,7 +180,11 @@ input,select,textarea { font-family:inherit; font-size:16px }
 .nav-sub a.active { background:var(--surface-3); color:var(--text); font-weight:600 }
 
 /* ─── Main Wrapper ────────────────────────────────────────── */
-.main-wrap { margin-left:var(--nav-w); padding-top:var(--header-h); min-height:100vh }
+.main-wrap {
+  margin-left:var(--nav-w); padding-top:var(--header-h); min-height:100vh;
+  transition:margin-left .25s cubic-bezier(.4,0,.2,1);
+}
+body.nav-collapsed .main-wrap { margin-left:0 }
 
 /* ─── Dashboard ───────────────────────────────────────────── */
 .dash-page { padding:40px 48px 100px; max-width:1040px; margin:0 auto }
@@ -1777,6 +1800,9 @@ input,select,textarea { font-family:inherit; font-size:16px }
 
 <!-- ══ Topbar ══ -->
 <header class="topbar">
+  <button class="nav-toggle-btn" onclick="toggleNavSidebar()" title="메뉴 열기/닫기">
+    <span></span><span></span><span></span>
+  </button>
   <a class="logo" href="#/dashboard"><span class="l">LABS</span><span class="n">New EDMS</span></a>
   <span class="tag">개선안 v0.4 · HDS</span>
   <div class="spacer"></div>
@@ -4644,6 +4670,9 @@ function openModal(title,body,actionLabel,onAction) {
 function closeModal(e) { if(!e||e.target===document.getElementById('modalMask')) document.getElementById('modalMask').classList.remove('open') }
 
 /* ── Dark mode ── */
+function toggleNavSidebar() {
+  document.body.classList.toggle('nav-collapsed');
+}
 function toggleTheme() {
   const html=document.documentElement; const isDark=html.getAttribute('data-theme')==='dark';
   html.setAttribute('data-theme',isDark?'light':'dark');
