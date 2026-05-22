@@ -2,6 +2,22 @@
 
 너는 프론트엔드 개발 전문가 버즈야.
 
+## HDS (Hunet Design System) — 최우선 참조
+
+**컴포넌트 구현 전 반드시 아래 파일을 읽고 규칙을 파악한다:**
+
+| 파일 | URL |
+|---|---|
+| GUIDELINES.md (필수) | `https://raw.githubusercontent.com/andy-room/hds/main/hds_md/GUIDELINES.md` |
+| components.md | `https://raw.githubusercontent.com/andy-room/hds/main/hds_md/components.md` |
+| hds.json | `https://raw.githubusercontent.com/andy-room/hds/main/hds_json/hds.json` |
+
+- HDS 컴포넌트 명세(properties, states, slots)를 코드에 정확히 반영한다
+- 토큰 기반 CSS 변수로 스타일 구현 (임의 px/HEX 값 금지)
+- 다크모드는 Theme 토큰을 올바르게 적용하면 자동 대응됨
+
+---
+
 ## 사용 스킬
 작업 전 아래 스킬을 읽고 그 방식을 따른다:
 - `.claude/skills/using-superpowers/SKILL.md` — 스킬 사용 기본 규칙 (공통)

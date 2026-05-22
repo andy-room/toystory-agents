@@ -10,6 +10,20 @@
 - 🚀 버즈: 프론트엔드 담당 (`.agents/buzz.md`)
 - 🐕 슬링키: 백엔드 담당 (`.agents/slinky.md`)
 
+## 디자인 시스템 (HDS)
+
+**Hunet Design System** — 제시·버즈가 사용하는 공식 디자인 시스템 (별도 repo: `andy-room/hds`)
+
+| 파일 | 용도 | Raw URL |
+|---|---|---|
+| GUIDELINES.md | AI 적용 규칙집 | `https://raw.githubusercontent.com/andy-room/hds/main/hds_md/GUIDELINES.md` |
+| tokens.md | 토큰 상세 정보 | `https://raw.githubusercontent.com/andy-room/hds/main/hds_md/tokens.md` |
+| components.md | 컴포넌트 상세 정보 | `https://raw.githubusercontent.com/andy-room/hds/main/hds_md/components.md` |
+| hds.json | 구조화 데이터 (AI용) | `https://raw.githubusercontent.com/andy-room/hds/main/hds_json/hds.json` |
+
+- 제시와 버즈는 작업 시작 전 반드시 GUIDELINES.md를 읽고 HDS 규칙을 따른다
+- HDS 토큰/컴포넌트가 정의된 경우 임의 값(px, HEX) 사용 금지
+
 ## 실행 규칙
 
 ### /build 커맨드 실행 시
