@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>LABS New EDMS — 완료기준 설정</title>
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="common.css"/>
+</head>
+<body>
+
+<!-- ===================== Top Bar ===================== -->
+<header class="topbar">
+  <div class="brand">
+    <a class="logo" href="러닝메이커_보드.html">
+      <span class="l">LABS</span><span class="n">New EDMS</span>
+    </a>
+    <span class="tag">LABS showcase</span>
+    <span class="tenant">1000012</span>
+  </div>
+  <div class="spacer"></div>
+  <div class="user">
+    <span class="name">이재길 <span class="text-muted">님</span></span>
+    <button onclick="toast('로그아웃되었습니다.', 'success')">로그아웃</button>
+  </div>
+</header>
+
+<!-- ===================== Sidebar ===================== -->
+<aside class="sidebar" id="sidebar">
+  <a class="studio" href="#" onclick="event.preventDefault(); toast('LABS Studio 외부 링크 (프로토타입)', 'warn');">
+    <span class="label"><span class="icon">◉</span> LABS Studio</span>
+    <span class="ext">↗</span>
+  </a>
+  <nav class="menu" id="menu">
+    <div class="group" data-id="employees">
+      <div class="item"><span class="lhs"><span class="ico">👤</span> 임직원</span><span class="caret">▾</span></div>
+      <div class="sub"><a href="#/employees" data-route="employees">임직원 관리</a></div>
+    </div>
+    <div class="group" data-id="enroll">
+      <div class="item"><span class="lhs"><span class="ico">📝</span> 수강신청</span><span class="caret">▾</span></div>
+      <div class="sub">
+        <a href="#/enroll/courses" data-route="enroll/courses">신청 가능 과정</a>
+        <a href="#/enroll/history" data-route="enroll/history">신청 이력</a>
+      </div>
+    </div>
+    <div class="group" data-id="learning">
+      <div class="item"><span class="lhs"><span class="ico">📖</span> 학습</span><span class="caret">▾</span></div>
+      <div class="sub">
+        <a href="#/learning/ongoing" data-route="learning/ongoing">학습중 과정</a>
+        <a href="#/learning/done" data-route="learning/done">학습완료 과정</a>
+      </div>
+    </div>
+    <div class="group" data-id="result">
+      <div class="item"><span class="lhs"><span class="ico">📊</span> 결과</span><span class="caret">▾</span></div>
+      <div class="sub">
+        <a href="#/result/transcript" data-route="result/transcript">학습 이력</a>
+        <a href="#/result/cert" data-route="result/cert">수료증</a>
+      </div>
+    </div>
+    <div class="group" data-id="connect">
+      <div class="item"><span class="lhs"><span class="ico">🔗</span> 커넥트</span><span class="caret">▾</span></div>
+      <div class="sub"><a href="#/connect/forum" data-route="connect/forum">학습 커뮤니티</a></div>
+    </div>
+    <div class="group" data-id="board">
+      <div class="item"><span class="lhs"><span class="ico">📰</span> 게시글</span><span class="caret">▾</span></div>
+      <div class="sub">
+        <a href="#/board/notice" data-route="board/notice">공지사항</a>
+        <a href="#/board/faq" data-route="board/faq">FAQ</a>
+      </div>
+    </div>
+    <div class="group" data-id="enroll-setting">
+      <div class="item"><span class="lhs"><span class="ico">🖥️</span> 수강신청 설정</span><span class="caret">▾</span></div>
+      <div class="sub"><a href="#/enroll-setting/policy" data-route="enroll-setting/policy">신청 정책</a></div>
+    </div>
+    <div class="group" data-id="extra">
+      <div class="item"><span class="lhs"><span class="ico">➕</span> 부가서비스</span><span class="caret">▾</span></div>
+      <div class="sub"><a href="#/extra/integration" data-route="extra/integration">외부 연동</a></div>
+    </div>
+    <!-- 러닝메이커 그룹 — 새 과정 만들기 active -->
+    <div class="group open" data-id="lm">
+      <div class="item active">
+        <span class="lhs"><span class="ico">⚙️</span> 러닝메이커</span>
+        <span class="caret">▾</span>
+      </div>
+      <div class="sub">
+        <a href="러닝메이커_보드.html" data-route="dashboard">러닝메이커 보드</a>
+        <a href="제작유형_선택.html" data-route="wizard/1" class="active">새 과정 만들기</a>
+      </div>
+    </div>
+  </nav>
+</aside>
+
+<!-- ===================== Main ===================== -->
+<main class="main">
+  <div class="main-inner" id="view"></div>
+</main>
+
+<!-- ===================== Drawer (Content Add) ===================== -->
+<div class="drawer-mask" id="drawer-mask" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true">
+  <div class="dhead">
+    <h3>콘텐츠 추가</h3>
+    <button class="btn-icon" onclick="onDrawerCloseClick()">✕</button>
+  </div>
+  <div class="dtabs" id="drawer-tabs">
+    <button class="dtab active" data-tab="upload"><span class="dot"></span>신규 업로드</button>
+    <button class="dtab" data-tab="library"><span class="dot"></span>라이브러리 검색</button>
+    <button class="dtab" data-tab="online"><span class="dot"></span>온라인 과정</button>
+    <button class="dtab" data-tab="prepkg"><span class="dot"></span>프리패키지드코스</button>
+  </div>
+  <div class="dbody" id="drawer-body"></div>
+  <div class="dfoot" id="drawer-foot"></div>
+</aside>
+
+<!-- ===================== Ops Drawer ===================== -->
+<div class="ops-drawer-mask" id="ops-drawer-mask" onclick="closeOpsDrawer()"></div>
+<aside class="ops-drawer" id="ops-drawer" role="dialog" aria-modal="true">
+  <div class="dhead">
+    <div class="head-info">
+      <span class="eyebrow" id="ops-drawer-eyebrow">운영 회차 추가</span>
+      <h3 id="ops-drawer-title"></h3>
+      <div class="sub" id="ops-drawer-sub"></div>
+    </div>
+    <button class="btn-icon" onclick="closeOpsDrawer()">✕</button>
+  </div>
+  <div class="opstabs" id="ops-drawer-tabs"></div>
+  <div class="opsbody" id="ops-drawer-body"></div>
+  <div class="opsfoot" id="ops-drawer-foot"></div>
+</aside>
+
+<!-- ===================== Modal ===================== -->
+<div class="modal-mask" id="modal-mask">
+  <div class="modal" id="modal">
+    <div class="head">
+      <h3 id="modal-title">제목</h3>
+      <button class="btn-icon" onclick="closeModal()">✕</button>
+    </div>
+    <div class="body" id="modal-body"></div>
+    <div class="foot" id="modal-foot"></div>
+  </div>
+</div>
+
+<!-- ===================== Course Creation Done Modal ===================== -->
+<div class="cd-modal-mask" id="cd-modal-mask">
+  <div class="cd-modal" id="cd-modal" role="dialog" aria-modal="true" aria-labelledby="cd-modal-title">
+    <button type="button" class="cd-modal-close" onclick="closeCourseCreationDoneModal()" aria-label="닫기">✕</button>
+    <div class="cd-modal-body" id="cd-modal-body"></div>
+  </div>
+</div>
+
+<!-- ===================== Toast ===================== -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script src="common.js"></script>
+<script>
+  renderWizard(4);
+  if (new URLSearchParams(location.search).get('done')) openCourseCreationDoneModal();
+</script>
+</body>
+</html>
