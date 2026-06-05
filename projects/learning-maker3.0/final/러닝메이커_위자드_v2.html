@@ -82,7 +82,7 @@ input,select,textarea{font-family:inherit}
 
 /* ══ Editor Layout ══ */
 .editor-page{padding:32px 40px 80px;display:flex;justify-content:center}
-.editor-container{width:100%;max-width:1200px;display:grid;grid-template-columns:260px 1fr;gap:0 20px;align-items:start}
+.editor-container{width:100%;max-width:1800px;display:grid;grid-template-columns:460px 1fr;gap:0 20px;align-items:start}
 
 /* Left Nav */
 .editor-left-nav{position:sticky;top:calc(var(--header-h)+32px);height:calc(100vh - var(--header-h) - 64px);background:var(--surface);border:1px solid var(--line-layout);border-radius:var(--r16);padding:24px 18px 20px;box-shadow:var(--shadow-sm);overflow-y:auto;display:flex;flex-direction:column}
@@ -201,14 +201,16 @@ input,select,textarea{font-family:inherit}
 /* ══════════════════════════════════════════════════════════
    Floating Panel
 ══════════════════════════════════════════════════════════ */
-.fp-backdrop{position:fixed;inset:0;z-index:300;display:none;background:rgba(10,12,20,0.20)}
+/* backdrop: 헤더 아래부터 시작 → 패널이 콘텐츠 영역 기준 상하 중앙 */
+.fp-backdrop{position:fixed;top:var(--header-h);left:0;right:0;bottom:0;z-index:300;display:none;background:rgba(10,12,20,0.20)}
 .fp-backdrop.open{display:block;animation:fpBdIn 280ms ease both}
 @keyframes fpBdIn{from{opacity:0}to{opacity:1}}
 .fp-backdrop.closing{animation:fpBdOut 240ms ease both}
 .fp-backdrop.closing .fp-panel{animation:fpOut 240ms cubic-bezier(.4,0,1,1) both}
 @keyframes fpBdOut{from{opacity:1}to{opacity:0}}
 @keyframes fpOut{from{transform:translateX(0)}to{transform:translateX(calc(100% + 32px))}}
-.fp-panel{position:absolute;top:calc(var(--header-h)+16px);right:16px;bottom:16px;width:480px;max-width:calc(100vw - 32px);background:var(--surface);border-radius:var(--r20);box-shadow:var(--shadow-lg);display:flex;flex-direction:column;overflow:hidden;animation:fpIn 400ms cubic-bezier(0.32,0.72,0,1) both}
+/* 패널: backdrop(헤더 아래) 기준 상하좌우 16px — 완전 대칭 */
+.fp-panel{position:absolute;top:16px;right:16px;bottom:16px;width:480px;max-width:calc(100vw - 32px);background:var(--surface);border-radius:var(--r20);box-shadow:var(--shadow-lg);display:flex;flex-direction:column;overflow:hidden;animation:fpIn 400ms cubic-bezier(0.32,0.72,0,1) both}
 @keyframes fpIn{from{transform:translateX(calc(100% + 32px))}to{transform:translateX(0)}}
 .fp-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 14px;border-bottom:1px solid var(--line-layout);flex-shrink:0}
 .fp-head-left{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
@@ -277,6 +279,26 @@ input,select,textarea{font-family:inherit}
 .fp-leaf::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--line-strong);flex-shrink:0;margin-top:5px}
 .fp-import-btn{width:100%;height:44px;background:var(--brand);color:#fff;border:none;border-radius:var(--r8);font-size:14px;font-weight:700;letter-spacing:-0.3px;cursor:pointer;transition:background var(--tr);font-family:inherit}
 .fp-import-btn:hover{background:var(--brand-strong)}
+
+/* 프리패키지드 16:9 썸네일 카드 */
+.pp-item{align-items:center}
+.pp-thumb-wrap{
+  flex-shrink:0;
+  width:96px; height:54px;   /* 16:9 */
+  border-radius:var(--r8);
+  overflow:hidden;
+  background:var(--surface-3);
+  position:relative;
+}
+.pp-thumb-img{width:100%;height:100%;object-fit:cover;display:block}
+.pp-thumb-play{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:#fff;
+  background:rgba(0,0,0,0.18);
+  opacity:0;transition:opacity 120ms;
+}
+.pp-item:hover .pp-thumb-play{opacity:1}
 </style>
 </head>
 <body>
@@ -349,8 +371,8 @@ const TYPES = [
   { id:'micro+',   bg:'rgba(240,64,48,.05)',   imgs:['./images/유튜브.png','./images/아티클.png'],       label:'마이크로러닝 + 자료',  sub:'동영상과 자료를 함께 학습',        tags:['동영상','아티클'] },
   { id:'online',   bg:'rgba(26,110,224,.05)',  imgs:['./images/동영상.png','./images/퀴즈.png','./images/시험.png'], label:'온라인', sub:'동영상 강의 기반 온라인 과정',    tags:['동영상','퀴즈','시험'] },
   { id:'hybrid',   bg:'rgba(0,191,140,.05)',   imgs:['./images/동영상.png','./images/오프라인.png'],     label:'하이브리드러닝',       sub:'온라인 + 오프라인 복합 구성',      tags:['온라인','오프라인'] },
-  { id:'import',   bg:'transparent',           imgs:[], label:'내 과정 불러오기',         sub:'기존 과정 가져와 수정·재활용', tags:[] },
-  { id:'prepkg',   bg:'transparent',           imgs:[], label:'프리패키지드코스 불러오기', sub:'검증된 교육 패키지 커스터마이징', tags:[] },
+  { id:'import',   bg:'rgba(255,100,20,.05)',  imgs:['./images/PDF.png'],   label:'내 과정 불러오기',         sub:'기존 과정 가져와 수정·재활용',    tags:['불러오기'] },
+  { id:'prepkg',   bg:'rgba(124,58,237,.05)', imgs:['./images/과제.png'],  label:'프리패키지드코스 불러오기', sub:'검증된 교육 패키지 커스터마이징', tags:['패키지'] },
 ];
 
 const ENT_COURSES = [
@@ -488,7 +510,6 @@ function updateNav() {
 
 /* Step 0 — 과정명 + 유형 */
 function renderStartAndType() {
-  const mainTypes=TYPES.slice(0,6), extraTypes=TYPES.slice(6,8);
   return `
     <div class="esec-header">
       <div class="esec-num">01 / 04</div>
@@ -505,24 +526,15 @@ function renderStartAndType() {
     </div>
     <div class="flabel" style="margin-bottom:12px">과정 유형</div>
     <div class="type-grid">
-      ${mainTypes.map(t=>`
-        <div class="type-card ${S.creationType===t.id?'selected':''}" onclick="selectType('${t.id}')" style="background:${t.bg}">
+      ${TYPES.map(t=>`
+        <div class="type-card ${S.creationType===t.id?'selected':''}"
+             data-type-id="${t.id}"
+             onclick="${t.id==='import'?'selectTypeImport()':t.id==='prepkg'?'selectTypePrepkg()':'selectType(\''+t.id+'\')'}"
+             style="background:${t.bg}">
           <div class="type-check">${SVG_CHECK}</div>
           <div class="t-icon-group">${t.imgs.map(src=>`<div class="t-ico-img"><img src="${src}" alt=""/></div>`).join('')}</div>
           <h3>${t.label}</h3><p>${t.sub}</p>
           <div class="ctags">${t.tags.map(g=>`<span class="ctag">${g}</span>`).join('')}</div>
-        </div>`).join('')}
-    </div>
-    <div class="type-extra-row">
-      ${extraTypes.map(t=>`
-        <div class="type-extra-card ${S.creationType===t.id?'selected':''}"
-             onclick="${t.id==='import'?'selectTypeImport()':'selectType(\'prepkg\')'}">
-          <div class="extra-icon">
-            ${t.id==='import'
-              ?`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#878A93" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>`
-              :`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#878A93" stroke-width="2" stroke-linecap="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" x2="12" y1="22.08" y2="12"/></svg>`}
-          </div>
-          <div class="extra-info"><h4>${t.label}</h4><p>${t.sub}</p></div>
         </div>`).join('')}
     </div>`;
 }
@@ -612,14 +624,17 @@ function refreshExtra(){const sv=document.getElementById('stepView');if(sv){sv.i
 /* Type selection */
 function selectType(id){
   S.creationType=id; updateNav();
-  document.querySelectorAll('.type-card').forEach(c=>c.classList.toggle('selected',c.getAttribute('onclick')?.includes(`'${id}'`)));
-  document.querySelectorAll('.type-extra-card').forEach(c=>c.classList.remove('selected'));
+  document.querySelectorAll('.type-card').forEach(c=>c.classList.toggle('selected',c.dataset.typeId===id));
 }
 function selectTypeImport(){
   S.creationType='import'; updateNav();
-  document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
-  document.querySelectorAll('.type-extra-card').forEach((c,i)=>c.classList.toggle('selected',i===0));
+  document.querySelectorAll('.type-card').forEach(c=>c.classList.toggle('selected',c.dataset.typeId==='import'));
   openFp();
+}
+function selectTypePrepkg(){
+  S.creationType='prepkg'; updateNav();
+  document.querySelectorAll('.type-card').forEach(c=>c.classList.toggle('selected',c.dataset.typeId==='prepkg'));
+  openPkgFp();
 }
 
 /* TOC */
@@ -722,6 +737,138 @@ function setupFpScroll(){
       loading=false;if(loader&&FP.loaded>=filtered.length)loader.style.display='none';
     },380);
   };
+}
+
+/* ══ 프리패키지드 패널 ══ */
+const PKG_COURSES = [
+  { id:'pp1', kind:'online',  title:'대리 리더십 전문가 과정',  meta:'8차시 · 4주 학습',  price:'140,000원', free:false,
+    tags:['리더십','성과관리'], modules:[{title:'Module 1. 고객 상품의 이해',leaves:['고객 품질과 6 sigma 5분 정리','고객 마케팅의 실제 사례','고객과 함께하는 리더의 자세']},{title:'Module 2. 상품 전략 수립',leaves:['전략과제 선정 5분 가이드','상품 그리고 판매전략']}]},
+  { id:'pp2', kind:'online',  title:'신입 매니저 온보딩',       meta:'6차시 · 3주 학습',  price:'',         free:true,
+    tags:['신입사원','온보딩'], modules:[{title:'1주차. 매니저의 역할',leaves:['매니저의 역할 5분 정리','역할과 책임의 재정의','팀 그라운드룰 만들기']},{title:'2주차. 일하는 방식',leaves:['1on1 운영 5분 가이드','회의 진행 기법']}]},
+  { id:'pp3', kind:'online',  title:'데이터 리터러시 기초',     meta:'10차시 · 5주 학습', price:'199,000원', free:false,
+    tags:['데이터','분석'], modules:[{title:'데이터의 이해',leaves:['데이터란 무엇인가 5분','데이터 품질의 기본']},{title:'분석 도구',leaves:['엑셀 피벗 활용','BI 도구 기초']}]},
+  { id:'pp4', kind:'offline', title:'현장 리더십 워크숍',       meta:'1일 · 8시간',        price:'320,000원', free:false,
+    tags:['리더십','워크숍'], modules:[{title:'AM. 리더십 진단',leaves:['리더십 스타일 진단','강점 기반 리더십']},{title:'PM. 팀 빌딩 실습',leaves:['퍼실리테이션 기법','갈등 해결 워크숍']}]},
+  { id:'pp5', kind:'hybrid',  title:'성과 코칭 마스터 과정',    meta:'12차시 · 6주 학습', price:'250,000원', free:false,
+    tags:['코칭','성과관리'], modules:[{title:'온라인. 코칭 이론',leaves:['코칭 대화 모델 GROW','질문의 기술']},{title:'오프라인. 코칭 실습',leaves:['1on1 시뮬레이션','피드백 롤플레이']}]},
+  { id:'pp6', kind:'online',  title:'비즈니스 글쓰기 실전',     meta:'5차시 · 2주 학습',  price:'',         free:true,
+    tags:['글쓰기','커뮤니케이션'], modules:[{title:'보고서 작성',leaves:['두괄식 글쓰기','보고서 구조화']},{title:'이메일·메시지',leaves:['명확한 이메일 작성','슬랙 커뮤니케이션']}]},
+];
+
+const PP = { filter:'all', sort:'title' };
+const PP_KINDS = [{val:'all',label:'전체'},{val:'online',label:'온라인'},{val:'offline',label:'오프라인'},{val:'hybrid',label:'블렌디드러닝'}];
+const PP_TAGS  = ['#리더십','#신입사원','#데이터','#코칭','#성과관리','#글쓰기'];
+
+function openPkgFp() {
+  PP.filter='all'; PP.sort='title';
+  const hl=document.getElementById('fpHeadLeft');
+  if(hl) hl.innerHTML='<span class="fp-title">프리패키지드코스 불러오기</span>';
+  document.getElementById('fpBody').innerHTML=renderPkgPanel();
+  const bd=document.getElementById('fpBackdrop');
+  bd.classList.remove('closing'); bd.classList.add('open');
+}
+
+function renderPkgPanel() {
+  const filtered = PKG_COURSES.filter(c => PP.filter==='all' || c.kind===PP.filter);
+  return `
+    <div class="ep2-filter-box">
+      <div class="ep2-search">
+        <div class="ep2-search-wrap">
+          <span class="ep2-search-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+          <input class="ep2-search-input" placeholder="패키지명으로 검색" oninput="ppSearch(this.value)"/>
+        </div>
+      </div>
+      <div class="ep2-chips">
+        ${PP_KINDS.map(k=>`<span class="ep2-chip ${PP.filter===k.val?'on':''}" onclick="ppSetFilter('${k.val}')">${k.label}</span>`).join('')}
+        <span class="ip-sep" style="width:1px;height:14px;background:var(--line-layout);flex-shrink:0;margin:0 2px"></span>
+        ${PP_TAGS.map(t=>`<span class="ep2-chip" onclick="this.classList.toggle('on')">${t}</span>`).join('')}
+      </div>
+    </div>
+    <div class="ep2-list-header">
+      <span class="ep2-count"><strong>${filtered.length}</strong>개 패키지</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;" id="ppList">
+      ${filtered.map(c => ppCardHtml(c)).join('')}
+    </div>`;
+}
+
+function ppCardHtml(c) {
+  const kindLabel={online:'온라인',offline:'오프라인',hybrid:'블렌디드러닝'}[c.kind]||c.kind;
+  const kindCls={online:'ep2-badge-online',offline:'ep2-badge-offline',hybrid:'ep2-badge-hybrid'}[c.kind]||'';
+  /* 16:9 썸네일 — picsum.photos seed로 과정마다 일관된 임의 이미지 */
+  const thumbSrc = `https://picsum.photos/seed/${c.id}/320/180`;
+  return `
+    <div class="ep2-item pp-item" onclick="ppOpenDetail('${c.id}')">
+      <div class="pp-thumb-wrap">
+        <img class="pp-thumb-img" src="${thumbSrc}" alt="" loading="lazy"
+             onerror="this.parentNode.style.background='var(--surface-3)'"/>
+        <div class="pp-thumb-play">▶</div>
+      </div>
+      <div class="ep2-info">
+        <span class="ep2-badge ${kindCls}">${kindLabel}</span>
+        <div class="ep2-title">${esc(c.title)}</div>
+        <div class="ep2-meta-cat">${esc(c.meta)}</div>
+      </div>
+      ${c.free
+        ? `<span style="flex-shrink:0;font-size:11px;font-weight:700;padding:3px 8px;border-radius:var(--r4);background:#EBFAF0;color:#007326">무료</span>`
+        : `<span style="flex-shrink:0;font-size:11px;font-weight:700;color:var(--brand);white-space:nowrap">${esc(c.price)}</span>`}
+    </div>`;
+}
+
+function ppSetFilter(val){
+  PP.filter=val;
+  document.getElementById('fpBody').innerHTML=renderPkgPanel();
+}
+function ppSearch(q){
+  const filtered=PKG_COURSES.filter(c=>!q||c.title.toLowerCase().includes(q.toLowerCase()));
+  const list=document.getElementById('ppList');
+  if(list) list.innerHTML=filtered.map(ppCardHtml).join('');
+}
+
+function ppOpenDetail(id) {
+  const c=PKG_COURSES.find(x=>x.id===id); if(!c) return;
+  const hl=document.getElementById('fpHeadLeft');
+  if(hl) hl.innerHTML=`
+    <button class="fp-back-icon" onclick="openPkgFp()" aria-label="목록으로">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    </button>
+    <span class="fp-title">${esc(c.title)}</span>`;
+  const kindLabel={online:'온라인',offline:'오프라인',hybrid:'블렌디드러닝'}[c.kind]||c.kind;
+  const kindCls={online:'ep2-badge-online',offline:'ep2-badge-offline',hybrid:'ep2-badge-hybrid'}[c.kind]||'';
+  const modsHtml=(c.modules||[]).map((m,i)=>`
+    <div class="fp-module" id="ppmod${i}">
+      <div class="fp-module-head" onclick="document.getElementById('ppmod${i}').classList.toggle('open')">
+        <span>${esc(m.title)}</span><span class="fp-module-caret">›</span>
+      </div>
+      <div class="fp-module-body">${(m.leaves||[]).map(l=>`<div class="fp-leaf">${esc(l)}</div>`).join('')}</div>
+    </div>`).join('');
+  document.getElementById('fpBody').innerHTML=`
+    <div class="fp-detail-wrap">
+      <div class="fp-detail-hero">
+        <img class="fp-detail-icon" src="${KIND_ICON[c.kind]||''}" alt=""/>
+        <div class="fp-detail-info">
+          <div class="fp-detail-badge">
+            <span class="ep2-badge ${kindCls}">${kindLabel}</span>
+            ${c.free
+              ? `<span style="margin-left:6px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:var(--r4);background:#EBFAF0;color:#007326">무료</span>`
+              : `<span style="margin-left:6px;font-size:11px;font-weight:700;color:var(--brand)">${esc(c.price)}</span>`}
+          </div>
+          <div class="fp-detail-title">${esc(c.title)}</div>
+          <div class="fp-detail-meta">${esc(c.meta)}</div>
+        </div>
+      </div>
+      <div class="fp-section-label">커리큘럼 — ${(c.modules||[]).length}개 모듈</div>
+      <div class="fp-modules">${modsHtml}</div>
+      <button class="fp-import-btn" onclick="ppImport('${id}','${esc(c.title)}')">이 패키지 불러오기</button>
+    </div>`;
+  document.getElementById('fpBody').scrollTop=0;
+}
+
+function ppImport(id, title) {
+  const c=PKG_COURSES.find(x=>x.id===id);
+  if(c){S.courseName=c.title;S.creationType='prepkg';}
+  closeFp(); updateNav();
+  showToast(`"${title}" 패키지를 불러왔습니다.`);
 }
 
 function showToast(msg){const t=document.createElement('div');t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#171719;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;z-index:999;box-shadow:0 4px 16px rgba(0,0,0,.25);white-space:nowrap';t.textContent=msg;document.body.appendChild(t);requestAnimationFrame(()=>{t.style.transition='opacity .2s';});setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),200);},2600);}
