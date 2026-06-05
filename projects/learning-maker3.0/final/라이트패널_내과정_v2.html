@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>LABS New EDMS — 제작유형 선택 (플로팅 패널)</title>
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="common.css"/>
+  <style>
+  /* ============================================================
+     HDS Token — common.css와 동일한 별칭 유지
+  ============================================================ */
+  :root {
+    --hds-company-primary: #0066FF; --hds-company-strong: #0052CC;
+    --hds-company-subtle:  #EBF3FF; --hds-company-ghost:  #F5F9FF;
+    --hds-bg-surface:      #FFFFFF; --hds-bg-subtle:      #F4F5F7;
+    --hds-text-100:        rgba(0,0,0,1.00); --hds-text-60: rgba(0,0,0,0.60);
+    --hds-text-45:         rgba(0,0,0,0.45);
+    --hds-line-layout:     #E1E4E8; --hds-line-outline: #C8CBD0;
+    --hds-radius-md:       12px;    --hds-radius-xl:    20px;
+    --hds-radius-full:     900px;
+    --hds-shadow-card:     0 1px 4px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
+  }
+
+  /* ============================================================
+     플로팅 패널 — Backdrop
+     참고 이미지: 우측 고정 카드, 반투명 backdrop, blur
+  ============================================================ */
+  .fp-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    display: none;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: calc(var(--header-h) + 16px) 20px 20px 0;
+    background: rgba(15, 15, 20, 0.22);
+  }
+  .fp-backdrop.open {
+    display: flex;
+    animation: fpBackdropIn 220ms ease both;
+  }
+  @keyframes fpBackdropIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* ============================================================
+     플로팅 패널 — Panel Card
+  ============================================================ */
+  .fp-panel {
+    width: 460px;
+    max-width: calc(100vw - 40px);
+    height: calc(100vh - var(--header-h) - 36px);
+    background: #fff;
+    border-radius: var(--hds-radius-xl);       /* radius/xl = 20px — 4면 모두 */
+    box-shadow:
+      0 32px 80px rgba(0, 0, 0, 0.22),
+      0 8px 24px rgba(0, 0, 0, 0.10),
+      0 0 0 1px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: fpPanelIn 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes fpPanelIn {
+    from { opacity: 0; transform: translateY(12px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* 닫기 애니메이션 */
+  .fp-backdrop.closing {
+    animation: fpBackdropOut 180ms ease both;
+  }
+  .fp-backdrop.closing .fp-panel {
+    animation: fpPanelOut 180ms cubic-bezier(0.4, 0, 1, 1) both;
+  }
+  @keyframes fpBackdropOut {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+  }
+  @keyframes fpPanelOut {
+    from { opacity: 1; transform: translateY(0) scale(1); }
+    to   { opacity: 0; transform: translateY(8px) scale(0.98); }
+  }
+
+  /* ── 패널 헤더 ─────────────────────────────────────────── */
+  .fp-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--hds-line-layout);
+    flex-shrink: 0;
+    background: #fff;
+  }
+  .fp-head-left {
+    display: flex; align-items: center; gap: 8px;
+    flex: 1; min-width: 0;
+  }
+  .fp-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--hds-text-100);
+    letter-spacing: -0.4px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  /* 헤더 뒤로가기 아이콘 버튼 */
+  .fp-back-icon {
+    width: 30px; height: 30px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    border: none; background: transparent;
+    color: var(--hds-text-60);
+    cursor: pointer; border-radius: 6px;
+    transition: background 100ms, color 100ms;
+    font-family: inherit;
+  }
+  .fp-back-icon:hover { background: var(--hds-bg-subtle); color: var(--hds-text-100); }
+  .fp-back-icon svg { width: 16px; height: 16px; }
+  .fp-close {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--hds-line-layout);
+    background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--hds-text-60);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 100ms, border-color 100ms;
+    font-family: inherit;
+  }
+  .fp-close:hover {
+    background: var(--hds-bg-subtle);
+    border-color: var(--hds-line-outline);
+    color: var(--hds-text-100);
+  }
+
+  /* ── 패널 바디 (enterprisePanel 영역) ──────────────────── */
+  .fp-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 16px 24px;
+    background: var(--hds-bg-subtle);
+  }
+  .fp-body::-webkit-scrollbar { width: 4px; }
+  .fp-body::-webkit-scrollbar-thumb {
+    background: var(--hds-line-layout);
+    border-radius: 4px;
+  }
+  .fp-body::-webkit-scrollbar-track { background: transparent; }
+
+  /* ── 상세 보기 래퍼 ────────────────────────────────────── */
+  .fp-detail-wrap {
+    background: var(--hds-bg-surface);
+    border-radius: var(--hds-radius-md);
+    padding: 16px;
+  }
+  /* 상세 히어로 — 유형 이미지 + 텍스트 */
+  .fp-detail-hero {
+    display: flex; align-items: flex-start; gap: 14px;
+    margin-bottom: 20px;
+  }
+  .fp-detail-icon {
+    width: 52px; height: 52px;
+    border-radius: 12px;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 1px solid var(--hds-line-layout);
+  }
+  .fp-detail-info { flex: 1; min-width: 0; }
+  .fp-detail-badge { margin-bottom: 6px; }
+  .fp-detail-title {
+    font-size: 16px; font-weight: 700;
+    color: var(--hds-text-100);
+    line-height: 1.4; margin-bottom: 4px;
+    letter-spacing: -0.4px;
+  }
+  .fp-detail-meta { font-size: 12px; color: var(--hds-text-45); }
+
+  /* 커리큘럼 섹션 */
+  .fp-section-label {
+    font-size: 12px; font-weight: 700; color: var(--hds-text-60);
+    letter-spacing: 0.2px; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .fp-modules { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+  .fp-module {
+    border: 1px solid var(--hds-line-layout);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--hds-bg-surface);
+  }
+  .fp-module-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; cursor: pointer;
+    font-size: 13px; font-weight: 600; color: var(--hds-text-100);
+    background: var(--hds-bg-subtle);
+    transition: background 100ms;
+    user-select: none;
+  }
+  .fp-module-head:hover { background: var(--hds-line-layout); }
+  .fp-module-caret {
+    font-size: 11px; color: var(--hds-text-45);
+    transition: transform 150ms;
+    flex-shrink: 0;
+  }
+  .fp-module.open .fp-module-caret { transform: rotate(90deg); }
+  .fp-module-body {
+    display: none;
+    padding: 8px 14px 10px;
+    border-top: 1px solid var(--hds-line-layout);
+  }
+  .fp-module.open .fp-module-body { display: block; }
+  .fp-leaf {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 5px 0; font-size: 12px; color: var(--hds-text-60);
+  }
+  .fp-leaf::before {
+    content: ''; width: 4px; height: 4px; border-radius: 50%;
+    background: var(--hds-line-outline); flex-shrink: 0; margin-top: 5px;
+  }
+
+  /* 불러오기 CTA 버튼 */
+  .fp-import-btn {
+    width: 100%; height: 44px;
+    background: var(--hds-company-primary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px; font-weight: 600;
+    letter-spacing: -0.3px;
+    cursor: pointer;
+    transition: background 120ms;
+    font-family: inherit;
+  }
+  .fp-import-btn:hover { background: var(--hds-company-strong); }
+
+  /* ── fp-body 전용 리스트 오버라이드 ─────────────────────
+     개별 카드 → 하나의 박스 안에서 줄 구분 리스팅
+  ─────────────────────────────────────────────────────── */
+  #fp-body .ep2-list {
+    background: var(--hds-bg-surface);
+    border: 1px solid var(--hds-line-layout);
+    border-radius: var(--hds-radius-md);
+    overflow: hidden;
+    gap: 0;
+  }
+  #fp-body .ep2-item {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--hds-line-layout);
+    border-radius: 0;
+    box-shadow: none;
+    padding: 12px 14px;
+  }
+  #fp-body .ep2-item:last-child { border-bottom: none; }
+  #fp-body .ep2-item:hover { background: var(--hds-bg-subtle); }
+
+  /* ── 현재 페이지의 드로어 관련 스타일 오버라이드 ────────
+     float panel 사용하므로 기존 drawer는 필요시에만 사용
+  ─────────────────────────────────────────────────────── */
+
+  /* 카드 타입 선택 — HDS bg-surface 통일 */
+  .type-card {
+    background: var(--hds-bg-surface) !important;
+    border-color: var(--hds-line-layout) !important;
+    border-radius: var(--hds-radius-md) !important;
+    box-shadow: var(--hds-shadow-card);
+    border-width: 1px !important;
+    transform: none !important;
+  }
+  .type-card:hover {
+    border-color: var(--hds-company-primary) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.04) !important;
+    z-index: 2;
+  }
+  .type-card.selected {
+    border-color: var(--hds-company-primary) !important;
+    background: var(--hds-company-ghost) !important;
+    box-shadow: 0 0 0 3px var(--hds-company-subtle) !important;
+  }
+  .type-card.tc-single, .type-card.tc-single-plus,
+  .type-card.tc-hunet, .type-card.extra-card {
+    background: var(--hds-bg-surface) !important;
+  }
+  .type-card .iconbox { background: var(--hds-bg-subtle) !important; }
+  .type-card h3 { color: var(--hds-text-100) !important; font-size: 14px !important; font-weight: 700 !important; letter-spacing: -0.5px; line-height: 1.6; }
+  .type-card p  { color: var(--hds-text-60) !important; font-size: 12px !important; line-height: 1.6; }
+  .type-card.tc-mine, .type-card.tc-hunet { border-style: dashed !important; box-shadow: none !important; }
+  .type-card.tc-mine:hover, .type-card.tc-hunet:hover { box-shadow: var(--hds-shadow-card) !important; }
+
+  /* input / button */
+  .step1-name-input {
+    border-color: var(--hds-line-outline) !important;
+    border-radius: 8px !important;
+  }
+  .step1-name-input:focus { border-color: var(--hds-line-heavy, #696E75) !important; box-shadow: none !important; outline: none; }
+  .wizard-actions .btn-primary, .wizard-actions .btn-primary.btn-lg {
+    height: 48px !important; border-radius: 8px !important;
+    background: var(--hds-company-primary) !important;
+    border-color: var(--hds-company-primary) !important;
+  }
+  .wizard-actions .btn-primary:hover { background: var(--hds-company-strong) !important; }
+  .wizard-frame { border-radius: var(--hds-radius-md) !important; }
+  </style>
+</head>
+<body>
+
+<!-- ===================== Top Bar ===================== -->
+<header class="topbar">
+  <div class="brand">
+    <a class="logo" href="러닝메이커_보드.html">
+      <span class="l">LABS</span><span class="n">New EDMS</span>
+    </a>
+    <span class="tag">LABS showcase</span>
+    <span class="tenant">1000012</span>
+  </div>
+  <div class="spacer"></div>
+  <div class="user">
+    <span class="name">이재길 <span class="text-muted">님</span></span>
+    <button onclick="toast('로그아웃되었습니다.', 'success')">로그아웃</button>
+  </div>
+</header>
+
+<!-- ===================== Sidebar ===================== -->
+<aside class="sidebar" id="sidebar">
+  <a class="studio" href="#" onclick="event.preventDefault(); toast('LABS Studio 외부 링크 (프로토타입)', 'warn');">
+    <span class="label"><span class="icon">◉</span> LABS Studio</span>
+    <span class="ext">↗</span>
+  </a>
+  <nav class="menu" id="menu">
+    <div class="group" data-id="employees">
+      <div class="item"><span class="lhs"><span class="ico">👤</span> 임직원</span><span class="caret">▾</span></div>
+      <div class="sub"><a href="#/employees" data-route="employees">임직원 관리</a></div>
+    </div>
+    <div class="group" data-id="enroll">
+      <div class="item"><span class="lhs"><span class="ico">📝</span> 수강신청</span><span class="caret">▾</span></div>
+      <div class="sub">
+        <a href="#/enroll/courses" data-route="enroll/courses">신청 가능 과정</a>
+        <a href="#/enroll/history" data-route="enroll/history">신청 이력</a>
+      </div>
+    </div>
+    <div class="group" data-id="lm open" data-id="lm">
+      <div class="item active">
+        <span class="lhs"><span class="ico">⚙️</span> 러닝메이커</span>
+        <span class="caret">▾</span>
+      </div>
+      <div class="sub">
+        <a href="러닝메이커_보드.html" data-route="dashboard">러닝메이커 보드</a>
+        <a href="라이트패널_내과정_v2.html" data-route="wizard/1" class="active">새 과정 만들기</a>
+      </div>
+    </div>
+  </nav>
+</aside>
+
+<!-- ===================== Main ===================== -->
+<main class="main">
+  <div class="main-inner" id="view"></div>
+</main>
+
+<!-- ===================== 기존 Drawer (프리패키지드 등 다른 탭용) ===================== -->
+<div class="drawer-mask" id="drawer-mask" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true">
+  <div class="dhead">
+    <h3>콘텐츠 추가</h3>
+    <button class="btn-icon" onclick="onDrawerCloseClick()">✕</button>
+  </div>
+  <div class="dtabs" id="drawer-tabs"></div>
+  <div class="dbody" id="drawer-body"></div>
+  <div class="dfoot" id="drawer-foot"></div>
+</aside>
+
+<!-- ===================== 플로팅 패널 — 내 과정 불러오기 ===================== -->
+<div class="fp-backdrop" id="fp-backdrop" onclick="closeFloatPanel()">
+  <div class="fp-panel" id="fp-panel" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-label="내 과정 불러오기">
+    <div class="fp-head">
+      <div class="fp-head-left" id="fp-head-left">
+        <span class="fp-title" id="fp-title">내 과정 불러오기</span>
+      </div>
+      <button class="fp-close" onclick="closeFloatPanel()" aria-label="닫기">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M18 6 6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="fp-body" id="fp-body"></div>
+  </div>
+</div>
+
+<!-- ===================== Ops Drawer ===================== -->
+<div class="ops-drawer-mask" id="ops-drawer-mask" onclick="closeOpsDrawer()"></div>
+<aside class="ops-drawer" id="ops-drawer" role="dialog" aria-modal="true">
+  <div class="dhead">
+    <div class="head-info">
+      <span class="eyebrow" id="ops-drawer-eyebrow">운영 회차 추가</span>
+      <h3 id="ops-drawer-title"></h3>
+      <div class="sub" id="ops-drawer-sub"></div>
+    </div>
+    <button class="btn-icon" onclick="closeOpsDrawer()">✕</button>
+  </div>
+  <div class="opstabs" id="ops-drawer-tabs"></div>
+  <div class="opsbody" id="ops-drawer-body"></div>
+  <div class="opsfoot" id="ops-drawer-foot"></div>
+</aside>
+
+<!-- ===================== Modal ===================== -->
+<div class="modal-mask" id="modal-mask">
+  <div class="modal" id="modal">
+    <div class="head"><h3 id="modal-title">제목</h3><button class="btn-icon" onclick="closeModal()">✕</button></div>
+    <div class="body" id="modal-body"></div>
+    <div class="foot" id="modal-foot"></div>
+  </div>
+</div>
+
+<!-- ===================== Course Creation Done Modal ===================== -->
+<div class="cd-modal-mask" id="cd-modal-mask">
+  <div class="cd-modal" id="cd-modal" role="dialog" aria-modal="true">
+    <button type="button" class="cd-modal-close" onclick="closeCourseCreationDoneModal()" aria-label="닫기">✕</button>
+    <div class="cd-modal-body" id="cd-modal-body"></div>
+  </div>
+</div>
+
+<!-- ===================== Toast ===================== -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script src="common.js"></script>
+<script>
+/* ============================================================
+   플로팅 패널 오버라이드
+   — openEnterpriseTabDrawer → 플로팅 패널로 대체
+   — openEnterprisePreview  → 패널 내부 상세 보기
+   — setupEnterpriseInfiniteScroll → fp-body 대상으로 재설정
+============================================================ */
+
+/* ── 패널 열기 / 닫기 ───────────────────────────────────── */
+function openEnterpriseTabDrawer() {
+  DRAWER._ep2Filter = 'all';
+  DRAWER._ep2Sort   = 'date';
+  DRAWER.entLoaded  = Math.min(ENT_PAGE_SIZE || 8, (ENT_COURSES || []).length);
+
+  /* 헤더: 일반 타이틀 (뒤로가기 없음) */
+  const headLeft = document.getElementById('fp-head-left');
+  if (headLeft) headLeft.innerHTML = '<span class="fp-title" id="fp-title">내 과정 불러오기</span>';
+
+  const body = document.getElementById('fp-body');
+  if (body) body.innerHTML = enterprisePanel();
+
+  const bd = document.getElementById('fp-backdrop');
+  bd.classList.remove('closing');
+  bd.classList.add('open');
+
+  setupFloatInfiniteScroll();
+}
+
+function closeFloatPanel() {
+  const bd = document.getElementById('fp-backdrop');
+  bd.classList.add('closing');
+  bd.addEventListener('animationend', function handler() {
+    bd.classList.remove('open', 'closing');
+    bd.removeEventListener('animationend', handler);
+  }, { once: true });
+}
+
+/* ESC 키로 닫기 */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeFloatPanel();
+});
+
+/* ── 상세 보기 ─────────────────────────────────────────── */
+function openEnterprisePreview(courseId) {
+  const course = (ENT_COURSES || []).find(c => c.id === courseId);
+  if (!course) return;
+  const LABELS  = { online: '온라인', offline: '오프라인', hybrid: '하이브리드러닝' };
+  const BADGE   = { online: 'ep2-badge-online', offline: 'ep2-badge-offline', hybrid: 'ep2-badge-hybrid' };
+  const ICONS   = { online: 'images/온라인.png', offline: 'images/오프라인.png', hybrid: 'images/하이브리드.png' };
+
+  /* 헤더: 뒤로가기 아이콘 + 과정 타이틀 */
+  const headLeft = document.getElementById('fp-head-left');
+  if (headLeft) headLeft.innerHTML = `
+    <button class="fp-back-icon" onclick="openEnterpriseTabDrawer()" aria-label="목록으로">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+    </button>
+    <span class="fp-title">${esc(course.title)}</span>`;
+
+  /* 커리큘럼 모듈 */
+  const modulesHtml = (course.modules || []).map((m, i) => `
+    <div class="fp-module" id="fp-mod-${i}">
+      <div class="fp-module-head" onclick="document.getElementById('fp-mod-${i}').classList.toggle('open')">
+        <span>${esc(m.title)}</span>
+        <span class="fp-module-caret">›</span>
+      </div>
+      <div class="fp-module-body">
+        ${(m.leaves || []).map(l => `<div class="fp-leaf">${esc(l)}</div>`).join('')}
+      </div>
+    </div>`).join('');
+
+  const body = document.getElementById('fp-body');
+  if (!body) return;
+  body.innerHTML = `
+    <div class="fp-detail-wrap">
+      <div class="fp-detail-hero">
+        <img class="fp-detail-icon"
+             src="${ICONS[course.kind] || 'images/온라인.png'}"
+             alt="${LABELS[course.kind] || ''}"/>
+        <div class="fp-detail-info">
+          <div class="fp-detail-badge">
+            <span class="ep2-badge ${BADGE[course.kind] || ''}">${LABELS[course.kind] || course.kind}</span>
+          </div>
+          <div class="fp-detail-title">${esc(course.title)}</div>
+          <div class="fp-detail-meta">${esc(course.category || '')} &nbsp;·&nbsp; ${esc(course.createdAt || '')}</div>
+        </div>
+      </div>
+      <div class="fp-section-label">커리큘럼 — ${(course.modules || []).length}개 모듈</div>
+      <div class="fp-modules">${modulesHtml}</div>
+      <button class="fp-import-btn" onclick="fpImportCourse('${esc(course.id)}', '${esc(course.title)}')">
+        이 과정 불러오기
+      </button>
+    </div>`;
+  body.scrollTop = 0;
+}
+
+function fpImportCourse(courseId, title) {
+  closeFloatPanel();
+  const course = (ENT_COURSES || []).find(c => c.id === courseId);
+  if (course) {
+    STATE.courseName = course.title;
+    if (course.kind === 'offline')       STATE.creationType = 'offline';
+    else if (course.kind === 'hybrid')   STATE.creationType = 'hybrid';
+    else                                  STATE.creationType = 'online';
+    saveState();
+    renderWizard(1);
+  }
+  toast(`"${title}" 과정을 불러왔습니다.`, 'success');
+}
+
+/* ── 무한 스크롤 — fp-body 대상 ────────────────────────── */
+function setupFloatInfiniteScroll() {
+  const scroller = document.getElementById('fp-body');
+  if (!scroller) return;
+  let _loading = false;
+  scroller.onscroll = function() {
+    if (_loading) return;
+    const courses = ENT_COURSES || [];
+    if (DRAWER.entLoaded >= courses.length) return;
+    const nearBottom = (scroller.scrollTop + scroller.clientHeight) >= (scroller.scrollHeight - 120);
+    if (!nearBottom) return;
+    _loading = true;
+    const loader = document.getElementById('ent-loader');
+    if (loader) loader.style.display = 'flex';
+    setTimeout(() => {
+      const tbody = document.getElementById('ent-tbody');
+      if (!tbody) { _loading = false; return; }
+      const next = Math.min(DRAWER.entLoaded + (ENT_PAGE_SIZE || 8), courses.length);
+      tbody.insertAdjacentHTML('beforeend', courses.slice(DRAWER.entLoaded, next).map(entRowHtml).join(''));
+      DRAWER.entLoaded = next;
+      _loading = false;
+      if (DRAWER.entLoaded >= courses.length && loader) loader.style.display = 'none';
+    }, 380);
+  };
+}
+
+/* 기존 setupEnterpriseInfiniteScroll 무력화 (fp-body로 대체되었으므로) */
+function setupEnterpriseInfiniteScroll() {}
+
+/* ── 렌더링 시작 ────────────────────────────────────────── */
+renderWizard(1);
+</script>
+</body>
+</html>

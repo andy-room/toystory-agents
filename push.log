@@ -1081,3 +1081,55 @@ hint: not have locally. This is usually caused by another repository pushing
 hint: to the same ref. You may want to first integrate the remote changes
 hint: (e.g., 'git pull ...') before pushing again.
 hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+[main add7129] auto: 2026-06-04 17:00 자동 저장
+ Committer: hunet_syhong <syhong@hunet-soon.local>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file:
+
+    git config --global --edit
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 32 files changed, 23465 insertions(+)
+ create mode 100644 projects/learning-maker3.0/final/.DS_Store
+ create mode 100644 projects/learning-maker3.0/final/common.css
+ create mode 100644 projects/learning-maker3.0/final/common.js
+ create mode 100644 projects/learning-maker3.0/final/images/PDF.png
+ create mode 100644 "projects/learning-maker3.0/final/images/\352\263\274\354\240\234.png"
+ create mode 100644 "projects/learning-maker3.0/final/images/\353\217\231\354\230\201\354\203\201.png"
+ create mode 100644 "projects/learning-maker3.0/final/images/\354\204\244\353\254\270.png"
+ create mode 100644 "projects/learning-maker3.0/final/images/\354\213\234\355\227\230.png"
+ create mode 100644 "projects/learning-maker3.0/final/images/\354\225\204\355\213\260\355\201\264.png"
+ create mode 100644 "projects/learning-maker3.0/final/images/\354\230\244\355\224\204\353\235\274\354\235\270.png"
+ create mode 100644 "projects/learning-maker3.0/final/images/\354\230\250\353\235\274\354\235\270.png"
+ create mode 100644 "projects/learning-maker3.0/final/images/\354\231\270\353\266\200\353\247\201\355\201\254.png"
+ create mode 100644 "projects/learning-maker3.0/final/images/\354\234\240\355\212\234\353\270\214.png"
+ create mode 100644 "projects/learning-maker3.0/final/images/\354\235\264\353\257\270\354\247\200.png"
+ create mode 100644 "projects/learning-maker3.0/final/images/\355\200\264\354\246\210.png"
+ create mode 100644 "projects/learning-maker3.0/final/images/\355\206\240\353\241\240.png"
+ create mode 100644 "projects/learning-maker3.0/final/images/\355\225\230\354\235\264\353\270\214\353\246\254\353\223\234.png"
+ create mode 100644 projects/learning-maker3.0/final/step1_v2.css
+ create mode 100644 "projects/learning-maker3.0/final/\353\235\274\354\235\264\355\212\270\355\214\250\353\204\220_\353\202\264\352\263\274\354\240\225.html"
+ rename "projects/learning-maker3.0/final/\353\237\254\353\213\235\353\251\224\354\235\264\354\273\244_\355\224\204\353\241\234\355\206\240\355\203\200\354\236\205_v0.2.02 (1).html" => "projects/learning-maker3.0/final/\353\237\254\353\213\235\353\251\224\354\235\264\354\273\244_UI.html" (100%)
+ create mode 100644 "projects/learning-maker3.0/final/\353\237\254\353\213\235\353\251\224\354\235\264\354\273\244_\353\263\264\353\223\234.html"
+ create mode 100644 "projects/learning-maker3.0/final/\353\252\251\354\260\250_\352\265\254\354\204\261.html"
+ create mode 100644 "projects/learning-maker3.0/final/\354\213\240\354\262\255_\355\225\231\354\212\265\354\204\244\354\240\225.html"
+ create mode 100644 "projects/learning-maker3.0/final/\354\231\204\353\243\214\352\270\260\354\244\200_\354\204\244\354\240\225.html"
+ create mode 100644 "projects/learning-maker3.0/final/\354\240\234\354\236\221\354\234\240\355\230\225_\354\204\240\355\203\235.html"
+ create mode 100644 "projects/learning-maker3.0/final/\354\240\234\354\236\221\354\234\240\355\230\225_\354\204\240\355\203\235_v2.html"
+ create mode 100644 "projects/learning-maker3.0/final/\354\265\234\354\242\205\355\231\225\354\235\270.html"
+ create mode 100644 "projects/learning-maker3.0/images/\354\230\250\353\235\274\354\235\270.png"
+ create mode 100644 "projects/learning-maker3.0/images/\355\225\230\354\235\264\353\270\214\353\246\254\353\223\234.png"
+To github.com:soonyeons/toystory-agents.git
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to 'github.com:soonyeons/toystory-agents.git'
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.

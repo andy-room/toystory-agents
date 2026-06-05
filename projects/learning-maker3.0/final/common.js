@@ -3215,19 +3215,21 @@ function enterprisePanel() {
   const visible = courses.slice(0, DRAWER.entLoaded);
   const hasMore = DRAWER.entLoaded < courses.length;
   return `
-    <div class="ep2-search">
-      <div class="ep2-search-wrap">
-        <span class="ep2-search-ico">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        </span>
-        <input class="ep2-search-input" id="ep2-q" placeholder="과정명으로 검색" oninput="ep2Filter()"/>
+    <div class="ep2-filter-box">
+      <div class="ep2-search">
+        <div class="ep2-search-wrap">
+          <span class="ep2-search-ico">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          </span>
+          <input class="ep2-search-input" id="ep2-q" placeholder="과정명으로 검색" oninput="ep2Filter()"/>
+        </div>
       </div>
-    </div>
-    <div class="ep2-chips" id="ep2-chips">
-      ${FILTER_CHIPS.map(c => `
-        <span class="ep2-chip ${DRAWER._ep2Filter===c.val?'on':''}"
-              data-val="${c.val}" onclick="ep2SetFilter(this,'${c.val}')">${c.label}</span>
-      `).join('')}
+      <div class="ep2-chips" id="ep2-chips">
+        ${FILTER_CHIPS.map(c => `
+          <span class="ep2-chip ${DRAWER._ep2Filter===c.val?'on':''}"
+                data-val="${c.val}" onclick="ep2SetFilter(this,'${c.val}')">${c.label}</span>
+        `).join('')}
+      </div>
     </div>
     <div class="ep2-list-header">
       <span class="ep2-count" id="ep2-count"><strong>${visible.length}</strong>개 과정</span>

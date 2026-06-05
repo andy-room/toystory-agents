@@ -6,6 +6,343 @@
   <title>LABS New EDMS — 제작유형 선택</title>
   <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet"/>
   <link rel="stylesheet" href="common.css"/>
+  <style>
+  /* ============================================================
+     HDS (Hunet Design System) — Token Definitions & Component Overrides
+     Ref: https://github.com/andy-room/hds
+     hds-design.md (2026-06-04) / hds-components.md (2026-06-04)
+  ============================================================ */
+
+  /* ── 1. HDS CSS Custom Properties ────────────────────────────
+     Theme Collection 시맨틱 토큰 기준 (Atomic 직접 사용 금지)
+  ─────────────────────────────────────────────────────────── */
+  :root {
+    /* Brand — brand/company-* */
+    --hds-company-primary:  #0066FF;   /* brand/company-primary  */
+    --hds-company-strong:   #0052CC;   /* brand/company-strong   */
+    --hds-company-medium:   #338BFF;   /* brand/company-medium   */
+    --hds-company-subtle:   #EBF3FF;   /* brand/company-subtle   */
+    --hds-company-muted:    #C2D9FF;   /* brand/company-muted    */
+    --hds-company-faint:    #EBF3FF;   /* brand/company-faint    */
+    --hds-company-ghost:    #F5F9FF;   /* brand/company-ghost    */
+    /* common.css alias 호환 */
+    --hds-brand-primary:    #0066FF;
+    --hds-brand-strong:     #0052CC;
+    --hds-brand-subtle:     #EBF3FF;
+    --hds-brand-faint:      #F5F9FF;
+
+    /* Background — background/bg-* */
+    --hds-bg-surface:       #FFFFFF;   /* bg-surface (카드·패널) */
+    --hds-bg-page:          #F4F5F7;   /* bg-page (페이지 바닥) */
+    --hds-bg-dim:           rgba(0,0,0,0.48); /* bg-dim (모달 오버레이) */
+    --hds-bg-ghost:         #FAFAFA;   /* bg-ghost  */
+    --hds-bg-faint:         #F7F8FA;   /* bg-faint  */
+    --hds-bg-subtle:        #F4F5F7;   /* bg-subtle */
+    --hds-bg-muted:         #EBEDF0;   /* bg-muted  */
+    --hds-bg-strong:        #DDE0E4;   /* bg-strong */
+    /* common.css alias 호환 */
+    --hds-bg-alt:           #F4F5F7;
+    --bg:                   #F4F5F7;
+
+    /* Typography — typography/black-* (투명도 기반) */
+    --hds-text-100:         rgba(0,0,0,1.00);   /* black-100 기본 텍스트  */
+    --hds-text-80:          rgba(0,0,0,0.80);   /* black-80  보조 텍스트  */
+    --hds-text-60:          rgba(0,0,0,0.60);   /* black-60  설명·캡션   */
+    --hds-text-45:          rgba(0,0,0,0.45);   /* black-45  힌트·플레이스홀더 */
+    --hds-text-disabled:    rgba(0,0,0,0.28);   /* black-disabled 비활성 */
+    /* common.css alias 호환 */
+    --hds-text-primary:     rgba(0,0,0,1.00);
+    --hds-text-secondary:   rgba(0,0,0,0.60);
+    --hds-text-tertiary:    rgba(0,0,0,0.45);
+
+    /* Line — line/* */
+    --hds-line-layout:      #E1E4E8;   /* line-layout  섹션 구분선  */
+    --hds-line-outline:     #C8CBD0;   /* line-outline 컴포넌트 외곽선 */
+    --hds-line-strong:      #979BA2;   /* line-strong  강조 선      */
+    --hds-line-heavy:       #696E75;   /* line-heavy   가장 굵은 경계 */
+
+    /* Interaction — interaction/* */
+    --hds-interaction-selected: rgba(0,102,255,0.08); /* interaction/selected-fill */
+    --hds-role-hover:       rgba(0,0,0,0.04);   /* role/hover    */
+    --hds-role-pressed:     rgba(0,0,0,0.08);   /* role/pressed  */
+    --hds-role-disabled:    rgba(0,0,0,0.04);   /* role/disabled */
+
+    /* ─── Radius — radius/* ───────────────────────────────────
+       ⚠️ HDS 스펙 정정 (2026-06-04):
+       xs=4, sm=8, md=12, lg=16, xl=20, 2xl=32, 3xl=40
+    ─────────────────────────────────────────────────────────── */
+    --hds-radius-none:      0px;
+    --hds-radius-xs:        4px;    /* radius/xs  소형·툴팁     */
+    --hds-radius-sm:        8px;    /* radius/sm  버튼·인풋     */
+    --hds-radius-md:        12px;   /* radius/md  카드          */
+    --hds-radius-lg:        16px;   /* radius/lg  대형 카드     */
+    --hds-radius-xl:        20px;   /* radius/xl  모달          */
+    --hds-radius-2xl:       32px;   /* radius/2xl 히어로        */
+    --hds-radius-3xl:       40px;   /* radius/3xl 대형 이미지   */
+    --hds-radius-full:      900px;  /* radius/full 원형·pill    */
+    /* common.css --radius alias (카드 기준 = md) */
+    --radius:               12px;
+
+    /* ─── Spacing — spacing/* (4px 베이스) ─────────────────── */
+    --hds-spacing-1:        2px;    /* spacing/1  최소 여백     */
+    --hds-spacing-2:        4px;    /* spacing/2  아이콘↔텍스트 */
+    --hds-spacing-3:        6px;    /* spacing/3  소형 패딩     */
+    --hds-spacing-4:        8px;    /* spacing/4  기본 패딩     */
+    --hds-spacing-6:        12px;   /* spacing/6  컴팩트 여백   */
+    --hds-spacing-8:        16px;   /* spacing/8  표준 패딩     */
+    --hds-spacing-10:       20px;   /* spacing/10 수평 패딩     */
+    --hds-spacing-12:       24px;   /* spacing/12 카드 패딩     */
+    --hds-spacing-16:       32px;   /* spacing/16 섹션 간       */
+    --hds-spacing-20:       40px;   /* spacing/20 큰 섹션       */
+    --hds-spacing-24:       48px;   /* spacing/24 레이아웃 블록 */
+    --hds-spacing-32:       64px;   /* spacing/32 페이지 레벨   */
+    --hds-spacing-40:       80px;   /* spacing/40 히어로        */
+    --hds-spacing-48:       96px;   /* spacing/48 대형 레이아웃 */
+    --hds-spacing-50:       100px;  /* spacing/50 최대 여백     */
+
+    /* Shadow — shadow/* */
+    --hds-shadow-xs:        0 1px 2px rgba(0,0,0,0.05);
+    --hds-shadow-sm:        0 1px 4px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
+    --hds-shadow-md:        0 4px 12px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.04);
+    --hds-shadow-lg:        0 8px 24px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04);
+    --hds-shadow-xl:        0 16px 40px rgba(0,0,0,0.14);
+    --hds-shadow-2xl:       0 16px 32px -8px rgba(0,0,0,0.18);
+    /* alias */
+    --hds-shadow-card:      var(--hds-shadow-sm);
+  }
+
+  /* ── 2. HDS Card 컴포넌트 ──────────────────────────────────
+     Spec: background/bg-surface · radius/md(12px) · shadow/sm
+           spacing/12(24px) padding · hover: role/hover overlay
+  ─────────────────────────────────────────────────────────── */
+  .type-card {
+    background: var(--hds-bg-surface) !important;   /* bg-surface 통일 */
+    border-color: var(--hds-line-layout) !important;
+    border-radius: var(--hds-radius-md) !important; /* radius/md = 12px */
+    box-shadow: var(--hds-shadow-sm);
+    border-width: 1px !important;
+  }
+  /* gradient·colored 배경 제거 (inline style 포함) */
+  .type-card.tc-single,
+  .type-card.tc-single-plus,
+  .type-card.tc-hunet,
+  .type-card.extra-card {
+    background: var(--hds-bg-surface) !important;
+  }
+  /* hover: shadow/md + company-primary border */
+  .type-card:hover {
+    border-color: var(--hds-company-primary) !important;
+    box-shadow: var(--hds-shadow-md) !important;
+    transform: none !important;
+    z-index: 2;
+  }
+  /* selected: interaction/selected-fill + company-primary border */
+  .type-card.selected {
+    background: var(--hds-interaction-selected) !important;
+    border-color: var(--hds-company-primary) !important;
+    box-shadow: 0 0 0 3px var(--hds-company-subtle) !important;
+  }
+  /* 불러오기 카드 (dashed) */
+  .type-card.tc-mine,
+  .type-card.tc-hunet {
+    border-style: dashed !important;
+    border-color: var(--hds-line-outline) !important;
+    background: var(--hds-bg-surface) !important;
+    box-shadow: none !important;
+  }
+  .type-card.tc-mine:hover,
+  .type-card.tc-hunet:hover {
+    border-color: var(--hds-company-primary) !important;
+    box-shadow: var(--hds-shadow-sm) !important;
+  }
+  /* iconbox — bg-subtle 기반 */
+  .type-card .iconbox { background: var(--hds-bg-subtle) !important; }
+  .type-card.tc-offline       .iconbox,
+  .type-card.tc-offline-blended .iconbox { background: rgba(255,100,20,0.08) !important; }
+  .type-card.tc-single        .iconbox,
+  .type-card.tc-single-plus   .iconbox  { background: rgba(0,102,255,0.08) !important; }
+  .type-card.tc-online        .iconbox  { background: rgba(79,70,229,0.08)  !important; }
+  .type-card.tc-hybrid        .iconbox  { background: rgba(14,165,115,0.08) !important; }
+  .type-card.tc-mine          .iconbox  { background: rgba(234,88,12,0.08)  !important; }
+  .type-card.tc-hunet         .iconbox  { background: rgba(124,58,237,0.08) !important; }
+  /* 카드 타이포 — body-14(bold) / body-12 */
+  .type-card h3 {
+    color: var(--hds-text-100) !important;
+    font-size: 14px !important; font-weight: 700 !important;
+    letter-spacing: -0.5px; line-height: 1.6;
+  }
+  .type-card p {
+    color: var(--hds-text-60) !important;
+    font-size: 12px !important;
+    letter-spacing: -0.3px; line-height: 1.6;
+  }
+
+  /* ── 3. HDS Input 컴포넌트 ─────────────────────────────────
+     Spec (hds-design.md):
+       enabled  → line/line-outline 외곽선
+       focused  → line/line-heavy 외곽선 (브랜드색 ❌)
+       filled   → line/line-outline 외곽선
+       error    → icon/error-color-round
+       disabled → role/disabled 배경
+     Radius: radius/sm (8px)
+  ─────────────────────────────────────────────────────────── */
+  .step1-name-input {
+    border: 1.5px solid var(--hds-line-outline) !important; /* enabled */
+    border-radius: var(--hds-radius-sm) !important;          /* radius/sm = 8px */
+    background: var(--hds-bg-surface) !important;
+    color: var(--hds-text-100) !important;
+    font-size: 15px !important; font-family: inherit;
+    height: 48px !important;                                  /* size md = spacing/24 */
+    padding: 0 var(--hds-spacing-8) !important;
+    transition: border-color 120ms;
+  }
+  .step1-name-input::placeholder { color: var(--hds-text-45) !important; }
+  /* state: focused → line/line-heavy (HDS 스펙: 브랜드색 아님) */
+  .step1-name-input:focus {
+    border-color: var(--hds-line-heavy) !important;
+    box-shadow: none !important;
+    outline: none;
+  }
+  /* state: filled */
+  .step1-name-input:not(:placeholder-shown):not(:focus) {
+    border-color: var(--hds-line-outline) !important;
+  }
+  /* state: error */
+  .step1-name-input.is-error { border-color: #E53535 !important; }
+
+  /* ── 4. HDS Button 컴포넌트 ────────────────────────────────
+     Spec (hds-components.md):
+       type=primary, background: brand/company-primary
+       size=md(48px), radius: radius/sm (8px)
+       hover: brand/company-strong
+  ─────────────────────────────────────────────────────────── */
+  .wizard-actions .btn-primary,
+  .wizard-actions .btn-primary.btn-lg {
+    height: var(--hds-spacing-24) !important;    /* md = 48px */
+    padding: 0 var(--hds-spacing-12) !important; /* spacing/12 = 24px */
+    font-size: 15px !important; font-weight: 600 !important;
+    letter-spacing: -0.3px;
+    border-radius: var(--hds-radius-sm) !important; /* radius/sm = 8px */
+    background: var(--hds-company-primary) !important;
+    border: 1px solid var(--hds-company-primary) !important;
+    color: #fff !important;
+    box-shadow: none !important;
+    transition: background 120ms, border-color 120ms;
+  }
+  .wizard-actions .btn-primary:hover {
+    background: var(--hds-company-strong) !important;
+    border-color: var(--hds-company-strong) !important;
+  }
+  .wizard-actions .btn-primary:focus-visible {
+    outline: 2px solid var(--hds-company-primary);
+    outline-offset: 2px;
+  }
+  /* 이전 버튼 — type=outline */
+  .wizard-actions .btn:not(.btn-primary) {
+    height: var(--hds-spacing-24) !important;
+    padding: 0 var(--hds-spacing-10) !important;
+    border-radius: var(--hds-radius-sm) !important;
+    border: 1px solid var(--hds-line-outline) !important;
+    color: var(--hds-text-100) !important;         /* outline: black-100 */
+    background: transparent !important;
+    font-size: 14px !important; font-weight: 500 !important;
+  }
+  .wizard-actions .btn:not(.btn-primary):hover {
+    background: var(--hds-role-hover) !important;
+  }
+
+  /* ── 5. HDS Typography ─────────────────────────────────────
+     Spec: Pretendard 서체
+     Heading: letter-spacing -0.7px, line-height 140%
+     Body:    letter-spacing -0.5px, line-height 160%
+  ─────────────────────────────────────────────────────────── */
+  .step1-title {
+    font-size: 20px !important; font-weight: 700 !important;  /* heading-20(bold) */
+    color: var(--hds-text-100) !important;
+    letter-spacing: -0.7px; line-height: 1.4;
+  }
+  .step1-desc {
+    font-size: 14px !important; font-weight: 400 !important;  /* body-14(regular) */
+    color: var(--hds-text-60) !important;
+    letter-spacing: -0.5px; line-height: 1.6;
+  }
+  .step1-field-label {
+    font-size: 14px !important; font-weight: 700 !important;  /* body-14(bold) */
+    color: var(--hds-text-100) !important;
+    letter-spacing: -0.5px;
+  }
+  .step1-field-hint {
+    font-size: 12px !important;                                /* body-12 */
+    color: var(--hds-text-60) !important;
+    letter-spacing: -0.3px; line-height: 1.6;
+  }
+  .title-error-msg {
+    font-size: 12px !important;
+    color: #E53535 !important;  /* icon/error-color-round */
+    letter-spacing: -0.3px;
+  }
+
+  /* ── 6. HDS Chips — chips-item(type=filter) ────────────────
+     Spec: selected(false→true), radius/full
+     XS: 가로 스크롤 / SM+: flex wrap
+  ─────────────────────────────────────────────────────────── */
+  .ep2-chip {
+    height: auto !important;
+    padding: 6px var(--hds-spacing-8) !important; /* 6px 16px — 자연 높이 */
+    border-radius: var(--hds-radius-full) !important;
+    border: 1px solid var(--hds-line-layout) !important;
+    font-size: 12px !important; font-weight: 500 !important;
+    color: var(--hds-text-60) !important;
+    background: var(--hds-bg-surface) !important;
+    letter-spacing: -0.3px; line-height: 1;
+    transition: all 100ms;
+  }
+  .ep2-chip:hover {
+    border-color: var(--hds-company-primary) !important;
+    color: var(--hds-company-primary) !important;
+    background: var(--hds-company-ghost) !important;
+  }
+  .ep2-chip.on {
+    background: var(--hds-company-primary) !important;
+    color: #fff !important;
+    border-color: var(--hds-company-primary) !important;
+    font-weight: 600 !important;
+  }
+
+  /* ── 7. HDS Badge ──────────────────────────────────────────
+     Spec: badge, state=brand/secondary/success/warning/error
+     Radius: radius/xs (4px)
+  ─────────────────────────────────────────────────────────── */
+  .ep2-badge {
+    font-size: 11px !important; font-weight: 700 !important;
+    padding: 2px 6px !important;
+    border-radius: var(--hds-radius-xs) !important; /* radius/xs = 4px */
+    letter-spacing: 0;
+  }
+  .ep2-badge-online  { background: var(--hds-company-subtle) !important; color: var(--hds-company-strong) !important; }
+  .ep2-badge-offline { background: #FFF0EB !important; color: #B84A00 !important; }
+  .ep2-badge-hybrid  { background: #F0EBFF !important; color: #5B0EBE !important; }
+
+  /* ── 8. 선택 요약 바 (step1) ───────────────────────────────
+     company-ghost 배경 / radius/sm
+  ─────────────────────────────────────────────────────────── */
+  .step1-summary {
+    border-radius: var(--hds-radius-sm) !important; /* radius/sm = 8px */
+    background: var(--hds-company-ghost) !important;
+    border: 1px solid var(--hds-company-subtle) !important;
+  }
+  .step1-summary-key { color: var(--hds-text-60) !important; }
+  .step1-summary-val { color: var(--hds-company-primary) !important; font-weight: 700 !important; }
+
+  /* ── 9. Wizard frame ───────────────────────────────────────
+     HDS Card 스펙: radius/md (12px), shadow/xs
+  ─────────────────────────────────────────────────────────── */
+  .wizard-frame {
+    border-radius: var(--hds-radius-md) !important; /* radius/md = 12px */
+    border-color: var(--hds-line-layout) !important;
+    box-shadow: var(--hds-shadow-xs) !important;
+  }
+  </style>
 </head>
 <body>
 
