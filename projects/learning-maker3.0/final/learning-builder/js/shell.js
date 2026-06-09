@@ -90,7 +90,7 @@ function renderPage() {
             ${STEPS.map((step, i) => {
               const st = getStepStatus(step.id);
               const active = i === CURRENT_STEP;
-              return `<div class="snav-item ${active ? 'active' : ''} ${st}"
+              const itemHtml = `<div class="snav-item ${active ? 'active' : ''} ${st}"
                            onclick="navigateTo('${step.href}')" data-step="${i}">
                 <div class="snav-num">${getStepSymbol(step.id, i)}</div>
                 <div class="snav-info">
@@ -98,9 +98,11 @@ function renderPage() {
                   <div class="snav-summary">${getStepSummary(step.id)}</div>
                 </div>
               </div>`;
+              return step.id === 'sec-toc'
+                ? itemHtml + `<div id="leftTocMap">${_leftTocMapHtml()}</div>`
+                : itemHtml;
             }).join('')}
           </div>
-          <div id="leftTocMap">${_leftTocMapHtml()}</div>
         </div>
         <div class="editor-sections">
           <div class="step-view entering" id="stepView">
@@ -158,6 +160,8 @@ function updateNav() {
       : '<span style="color:var(--text-3);font-weight:400">미입력</span>';
     titleEl.className = 'eleft-title' + (S.courseName ? '' : ' placeholder');
   }
+  const tocMapEl = document.getElementById('leftTocMap');
+  if (tocMapEl) tocMapEl.innerHTML = _leftTocMapHtml();
 }
 
 /* ── 과정명 더블클릭 인라인 편집 ── */

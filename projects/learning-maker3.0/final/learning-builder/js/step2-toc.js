@@ -1210,6 +1210,7 @@ let _chapFormState    = null;
 let _chapEditTitle    = '';
 let _chapEditTags     = [];
 let _tocEditMode       = false;       /* 체크박스 편집 모드 */
+let _tocCollapsedChaps = new Set();   /* 접힌 목차 id */
 let _tocSelectedChaps  = new Set();   /* 선택된 목차 id  */
 let _tocSelectedItems  = new Set();   /* 선택된 콘텐츠 id (chapId:idx) */
 
@@ -1233,8 +1234,8 @@ function renderTocStep() {
          onclick="deleteSelectedChaps()" ${selCnt ? '' : 'disabled'}>
          선택 삭제${selCnt ? ` (${selCnt})` : ''}
        </button>`
-    : `<button class="esec-act-btn" onclick="enterTocEditMode()" title="목차 선택 편집">${_PLUS_ICO}</button>
-       <button class="esec-act-btn" onclick="_tocEditFirst()" title="목차명 편집">${_EDIT_ICO}</button>`;
+    : `<button class="esec-act-btn" onclick="addChapter()" title="목차 추가">${_PLUS_ICO}</button>
+       <button class="esec-act-btn" onclick="enterTocEditMode()" title="목차 편집">${_EDIT_ICO}</button>`;
 
   return `
     <div class="esec-header esec-header-flex">
@@ -1248,17 +1249,47 @@ function renderTocStep() {
     ${chapHtml}`;
 }
 
+/* ── 접힌 상태 프리뷰 ── */
+function _tocCollapsedPreview(ch) {
+  const items = ch.items || [];
+  if (items.length === 0) {
+    return `<div class="toc-col-empty" onclick="event.stopPropagation();toggleTocCollapse('${ch.id}')">콘텐츠를 추가하세요</div>`;
+  }
+  const MAX = 5;
+  const shown = items.slice(0, MAX);
+  const rest  = items.length - MAX;
+  const iconsHtml = shown.map((item, i) => {
+    const src = item.typeImg || (_TOC_ALL_TYPES.find(t => t.id === item.typeId)?.img) || null;
+    const inner = src
+      ? `<img src="${src}" alt="${esc(item.typeLabel || '')}">`
+      : `<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%">${_CLIP_SVG_SM}</span>`;
+    return `<div class="toc-col-icon" style="z-index:${MAX - i}">${inner}</div>`;
+  }).join('');
+  const moreHtml = rest > 0
+    ? `<div class="toc-col-more" style="z-index:0">+${rest}</div>`
+    : '';
+  return `
+    <div class="toc-sec-collapsed" onclick="event.stopPropagation();toggleTocCollapse('${ch.id}')">
+      <div class="toc-col-stack">${iconsHtml}${moreHtml}</div>
+      <span class="toc-col-label">${items.length}개 콘텐츠</span>
+    </div>`;
+}
+
 /* ── 목차 섹션 ── */
 function _tocSection(ch, idx) {
-  const items    = ch.items || [];
-  const body     = _tocRenderItems(ch.id, items);
+  const items      = ch.items || [];
   const isSelected = _tocSelectedChaps.has(ch.id);
+  const isCollapsed = _tocCollapsedChaps.has(ch.id);
 
   const leftEl = _tocEditMode
     ? `<input type="checkbox" class="toc-chap-cb" data-chap="${ch.id}"
          ${isSelected ? 'checked' : ''}
          onclick="event.stopPropagation();toggleTocChapSelect('${ch.id}')">`
     : '';
+
+  const toggleEl = `<button class="toc-toggle-btn" onclick="event.stopPropagation();toggleTocCollapse('${ch.id}')">
+    <svg class="toc-toggle-ico${isCollapsed ? ' collapsed' : ''}" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+  </button>`;
 
   const addBtnEl = !_tocEditMode
     ? `<button class="toc-ch-add-btn" data-chap="${ch.id}" data-idx="${items.length}"
@@ -1267,39 +1298,39 @@ function _tocSection(ch, idx) {
        </button>`
     : '';
 
+  const titleHtml = ch.title
+    ? `<span class="toc-sec-name" data-chap="${ch.id}" ondblclick="editTocTitle('${ch.id}',event)">${esc(ch.title)}</span>`
+    : `<span class="toc-sec-name toc-sec-name-empty" data-chap="${ch.id}" ondblclick="editTocTitle('${ch.id}',event)">목차명을 입력해 주세요</span>`;
+
   return `
     <div class="toc-sec${isSelected ? ' toc-sec-selected' : ''}">
       <div class="toc-sec-header" onclick="${_tocEditMode ? `toggleTocChapSelect('${ch.id}')` : ''}">
         ${leftEl}
-        <span class="toc-sec-label">목차</span>
-        <span class="toc-sec-name" data-chap="${ch.id}" ondblclick="editTocTitle('${ch.id}',event)">${esc(ch.title)}</span>
+        ${toggleEl}
+        ${titleHtml}
         ${addBtnEl}
       </div>
-      <div class="toc-sec-divider"></div>
-      <div class="toc-sec-body">${body}</div>
+      <div class="toc-sec-body">${isCollapsed ? _tocCollapsedPreview(ch) : _tocRenderItems(ch.id, items)}</div>
     </div>`;
 }
 
 /* ── 아이템 목록 + 슬롯 ── */
 function _tocRenderItems(chapId, items) {
   if (items.length === 0) {
-    if (_chapFormState && _chapFormState.chapId === chapId) {
-      return `<div class="toc-form-wrap">${_tocBuildForm(_chapFormState.typeId, chapId)}</div>`;
-    }
     return `<div class="toc-add-empty" data-chap="${chapId}" data-idx="0"
       onclick="openTocPicker('${chapId}',0)">+ 콘텐츠 추가</div>`;
   }
 
   let html = '';
   items.forEach((item, idx) => {
-    if (_chapFormState && _chapFormState.chapId === chapId && _chapFormState.editIdx === idx) {
-      html += `<div class="toc-form-wrap">${_tocBuildForm(_chapFormState.typeId, chapId)}</div>`;
-    } else {
-      html += _tocContentCard(item, chapId, idx);
+    if (idx > 0) {
+      html += `<div class="toc-item-sep" data-chap="${chapId}" data-idx="${idx}"
+        onclick="event.stopPropagation();openTocPicker('${chapId}',${idx})"></div>`;
     }
-    html += _tocSlot(chapId, idx + 1);
+    html += _tocContentCard(item, chapId, idx);
   });
-  return html;
+  const lineHtml = items.length > 1 ? `<div class="toc-items-line"></div>` : '';
+  return `<div class="toc-items-wrap">${lineHtml}${html}</div>`;
 }
 
 function _tocSlot(chapId, slotIdx) {
@@ -1312,9 +1343,10 @@ function _tocSlot(chapId, slotIdx) {
 
 /* ── 개별 콘텐츠 카드 ── */
 function _tocContentCard(item, chapId, idx) {
-  const ico = item.typeImg
-    ? `<img src="${item.typeImg}" alt="${esc(item.typeLabel)}">`
-    : `<span style="font-size:11px;font-weight:700;color:var(--text-3)">${esc((item.typeLabel||'')[0])}</span>`;
+  const _typeImgSrc = item.typeImg || (_TOC_ALL_TYPES.find(t => t.id === item.typeId)?.img) || null;
+  const ico = _typeImgSrc
+    ? `<img src="${_typeImgSrc}" alt="${esc(item.typeLabel)}">`
+    : `<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%">${_CLIP_SVG_SM}</span>`;
   const trashSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>`;
   const itemKey = `${chapId}:${idx}`;
   const isItemSel = _tocSelectedItems.has(itemKey);
@@ -1543,6 +1575,14 @@ function _tocEditFirst() {
   if (S.toc.length > 0) editTocTitle(S.toc[0].id);
 }
 
+/* ── 목차 접기/펼치기 ── */
+function toggleTocCollapse(chapId) {
+  if (_tocCollapsedChaps.has(chapId)) _tocCollapsedChaps.delete(chapId);
+  else _tocCollapsedChaps.add(chapId);
+  const sv = document.getElementById('stepView');
+  if (sv) sv.innerHTML = renderTocStep();
+}
+
 /* ── 목차 편집 모드 (체크박스 선택 삭제) ── */
 function enterTocEditMode() {
   _tocEditMode = true;
@@ -1603,6 +1643,7 @@ function editTocTitle(chapId, e) {
   const newEl = document.createElement('input');
   newEl.className   = 'toc-sec-name-input';
   newEl.value       = cur;
+  newEl.placeholder = '목차명을 입력해 주세요';
   newEl.onblur      = () => _saveTocTitle(chapId, newEl.value);
   newEl.onkeydown   = (ev) => {
     if (ev.key === 'Enter')  newEl.blur();
@@ -1610,10 +1651,12 @@ function editTocTitle(chapId, e) {
   };
   el.replaceWith(newEl);
   newEl.focus(); newEl.select();
+  const addBtn = document.querySelector(`.toc-ch-add-btn[data-chap="${chapId}"]`);
+  if (addBtn) addBtn.style.visibility = 'hidden';
 }
 function _saveTocTitle(chapId, val) {
   const ch = S.toc.find(c => c.id === chapId);
-  if (ch) { const t = val.trim(); if (t) ch.title = t; }
+  if (ch) ch.title = val.trim();
   saveState();
   const sv = document.getElementById('stepView');
   if (sv) sv.innerHTML = renderTocStep();
@@ -1621,10 +1664,16 @@ function _saveTocTitle(chapId, val) {
 
 function addChapter() {
   _chapSeq++;
-  S.toc.push({ id: 'ch' + _chapSeq, title: `${S.toc.length + 1}장`, contents: 0, items: [] });
+  const newId = 'ch' + _chapSeq;
+  S.toc.push({ id: newId, title: '', contents: 0, items: [] });
   saveState();
   const sv = document.getElementById('stepView');
   if (sv) { sv.innerHTML = renderTocStep(); updateNav(); }
+  setTimeout(() => {
+    editTocTitle(newId);
+    const el = document.querySelector(`.toc-sec-name-input`);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 0);
 }
 
 function removeChapter(id) {
