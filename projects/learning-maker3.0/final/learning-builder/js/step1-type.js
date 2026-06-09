@@ -34,6 +34,7 @@ function renderStartAndType() {
 function selectType(id) {
   S.creationType = id; saveState(); updateNav();
   document.querySelectorAll('.type-card').forEach(c => c.classList.toggle('selected', c.dataset.typeId === id));
+  setTimeout(() => goNext(), 200);
 }
 function selectTypeImport() {
   S.creationType = 'import'; saveState(); updateNav();

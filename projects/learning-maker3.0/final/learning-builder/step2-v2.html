@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>러닝메이커 v2 — 콘텐츠 구성</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="nav-toggle-btn" onclick="toggleNav()" aria-label="메뉴">
+    <svg width="16" height="14" viewBox="0 0 16 14" fill="none"><path d="M1 1h14M1 7h14M1 13h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+  </button>
+  <div class="logo" onclick="navigateTo('index-v2.html')"><span class="l">LABS</span><span class="n">New EDMS</span></div>
+  <span class="tag">learning-builder v2</span>
+  <div class="spacer"></div>
+  <div class="user">
+    <span class="name">이재길 님</span>
+    <button class="theme-btn" onclick="toggleTheme()">🌙 다크모드</button>
+  </div>
+</header>
+
+<div class="nav-overlay" id="navOverlay" onclick="closeNav()"></div>
+
+<nav class="nav-sidebar">
+  <div class="nav-menu">
+    <div class="nav-group">
+      <div class="nav-item"><span class="lhs">👤 임직원</span></div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-item active"><span class="lhs">⚙️ 러닝메이커</span></div>
+      <div class="nav-sub">
+        <a href="#">러닝메이커 보드</a>
+        <a href="index-v2.html" class="active">새 과정 만들기</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main class="main-wrap">
+  <div id="editorRoot"></div>
+</main>
+
+<div class="fp-backdrop" id="fpBackdrop" onclick="closeFp()">
+  <div class="fp-panel" onclick="event.stopPropagation()">
+    <div class="fp-head">
+      <div class="fp-head-left" id="fpHeadLeft">
+        <span class="fp-title">불러오기</span>
+      </div>
+      <button class="fp-close" onclick="closeFp()" aria-label="닫기">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="fp-body" id="fpBody"></div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/state.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/step1-type.js"></script>
+<script src="js/step2-toc.js"></script>
+<script src="js/step2-toc-v2.js"></script>
+<script src="js/step3-enroll.js"></script>
+<script src="js/step4-extra.js"></script>
+<script src="js/panel-import.js"></script>
+<script src="js/panel-prepkg.js"></script>
+<script src="js/shell-v2.js"></script>
+<script>
+const CURRENT_STEP = 1;
+document.addEventListener('DOMContentLoaded', function() {
+  renderPage();
+  updateNavState();
+});
+</script>
+</body>
+</html>

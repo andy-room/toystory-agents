@@ -14,6 +14,9 @@ let _cregYtResults = [];
 let _cregYtSelected = null;
 let _cregExtResult = null;
 
+/* ── TOC 콘텐츠 패널 상태 ── */
+let _tocFpState = null; /* { chapId, insertIdx, editIdx } | null */
+
 /* ── 콘텐츠 등록 폼 힌트 (동일 폼 기본값, 추후 유형별 확장 예정) ── */
 const CONTENT_TYPE_HINTS = {
   video:      ['3GB 이하의 avi, wmv, mpg, mov, mp4 파일을 등록해 주세요.', '파일 업로드 후 트랜스코딩이 진행되며, 추출된 첫 번째 이미지가 동영상의 기본 섬네일로 자동 등록됩니다.'],
@@ -56,14 +59,44 @@ const CONTENT_TYPE_GROUPS = [
 ];
 
 /* ── micro 유형: 콘텐츠 유형 선택 UI ── */
+const MICRO_CONTENT_TYPES = ['video', 'article', 'attachment', 'youtube'];
+
 function renderContentRegisterStep() {
+  const contents = S.microContents || [];
+
+  /* ── 콘텐츠가 등록된 이후: 타입 그리드 숨기고 리스트만 표시 ── */
+  if (contents.length > 0) {
+    const listHtml = contents.map((item, i) => {
+      const iconHtml = item.typeImg
+        ? `<img src="${item.typeImg}" alt="${esc(item.typeLabel)}">`
+        : `<span style="font-size:11px;font-weight:700;color:var(--text-3)">${esc(item.typeLabel[0])}</span>`;
+      return `<div class="micro-ct-row">
+        <div class="toc-ch-num">${i + 1}</div>
+        <div class="micro-ct-type-icon">${iconHtml}</div>
+        <div class="micro-ct-body">
+          <div class="micro-ct-title">${esc(item.title)}</div>
+          ${item.subtitle ? `<div class="micro-ct-sub">${esc(item.subtitle)}</div>` : ''}
+        </div>
+        <span class="micro-ct-badge">${esc(item.typeLabel)}</span>
+        <button class="toc-ch-del" onclick="removeMicroContent(${i})">삭제</button>
+      </div>`;
+    }).join('');
+
+    return `
+      <div class="esec-header">
+        <div class="esec-num">02 / 04</div>
+        <div class="esec-title">콘텐츠를 구성하세요</div>
+        <div class="esec-desc">등록된 콘텐츠를 확인하고, 필요 시 삭제 후 다시 등록하세요.</div>
+      </div>
+      <div class="micro-content-list">${listHtml}</div>`;
+  }
+
+  /* ── 등록 전: 콘텐츠 유형 선택 그리드 표시 ── */
   const typeLabel = TYPES.find(t => t.id === S.creationType)?.label || '콘텐츠 1개 등록';
-  const allItems = CONTENT_TYPE_GROUPS.flatMap(g => g.items);
+  const allItems = CONTENT_TYPE_GROUPS.flatMap(g => g.items).filter(i => MICRO_CONTENT_TYPES.includes(i.id));
   const itemsHtml = allItems.map(item => {
     const sel = S.contentType === item.id;
-    const iconHtml = item.img
-      ? `<img src="${item.img}" alt="${item.label}"/>`
-      : item.svg;
+    const iconHtml = item.img ? `<img src="${item.img}" alt="${item.label}"/>` : item.svg;
     return `<div class="creg-item${sel ? ' selected' : ''}" data-id="${item.id}" onclick="selectContentType('${item.id}')">
       <div class="creg-icon">${iconHtml}</div>
       <div class="creg-item-label">${item.label}</div>
@@ -91,7 +124,10 @@ function selectContentType(id) {
 }
 
 function openContentPanel(typeId) {
-  const allItems = CONTENT_TYPE_GROUPS.flatMap(g => g.items);
+  const isMicro = S.creationType === 'micro' || S.creationType === 'micro+';
+  const allItems = isMicro
+    ? CONTENT_TYPE_GROUPS.flatMap(g => g.items).filter(i => MICRO_CONTENT_TYPES.includes(i.id))
+    : CONTENT_TYPE_GROUPS.flatMap(g => g.items);
   const cur = allItems.find(i => i.id === typeId);
   const typeLabel = CONTENT_TYPE_LABELS[typeId] || typeId;
 
@@ -724,7 +760,7 @@ function _cfUpload(label, hints) {
 function _cfFooter() {
   return `<div class="creg-form-footer">
     <button class="creg-btn-cancel" onclick="changeContentType()">취소</button>
-    <button class="creg-btn-submit">콘텐츠 등록</button>
+    <button class="creg-btn-submit" onclick="submitMicroContent()">콘텐츠 등록</button>
   </div>`;
 }
 
@@ -1068,10 +1104,114 @@ function cregRenderTags() {
 function changeContentType() {
   closeFp();
   S.contentType = null;
+  _tocFpState = null;
   saveState();
   document.querySelectorAll('.creg-item').forEach(el => el.classList.remove('selected'));
   updateNav();
 }
+
+function _submitTocFp() {
+  const titleEl = document.querySelector('#fpBody .creg-field-title .creg-text-input');
+  const title   = titleEl?.value?.trim() || '';
+  if (!title) { alert('제목을 입력해주세요.'); titleEl?.focus(); return; }
+
+  const typeId    = S.contentType;
+  const typeLabel = CONTENT_TYPE_LABELS[typeId] || typeId;
+  const typeItem  = CONTENT_TYPE_GROUPS.flatMap(g => g.items).find(i => i.id === typeId);
+
+  let subtitle = '';
+  if (typeId === 'youtube' && _cregYtSelected)          subtitle = _cregYtSelected.title || '';
+  else if (typeId === 'attachment' && _cregFiles.length) subtitle = _cregFiles.length === 1 ? (_cregFiles[0].name||'') : `파일 ${_cregFiles.length}개`;
+  else if (typeId === 'image' && _cregImages.length)    subtitle = `이미지 ${_cregImages.length}개`;
+  else if (typeId === 'external' && _cregExtResult)     subtitle = _cregExtResult.title || _cregExtResult.domain || '';
+  else if (typeId === 'article') {
+    const ta = document.querySelector('#fpBody .creg-editor-body');
+    const txt = ta?.value?.trim() || '';
+    if (txt) subtitle = txt.length > 40 ? txt.slice(0, 40) + '…' : txt;
+  }
+
+  const newItem = { id: String(Date.now()), typeId, typeLabel, typeImg: typeItem?.img||null, title, subtitle, tags: _cregTags.slice() };
+
+  const ch = S.toc.find(c => c.id === _tocFpState.chapId);
+  if (!ch) return;
+  if (!ch.items) ch.items = [];
+
+  if (_tocFpState.editIdx >= 0 && _tocFpState.editIdx < ch.items.length) {
+    ch.items[_tocFpState.editIdx] = newItem;
+  } else {
+    const pos = _tocFpState.insertIdx >= 0 ? _tocFpState.insertIdx : ch.items.length;
+    ch.items.splice(pos, 0, newItem);
+  }
+  ch.contents = ch.items.length;
+
+  _tocFpState = null;
+  saveState();
+  closeFp();
+  const sv = document.getElementById('stepView');
+  if (sv) { sv.innerHTML = renderTocStep(); updateNav(); }
+}
+
+function submitMicroContent() {
+  /* TOC 콘텐츠 등록/수정 라우팅 */
+  if (_tocFpState) { _submitTocFp(); return; }
+
+  const titleEl = document.querySelector('#fpBody .creg-field-title .creg-text-input');
+  const title = titleEl?.value?.trim() || '';
+  if (!title) {
+    alert('제목을 입력해주세요.');
+    titleEl?.focus();
+    return;
+  }
+
+  const typeId = S.contentType;
+  const typeLabel = CONTENT_TYPE_LABELS[typeId] || typeId;
+  const typeItem = CONTENT_TYPE_GROUPS.flatMap(g => g.items).find(i => i.id === typeId);
+
+  let subtitle = '';
+  if (typeId === 'youtube' && _cregYtSelected) {
+    subtitle = _cregYtSelected.title;
+  } else if (typeId === 'attachment' && _cregFiles.length) {
+    subtitle = _cregFiles.length === 1 ? _cregFiles[0].name : `파일 ${_cregFiles.length}개`;
+  } else if (typeId === 'article') {
+    const ta = document.querySelector('#fpBody .creg-editor-body');
+    const txt = ta?.value?.trim() || '';
+    if (txt) subtitle = txt.length > 40 ? txt.slice(0, 40) + '…' : txt;
+  }
+
+  if (!S.microContents) S.microContents = [];
+  S.microContents.push({
+    id: String(Date.now()),
+    typeId,
+    typeLabel,
+    typeImg: typeItem?.img || null,
+    title,
+    subtitle,
+    tags: [..._cregTags],
+  });
+
+  S.contentType = null;
+  saveState();
+  closeFp();
+
+  const sv = document.getElementById('stepView');
+  if (sv) { sv.innerHTML = renderTocStep(); updateNav(); }
+}
+
+function removeMicroContent(idx) {
+  S.microContents.splice(idx, 1);
+  saveState();
+  const sv = document.getElementById('stepView');
+  if (sv) { sv.innerHTML = renderTocStep(); updateNav(); }
+}
+
+/* ── 목차·챕터 UI 상태 ── */
+let _chapPickerState  = null;
+let _chapFormState    = null;
+let _chapEditTitle    = '';
+let _chapEditTags     = [];
+let _tocEditMode       = false;       /* 체크박스 편집 모드 */
+let _tocSelectedChaps  = new Set();   /* 선택된 목차 id  */
+let _tocSelectedItems  = new Set();   /* 선택된 콘텐츠 id (chapId:idx) */
 
 /* ── 일반 유형: 목차·챕터 UI ── */
 function renderTocStep() {
@@ -1080,30 +1220,408 @@ function renderTocStep() {
   }
 
   const chapHtml = S.toc.length
-    ? S.toc.map((ch, i) => `
-        <div class="toc-ch-row">
-          <div class="toc-ch-head">
-            <div class="toc-ch-num">${i + 1}</div>
-            <div class="toc-ch-title">${esc(ch.title)}</div>
-            <div class="toc-ch-meta">콘텐츠 ${ch.contents}개</div>
-            <button class="toc-ch-del" onclick="removeChapter('${ch.id}')">삭제</button>
-          </div>
-        </div>`).join('')
-    : `<div style="text-align:center;padding:32px;color:var(--text-3);font-size:13px;background:var(--surface-2);border-radius:var(--r12);margin-bottom:8px">목차가 없습니다. 챕터를 추가해주세요.</div>`;
+    ? S.toc.map((ch, i) => _tocSection(ch, i)).join('')
+    : `<div class="toc-empty-state">목차를 추가해 콘텐츠를 구성해주세요.</div>`;
+
+  const _PLUS_ICO  = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`;
+  const _EDIT_ICO  = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`;
+
+  const selCnt = _tocSelectedChaps.size + _tocSelectedItems.size;
+  const actionBtns = _tocEditMode
+    ? `<button class="esec-act-btn toc-edit-done-btn" onclick="cancelTocEditMode()">취소</button>
+       <button class="esec-act-btn toc-del-sel-btn${selCnt ? ' active' : ''}"
+         onclick="deleteSelectedChaps()" ${selCnt ? '' : 'disabled'}>
+         선택 삭제${selCnt ? ` (${selCnt})` : ''}
+       </button>`
+    : `<button class="esec-act-btn" onclick="enterTocEditMode()" title="목차 선택 편집">${_PLUS_ICO}</button>
+       <button class="esec-act-btn" onclick="_tocEditFirst()" title="목차명 편집">${_EDIT_ICO}</button>`;
 
   return `
-    <div class="esec-header">
-      <div class="esec-num">02 / 04</div>
-      <div class="esec-title">목차와 콘텐츠를 구성하세요</div>
-      <div class="esec-desc">학습 목차를 챕터 단위로 추가하고, 각 챕터에 콘텐츠를 구성하세요.</div>
+    <div class="esec-header esec-header-flex">
+      <div class="esec-header-left">
+        <div class="esec-num">02 / 04</div>
+        <div class="esec-title">목차와 콘텐츠를 구성하세요</div>
+        <div class="esec-desc">목차를 추가하고 각 목차에 콘텐츠를 등록하세요.</div>
+      </div>
+      <div class="esec-header-actions">${actionBtns}</div>
     </div>
-    ${chapHtml}
-    <button class="btn-add-ch" onclick="addChapter()">+ 챕터 추가</button>`;
+    ${chapHtml}`;
+}
+
+/* ── 목차 섹션 ── */
+function _tocSection(ch, idx) {
+  const items    = ch.items || [];
+  const body     = _tocRenderItems(ch.id, items);
+  const isSelected = _tocSelectedChaps.has(ch.id);
+
+  const leftEl = _tocEditMode
+    ? `<input type="checkbox" class="toc-chap-cb" data-chap="${ch.id}"
+         ${isSelected ? 'checked' : ''}
+         onclick="event.stopPropagation();toggleTocChapSelect('${ch.id}')">`
+    : '';
+
+  const addBtnEl = !_tocEditMode
+    ? `<button class="toc-ch-add-btn" data-chap="${ch.id}" data-idx="${items.length}"
+         onclick="event.stopPropagation();openTocPicker('${ch.id}',${items.length})" title="콘텐츠 추가">
+         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+       </button>`
+    : '';
+
+  return `
+    <div class="toc-sec${isSelected ? ' toc-sec-selected' : ''}">
+      <div class="toc-sec-header" onclick="${_tocEditMode ? `toggleTocChapSelect('${ch.id}')` : ''}">
+        ${leftEl}
+        <span class="toc-sec-label">목차</span>
+        <span class="toc-sec-name" data-chap="${ch.id}" ondblclick="editTocTitle('${ch.id}',event)">${esc(ch.title)}</span>
+        ${addBtnEl}
+      </div>
+      <div class="toc-sec-divider"></div>
+      <div class="toc-sec-body">${body}</div>
+    </div>`;
+}
+
+/* ── 아이템 목록 + 슬롯 ── */
+function _tocRenderItems(chapId, items) {
+  if (items.length === 0) {
+    if (_chapFormState && _chapFormState.chapId === chapId) {
+      return `<div class="toc-form-wrap">${_tocBuildForm(_chapFormState.typeId, chapId)}</div>`;
+    }
+    return `<div class="toc-add-empty" data-chap="${chapId}" data-idx="0"
+      onclick="openTocPicker('${chapId}',0)">+ 콘텐츠 추가</div>`;
+  }
+
+  let html = '';
+  items.forEach((item, idx) => {
+    if (_chapFormState && _chapFormState.chapId === chapId && _chapFormState.editIdx === idx) {
+      html += `<div class="toc-form-wrap">${_tocBuildForm(_chapFormState.typeId, chapId)}</div>`;
+    } else {
+      html += _tocContentCard(item, chapId, idx);
+    }
+    html += _tocSlot(chapId, idx + 1);
+  });
+  return html;
+}
+
+function _tocSlot(chapId, slotIdx) {
+  if (_chapFormState && _chapFormState.chapId === chapId && _chapFormState.editIdx < 0 && _chapFormState.insertIdx === slotIdx) {
+    return `<div class="toc-form-wrap">${_tocBuildForm(_chapFormState.typeId, chapId)}</div>`;
+  }
+  /* 피커는 body 앱스 툴팁 — 인라인 렌더 없음 */
+  return _tocAddDivider(chapId, slotIdx);
+}
+
+/* ── 개별 콘텐츠 카드 ── */
+function _tocContentCard(item, chapId, idx) {
+  const ico = item.typeImg
+    ? `<img src="${item.typeImg}" alt="${esc(item.typeLabel)}">`
+    : `<span style="font-size:11px;font-weight:700;color:var(--text-3)">${esc((item.typeLabel||'')[0])}</span>`;
+  const trashSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>`;
+  const itemKey = `${chapId}:${idx}`;
+  const isItemSel = _tocSelectedItems.has(itemKey);
+
+  const cbHtml = _tocEditMode
+    ? `<input type="checkbox" class="toc-chap-cb" ${isItemSel ? 'checked' : ''}
+        onclick="event.stopPropagation();toggleTocItemSelect('${chapId}',${idx})">`
+    : '';
+  const onclickFn = _tocEditMode
+    ? `toggleTocItemSelect('${chapId}',${idx})`
+    : `editTocContent('${chapId}',${idx})`;
+
+  return `<div class="toc-content-card${isItemSel ? ' toc-item-selected' : ''}" onclick="${onclickFn}">
+    ${cbHtml}
+    <div class="toc-cc-icon">${ico}</div>
+    <div class="toc-cc-info">
+      <div class="toc-cc-title">${esc(item.title)}</div>
+      <div class="toc-cc-sub">${esc(item.typeLabel)}${item.subtitle ? ' · ' + esc(item.subtitle) : ''}</div>
+    </div>
+    ${!_tocEditMode ? `<button class="toc-cc-del" onclick="event.stopPropagation();removeTocContent('${chapId}',${idx})">${trashSvg}</button>` : ''}
+  </div>`;
+}
+
+/* ── + 추가 구분선 ── */
+function _tocAddDivider(chapId, insertIdx) {
+  return `<div class="toc-add-divider" data-chap="${chapId}" data-idx="${insertIdx}"
+    onclick="event.stopPropagation();openTocPicker('${chapId}',${insertIdx})">
+    <button class="toc-add-btn" tabindex="-1">+</button>
+  </div>`;
+}
+
+/* ── 타입 피커 (툴팁, body 앱스) ── */
+const _TOC_ALL_TYPES = [
+  {id:'video',      name:'동영상',   img:'images/동영상.png'  },
+  {id:'image',      name:'이미지',   img:'images/이미지.png'  },
+  {id:'article',    name:'아티클',   img:'images/아티클.png'  },
+  {id:'attachment', name:'첨부파일', img:null                 },
+  {id:'youtube',    name:'유튜브',   img:'images/유튜브.png'  },
+  {id:'external',   name:'외부링크', img:'images/외부링크.png'},
+  {id:'offline',    name:'오프라인', img:'images/오프라인.png'},
+  {id:'quiz',       name:'퀴즈',     img:'images/퀴즈.png'    },
+  {id:'exam',       name:'시험',     img:'images/시험.png'    },
+  {id:'task',       name:'과제',     img:'images/과제.png'    },
+  {id:'survey',     name:'설문',     img:'images/설문.png'    },
+  {id:'discuss',    name:'토론',     img:'images/토론.png'    },
+];
+
+function _tocPickerInner(chapId, insertIdx) {
+  const items = _TOC_ALL_TYPES.map(t => {
+    const ico = t.img
+      ? `<div class="toc-picker-icon"><img src="${t.img}" alt="${esc(t.name)}"></div>`
+      : `<div class="toc-picker-icon toc-picker-icon-clip">${_CLIP_SVG_SM}</div>`;
+    return `<div class="toc-picker-item" onclick="pickTocType('${chapId}',${insertIdx},'${t.id}')">
+      ${ico}<span class="toc-picker-label">${esc(t.name)}</span>
+    </div>`;
+  }).join('');
+  return `<div class="toc-type-picker-head">
+    <span class="toc-type-picker-title">콘텐츠 유형 선택</span>
+    <button class="toc-type-picker-close" onclick="closeTocPicker()">×</button>
+  </div>
+  <div class="toc-type-picker-grid">${items}</div>`;
+}
+
+/* ── 인라인 폼 ── */
+function _tocBuildForm(typeId, chapId) {
+  const typeLabel = CONTENT_TYPE_LABELS[typeId] || typeId;
+  const typeItem  = CONTENT_TYPE_GROUPS.flatMap(g => g.items).find(i => i.id === typeId);
+  const iconHtml  = (typeItem && typeItem.img)
+    ? `<img src="${typeItem.img}" alt="${esc(typeLabel)}" width="18" height="18" style="object-fit:contain;vertical-align:middle">`
+    : _CLIP_SVG_SM;
+  const backSvg = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>`;
+
+  let mainField;
+  switch (typeId) {
+    case 'video':      mainField = _cfVideo();      break;
+    case 'article':    mainField = _cfArticle();    break;
+    case 'attachment': mainField = _cfAttachment(); break;
+    case 'youtube':    mainField = _cfYoutube();    break;
+    case 'image':      mainField = _cfImage();      break;
+    case 'external':   mainField = _cfExternal();   break;
+    default:           mainField = _cfGeneric(typeId); break;
+  }
+  return `
+    <div class="v2-form-header">
+      <button class="v2-back-btn" onclick="backTocContent()">${backSvg} 뒤로</button>
+      <div class="v2-form-type-badge">${iconHtml}<span>${esc(typeLabel)}</span></div>
+    </div>
+    <div class="v2-form-body">${_cfTitle()}${mainField}${_cfTags()}</div>
+    <div class="v2-form-footer"><button class="creg-btn-submit" onclick="submitTocContent()">등록</button></div>`;
+}
+
+/* ── 목차 액션 함수 ── */
+function openTocPicker(chapId, insertIdx) {
+  _chapPickerState = { chapId, insertIdx };
+  _chapFormState   = null;
+
+  /* 기존 툴팁·오버레이 제거 */
+  document.getElementById('tocPickerTooltip')?.remove();
+  document.getElementById('tocPickerOverlay')?.remove();
+
+  /* 오버레이 (클릭 외부 시 닫기) */
+  const ov = document.createElement('div');
+  ov.id = 'tocPickerOverlay';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:299';
+  ov.onclick = closeTocPicker;
+  document.body.appendChild(ov);
+
+  /* 툴팁 */
+  const tt = document.createElement('div');
+  tt.id        = 'tocPickerTooltip';
+  tt.className = 'toc-picker-tooltip';
+  tt.innerHTML = _tocPickerInner(chapId, insertIdx);
+  tt.onclick   = e => e.stopPropagation();
+  document.body.appendChild(tt);
+
+  /* 위치 계산 */
+  requestAnimationFrame(() => {
+    const trigger = document.querySelector(
+      `[data-chap="${chapId}"][data-idx="${insertIdx}"]`
+    );
+    if (!trigger) return;
+    const r  = trigger.getBoundingClientRect();
+    const tw = tt.offsetWidth || 300;
+    let left = r.left + r.width / 2 - tw / 2;
+    left = Math.max(16, Math.min(left, window.innerWidth - tw - 16));
+    tt.style.top  = (r.bottom + 6) + 'px';
+    tt.style.left = left + 'px';
+  });
+}
+
+function closeTocPicker() {
+  _chapPickerState = null;
+  document.getElementById('tocPickerTooltip')?.remove();
+  document.getElementById('tocPickerOverlay')?.remove();
+}
+
+function pickTocType(chapId, insertIdx, typeId) {
+  closeTocPicker();
+  _chapFormState   = null;
+  _tocFpState      = { chapId, insertIdx, editIdx: -1 };
+  S.contentType    = typeId;
+  _cregTags = []; _cregFiles = []; _cregImages = []; _cregYtResults = []; _cregYtSelected = null; _cregExtResult = null;
+  saveState();
+  openContentPanel(typeId);
+}
+function editTocContent(chapId, idx) {
+  const ch = S.toc.find(c => c.id === chapId);
+  if (!ch || !ch.items) return;
+  const item = ch.items[idx];
+  if (!item) return;
+  _chapPickerState = null;
+  _chapFormState   = null;
+  _tocFpState      = { chapId, insertIdx: -1, editIdx: idx };
+  S.contentType    = item.typeId;
+  _cregTags = item.tags ? item.tags.slice() : [];
+  _cregFiles = []; _cregImages = []; _cregYtResults = []; _cregYtSelected = null; _cregExtResult = null;
+  saveState();
+  openContentPanel(item.typeId);
+  setTimeout(() => {
+    const el = document.querySelector('#fpBody .creg-field-title .creg-text-input');
+    if (el) el.value = item.title;
+    if (_cregTags.length) cregRenderTags && cregRenderTags();
+  }, 50);
+}
+function backTocContent() {
+  if (_chapFormState && _chapFormState.editIdx < 0) {
+    _chapPickerState = { chapId: _chapFormState.chapId, insertIdx: _chapFormState.insertIdx };
+  } else {
+    _chapPickerState = null;
+  }
+  _chapFormState = null; _chapEditTitle = ''; _chapEditTags = [];
+  const sv = document.getElementById('stepView');
+  if (sv) sv.innerHTML = renderTocStep();
+}
+function removeTocContent(chapId, idx) {
+  const ch = S.toc.find(c => c.id === chapId);
+  if (!ch || !ch.items) return;
+  ch.items.splice(idx, 1);
+  ch.contents = ch.items.length;
+  saveState();
+  const sv = document.getElementById('stepView');
+  if (sv) { sv.innerHTML = renderTocStep(); updateNav(); }
+}
+function submitTocContent() {
+  const titleEl = document.querySelector('.toc-form-wrap .creg-field-title .creg-text-input');
+  const title   = titleEl?.value?.trim() || '';
+  if (!title) { alert('제목을 입력해주세요.'); titleEl?.focus(); return; }
+
+  const typeId    = _chapFormState.typeId;
+  const typeLabel = CONTENT_TYPE_LABELS[typeId] || typeId;
+  const typeItem  = CONTENT_TYPE_GROUPS.flatMap(g => g.items).find(i => i.id === typeId);
+
+  let subtitle = '';
+  if (typeId === 'youtube' && _cregYtSelected)     subtitle = _cregYtSelected.title || '';
+  else if (typeId === 'attachment' && _cregFiles.length) subtitle = _cregFiles.length === 1 ? (_cregFiles[0].name||'') : `파일 ${_cregFiles.length}개`;
+  else if (typeId === 'image' && _cregImages.length)    subtitle = `이미지 ${_cregImages.length}개`;
+  else if (typeId === 'external' && _cregExtResult)     subtitle = _cregExtResult.title || _cregExtResult.domain || '';
+  else if (typeId === 'article') {
+    const ta = document.querySelector('.toc-form-wrap .creg-editor-body');
+    const txt = ta?.value?.trim() || '';
+    if (txt) subtitle = txt.length > 40 ? txt.slice(0, 40) + '…' : txt;
+  }
+
+  const newItem = { id: String(Date.now()), typeId, typeLabel, typeImg: typeItem?.img||null, title, subtitle, tags: _cregTags.slice() };
+
+  const ch = S.toc.find(c => c.id === _chapFormState.chapId);
+  if (!ch) return;
+  if (!ch.items) ch.items = [];
+
+  if (_chapFormState.editIdx >= 0 && _chapFormState.editIdx < ch.items.length) {
+    ch.items[_chapFormState.editIdx] = newItem;
+  } else {
+    const pos = _chapFormState.insertIdx >= 0 ? _chapFormState.insertIdx : ch.items.length;
+    ch.items.splice(pos, 0, newItem);
+  }
+  ch.contents = ch.items.length;
+
+  _chapFormState = null; _chapPickerState = null; _chapEditTitle = ''; _chapEditTags = [];
+  saveState();
+  const sv = document.getElementById('stepView');
+  if (sv) { sv.innerHTML = renderTocStep(); updateNav(); }
+}
+
+/* ── esec-header 편집 버튼 ── */
+function _tocEditFirst() {
+  if (S.toc.length > 0) editTocTitle(S.toc[0].id);
+}
+
+/* ── 목차 편집 모드 (체크박스 선택 삭제) ── */
+function enterTocEditMode() {
+  _tocEditMode = true;
+  _tocSelectedChaps.clear();
+  _tocSelectedItems.clear();
+  const sv = document.getElementById('stepView');
+  if (sv) { sv.innerHTML = renderTocStep(); updateNav(); }
+}
+function cancelTocEditMode() {
+  _tocEditMode = false;
+  _tocSelectedChaps.clear();
+  _tocSelectedItems.clear();
+  const sv = document.getElementById('stepView');
+  if (sv) { sv.innerHTML = renderTocStep(); updateNav(); }
+}
+function toggleTocChapSelect(chapId) {
+  if (_tocSelectedChaps.has(chapId)) _tocSelectedChaps.delete(chapId);
+  else _tocSelectedChaps.add(chapId);
+  const sv = document.getElementById('stepView');
+  if (sv) { sv.innerHTML = renderTocStep(); updateNav(); }
+}
+function toggleTocItemSelect(chapId, idx) {
+  const key = `${chapId}:${idx}`;
+  if (_tocSelectedItems.has(key)) _tocSelectedItems.delete(key);
+  else _tocSelectedItems.add(key);
+  const sv = document.getElementById('stepView');
+  if (sv) { sv.innerHTML = renderTocStep(); updateNav(); }
+}
+function deleteSelectedChaps() {
+  const totalSel = _tocSelectedChaps.size + _tocSelectedItems.size;
+  if (totalSel === 0) return;
+  /* 콘텐츠 항목 삭제 */
+  _tocSelectedItems.forEach(key => {
+    const [chapId, idxStr] = key.split(':');
+    const ch = S.toc.find(c => c.id === chapId);
+    if (ch && ch.items) ch.items[+idxStr] = null;
+  });
+  S.toc.forEach(ch => {
+    if (ch.items) { ch.items = ch.items.filter(Boolean); ch.contents = ch.items.length; }
+  });
+  /* 목차 삭제 */
+  S.toc = S.toc.filter(c => !_tocSelectedChaps.has(c.id));
+  _tocSelectedChaps.clear();
+  _tocSelectedItems.clear();
+  _tocEditMode = false;
+  saveState();
+  const sv = document.getElementById('stepView');
+  if (sv) { sv.innerHTML = renderTocStep(); updateNav(); }
+}
+
+/* ── 목차 타이틀 더블클릭 편집 ── */
+function editTocTitle(chapId, e) {
+  e && e.stopPropagation();
+  const el = document.querySelector(`.toc-sec-name[data-chap="${chapId}"]`);
+  if (!el || el.tagName === 'INPUT') return;
+  const ch  = S.toc.find(c => c.id === chapId);
+  const cur = ch ? ch.title : '';
+  const newEl = document.createElement('input');
+  newEl.className   = 'toc-sec-name-input';
+  newEl.value       = cur;
+  newEl.onblur      = () => _saveTocTitle(chapId, newEl.value);
+  newEl.onkeydown   = (ev) => {
+    if (ev.key === 'Enter')  newEl.blur();
+    if (ev.key === 'Escape') { newEl.value = cur; newEl.blur(); }
+  };
+  el.replaceWith(newEl);
+  newEl.focus(); newEl.select();
+}
+function _saveTocTitle(chapId, val) {
+  const ch = S.toc.find(c => c.id === chapId);
+  if (ch) { const t = val.trim(); if (t) ch.title = t; }
+  saveState();
+  const sv = document.getElementById('stepView');
+  if (sv) sv.innerHTML = renderTocStep();
 }
 
 function addChapter() {
   _chapSeq++;
-  S.toc.push({ id: 'ch' + _chapSeq, title: `챕터 ${S.toc.length + 1}`, contents: 0 });
+  S.toc.push({ id: 'ch' + _chapSeq, title: `${S.toc.length + 1}장`, contents: 0, items: [] });
   saveState();
   const sv = document.getElementById('stepView');
   if (sv) { sv.innerHTML = renderTocStep(); updateNav(); }

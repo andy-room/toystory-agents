@@ -1,14 +1,14 @@
-/* ══ 공통 쉘: 레이아웃 · 스텝 네비게이션 ══
+/* ══ 공통 쉘 v2: 레이아웃 · 스텝 네비게이션 ══
    CURRENT_STEP (0~3) 은 각 HTML 페이지에서 선언
 ══════════════════════════════════════════════ */
 
 const _isMicroType = () => S.creationType === 'micro' || S.creationType === 'micro+';
 
 const STEPS = [
-  { id: 'sec-start',  label: '과정명 · 유형',  href: 'index.html' },
-  { id: 'sec-toc',    get label() { return _isMicroType() ? '콘텐츠 등록' : '목차·콘텐츠'; }, href: 'step2-toc.html' },
-  { id: 'sec-enroll', label: '신청·학습 설정', href: 'step3-enroll.html' },
-  { id: 'sec-extra',  label: '부가 설정',      href: 'step4-extra.html' },
+  { id: 'sec-start',  label: '과정명 · 유형',  href: 'index-v2.html' },
+  { id: 'sec-toc',    get label() { return _isMicroType() ? '콘텐츠 등록' : '목차·콘텐츠'; }, href: 'step2-v2.html' },
+  { id: 'sec-enroll', label: '신청·학습 설정', href: 'step3-enroll-v2.html' },
+  { id: 'sec-extra',  label: '부가 설정',      href: 'step4-extra-v2.html' },
 ];
 
 /* ── 스텝 상태 ── */
@@ -19,7 +19,7 @@ function getStepStatus(id) {
       if (S.courseName.trim().length > 0 && S.courseName.trim().length < 2) return 'no';
       return '';
     case 'sec-toc':
-      if (_isMicroType()) return S.contentType ? 'ok' : '';
+      if (_isMicroType()) return (S.microContents?.length > 0) ? 'ok' : '';
       return S.toc.length ? 'ok' : '';
     case 'sec-enroll': return (S.enroll.immediate || (S.enroll.learnFrom && S.enroll.learnTo)) ? 'ok' : '';
     case 'sec-extra':  return 'ok';
@@ -39,9 +39,15 @@ function getStepSummary(id) {
       return `${nm} · ${tp}`;
     }
     case 'sec-toc':
-      if (_isMicroType()) return S.contentType
-        ? (CONTENT_TYPE_LABELS[S.contentType] || S.contentType)
-        : '유형 미선택';
+      if (_isMicroType()) {
+        const mc = S.microContents;
+        if (mc?.length > 0) {
+          const first = mc[0];
+          const title = first.title.length > 12 ? first.title.slice(0, 12) + '…' : first.title;
+          return `${first.typeLabel}: ${esc(title)}`;
+        }
+        return '미등록';
+      }
       return S.toc.length ? `${S.toc.length}개 챕터` : '목차 없음';
     case 'sec-enroll': return S.enroll.immediate
       ? `즉시 · ${S.enroll.days}일`
@@ -80,13 +86,12 @@ function renderPage() {
         <div class="editor-left-nav">
           <div class="eleft-label">과정명</div>
           <div class="eleft-title${S.courseName ? '' : ' placeholder'}" id="eleftTitle"
-               onclick="_eleftClick()"
-               ondblclick="_eleftDblClick(event)">
+               onclick="navigateTo('${STEPS[0].href}')">
             ${S.courseName
               ? esc(S.courseName)
               : '<span style="color:var(--text-3);font-weight:400">미입력</span>'}
           </div>
-          <div class="section-nav" id="sectionNav">
+          <div class="section-nav">
             ${STEPS.map((step, i) => {
               const st = getStepStatus(step.id);
               const active = i === CURRENT_STEP;
@@ -100,7 +105,6 @@ function renderPage() {
               </div>`;
             }).join('')}
           </div>
-          <div id="leftTocMap">${_leftTocMapHtml()}</div>
         </div>
         <div class="editor-sections">
           <div class="step-view entering" id="stepView">
@@ -118,30 +122,7 @@ function renderPage() {
     </div>`;
 }
 
-/* ── 레프트 TOC 맵 렌더 ── */
-function _leftTocMapHtml() {
-  if (!S.toc || S.toc.length === 0) return '';
-  const chapHtml = S.toc.map((ch, ci) => {
-    const items = ch.items || [];
-    const itemsHtml = items.map(item => {
-      const ico = item.typeImg
-        ? `<img src="${item.typeImg}" alt="" style="width:14px;height:14px;border-radius:3px;object-fit:cover;flex-shrink:0;display:block">`
-        : `<span style="width:14px;height:14px;border-radius:3px;background:var(--surface-3);display:inline-block;flex-shrink:0"></span>`;
-      return `<div class="ltoc-item"><div class="ltoc-item-ico">${ico}</div><span class="ltoc-item-name">${esc(item.title)}</span></div>`;
-    }).join('');
-    return `<div class="ltoc-chapter">
-      <div class="ltoc-ch-row">
-        <span class="ltoc-arrow">▾</span>
-        <span class="ltoc-ch-name">${esc(ch.title)}</span>
-        <span class="ltoc-cnt">${items.length}</span>
-      </div>
-      ${items.length ? `<div class="ltoc-items">${itemsHtml}</div>` : ''}
-    </div>`;
-  }).join('');
-  return `<div class="ltoc-map"><div class="ltoc-label">목차 구성</div>${chapHtml}</div>`;
-}
-
-/* ── 좌측 네비 부분 갱신 (입력 변경 시) ── */
+/* ── 좌측 네비 부분 갱신 ── */
 function updateNav() {
   document.querySelectorAll('.snav-item').forEach((item, i) => {
     const step = STEPS[i], st = getStepStatus(step.id);
@@ -158,35 +139,6 @@ function updateNav() {
       : '<span style="color:var(--text-3);font-weight:400">미입력</span>';
     titleEl.className = 'eleft-title' + (S.courseName ? '' : ' placeholder');
   }
-}
-
-/* ── 과정명 더블클릭 인라인 편집 ── */
-let _eleftClickTimer = null;
-function _eleftClick() {
-  if (_eleftClickTimer) return;
-  _eleftClickTimer = setTimeout(() => {
-    _eleftClickTimer = null;
-    navigateTo(STEPS[0].href);
-  }, 250);
-}
-function _eleftDblClick(e) {
-  e.stopPropagation();
-  if (_eleftClickTimer) { clearTimeout(_eleftClickTimer); _eleftClickTimer = null; }
-  const el = document.getElementById('eleftTitle');
-  if (!el || el.querySelector('input')) return;
-  const cur = S.courseName || '';
-  el.innerHTML = `<input class="eleft-edit-input" id="eleftEditInput"
-    value="${esc(cur)}"
-    onblur="_eleftSave(this.value)"
-    onkeydown="if(event.key==='Enter')this.blur();if(event.key==='Escape'){this.value='${esc(cur)}';this.blur();}"/>`;
-  const inp = document.getElementById('eleftEditInput');
-  if (inp) { inp.focus(); inp.select(); }
-}
-function _eleftSave(val) {
-  const trimmed = val.trim();
-  if (trimmed.length >= 2) S.courseName = trimmed;
-  saveState();
-  updateNav();
 }
 
 /* ── 기타 유틸 ── */
