@@ -5,10 +5,8 @@ const SVG_X     = `<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
 
 const TYPES = [
-  { id:'offline',  bg:'rgba(167,105,230,.05)', imgs:['images/오프라인.png'],                                        label:'오프라인 Only',                   sub:'' },
-  { id:'blended',  bg:'rgba(167,105,230,.05)', imgs:['images/오프라인.png','images/동영상.png'],                    label:'오프라인 + 사전학습·평가',         sub:'' },
-  { id:'micro',    bg:'rgba(240,64,48,.05)',   imgs:['images/유튜브.png'],                                          label:'콘텐츠 1개 등록',                  sub:'(영상, 유튜브, 아티클, 첨부파일 등)' },
-  { id:'micro+',   bg:'rgba(240,64,48,.05)',   imgs:['images/유튜브.png','images/아티클.png'],                      label:'콘텐츠 1개 등록 + 부가 교육자료',  sub:'(교안파일·아티클·이미지 등)' },
+  { id:'offline',  bg:'rgba(167,105,230,.05)', imgs:['images/오프라인.png'],                                        label:'오프라인',                         sub:'' },
+  { id:'micro',    bg:'rgba(26,110,224,.05)',  imgs:['images/유튜브.png'],                                          label:'콘텐츠 등록',                      sub:'(마이크로러닝)' },
   { id:'online',   bg:'rgba(26,110,224,.05)',  imgs:['images/동영상.png','images/퀴즈.png','images/시험.png'],      label:'온라인',                           sub:'(학습콘텐츠+평가)' },
   { id:'hybrid',   bg:'rgba(0,191,140,.05)',   imgs:['images/동영상.png','images/오프라인.png'],                    label:'하이브리드러닝',                   sub:'(온라인+오프라인)' },
   { id:'import',   bg:'rgba(255,100,20,.05)',  imgs:['images/PDF.png'],                                             label:'이전 제작한 과정 불러오기',         sub:'' },

@@ -1133,3 +1133,28 @@ hint: not have locally. This is usually caused by another repository pushing
 hint: to the same ref. You may want to first integrate the remote changes
 hint: (e.g., 'git pull ...') before pushing again.
 hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+[main 336ca55] auto: 2026-06-09 17:00 자동 저장
+ Committer: hunet_syhong <syhong@hunet-soon.local>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file:
+
+    git config --global --edit
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 11 files changed, 1623 insertions(+), 38 deletions(-)
+ create mode 100644 projects/learning-maker3.0/final/learning-builder/index-v2.html
+ create mode 100644 projects/learning-maker3.0/final/learning-builder/js/shell-v2.js
+ create mode 100644 projects/learning-maker3.0/final/learning-builder/js/step2-toc-v2.js
+ create mode 100644 projects/learning-maker3.0/final/learning-builder/step2-v2.html
+ create mode 100644 projects/learning-maker3.0/final/learning-builder/step3-enroll-v2.html
+ create mode 100644 projects/learning-maker3.0/final/learning-builder/step4-extra-v2.html
+remote: This repository moved. Please use the new location:        
+remote:   git@github.com:andy-room/toystory-agents.git        
+To github.com:soonyeons/toystory-agents.git
+   e375a38..336ca55  main -> main

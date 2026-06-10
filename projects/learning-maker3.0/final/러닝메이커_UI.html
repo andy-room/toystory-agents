@@ -1271,7 +1271,7 @@
     padding: 0 24px;
   }
   .type-grid.eight-col {
-    grid-template-columns: repeat(4, 1fr); gap: 18px;
+    grid-template-columns: repeat(3, 1fr); gap: 18px;
     margin-top: 24px;
   }
   .type-grid.eight-col .type-card { min-height: 220px; padding: 22px 14px; gap: 10px; }
@@ -2334,6 +2334,27 @@
     width: 96px; padding: 8px 10px; text-align: center;
   }
 
+  /* 신청·학습기간 인라인 에러 메시지 */
+  .period-error {
+    display: none;
+    margin: -2px 0 2px 98px;
+    color: #dc2626; font-size: 12px;
+  }
+
+  /* 기간 학습 아래 — 오프라인 일정정보 요약 */
+  .offline-schedule-info {
+    margin-top: 10px; padding: 10px 14px;
+    background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px;
+    font-size: 13px; color: var(--text-2); line-height: 1.6;
+  }
+  .offline-schedule-info b { color: #c2410c; font-weight: 700; }
+  .offline-schedule-info ul {
+    margin: 4px 0 0; padding-left: 4px; list-style: none;
+  }
+  .offline-schedule-info ul li { margin-top: 2px; }
+  .offline-schedule-info ul li b { color: var(--text-1); }
+  .offline-schedule-info .no-schedule { color: var(--text-3); }
+
   .opt-inline {
     display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-2);
     cursor: pointer;
@@ -2770,6 +2791,9 @@
   .check-rows .crow.warn .k { color: var(--brand-strong); }
   .check-rows .crow.warn .v { color: var(--brand-strong); }
   .check-rows .crow.warn { background: #fff7ed; }
+  /* 누락 행 우측 영역 — 클릭 시 2단계 해당 목차/콘텐츠 위치로 이동 */
+  .check-rows .crow.warn .v.miss-link { cursor: pointer; }
+  .check-rows .crow.warn .v.miss-link:hover { text-decoration: underline; text-underline-offset: 3px; }
   .checklist { display: flex; flex-direction: column; gap: 8px; }
   .checklist .ci {
     display: flex; gap: 12px; padding: 12px 14px; background: #fff;
@@ -2785,7 +2809,7 @@
 
   /* ------------ Modal ------------ */
   .modal-mask {
-    position: fixed; inset: 0; background: rgba(15, 23, 42, .45); z-index: 120;
+    position: fixed; inset: 0; background: rgba(15, 23, 42, .45); z-index: 300;
     display: none; align-items: center; justify-content: center; padding: 24px;
   }
   .modal-mask.open { display: flex; }
@@ -3693,6 +3717,42 @@
   }
   .file-chip .x:hover { background: var(--text-2); }
 
+  /* ----- 동영상 업로드 진행 상태 (업로드 중) ----- */
+  .video-uploading {
+    border-radius: 12px; background: #f3f4f6;
+    padding: 30px 24px 26px; text-align: center;
+  }
+  .video-uploading .vu-ico {
+    width: 46px; height: 46px; border-radius: 10px;
+    background: #fff; border: 1px solid var(--border);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 22px; color: var(--text-2); margin-bottom: 12px;
+  }
+  .video-uploading .vu-ttl { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+  .video-uploading .vu-bar {
+    height: 6px; border-radius: 999px; background: #d8dbe0; overflow: hidden;
+    max-width: 240px; margin: 0 auto 16px;
+  }
+  .video-uploading .vu-bar-fill {
+    display: block; height: 100%; border-radius: 999px;
+    background: var(--text-2); transition: width .3s ease;
+  }
+  .video-uploading .vu-desc { font-size: 12.5px; color: var(--text-3); line-height: 1.6; margin: 0; }
+
+  /* ----- 동영상 트랜스코딩 진행 상태 ----- */
+  .video-transcoding {
+    border-radius: 12px; background: #f3f4f6;
+    padding: 30px 24px 26px; text-align: center;
+  }
+  .video-transcoding .vt-spinner {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 3px solid #d8dbe0; border-top-color: var(--text-2);
+    margin: 0 auto 14px; animation: vt-spin .8s linear infinite;
+  }
+  @keyframes vt-spin { to { transform: rotate(360deg); } }
+  .video-transcoding .vt-ttl { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.5; margin-bottom: 10px; }
+  .video-transcoding .vt-desc { font-size: 12.5px; color: var(--text-3); line-height: 1.6; margin: 0; }
+
   /* ----- 콘텐츠 수정: 태그 칩 ----- */
   .tag-chip-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
   .tag-chip {
@@ -3735,22 +3795,7 @@
     font-size: 22px; color: var(--text-2); margin-bottom: 10px;
   }
   .img-uploader .ttl { font-size: 14px; font-weight: 700; color: var(--text); }
-  .img-list-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-top: 14px; margin-bottom: 6px;
-  }
-  .img-list-hint { font-size: 12.5px; color: var(--text-3); }
-  .img-view-toggle {
-    display: inline-flex; gap: 2px;
-    background: var(--surface-2); border-radius: 6px; padding: 2px;
-  }
-  .img-view-toggle .vbtn {
-    background: transparent; border: none; cursor: pointer;
-    padding: 4px 8px; font-size: 13px; color: var(--text-3);
-    border-radius: 4px; line-height: 1;
-  }
-  .img-view-toggle .vbtn.is-active { background: var(--text); color: #fff; }
-  .img-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+  .img-list { list-style: none; padding: 0; margin: 14px 0 0; display: flex; flex-direction: column; gap: 6px; }
   .img-list-item {
     display: flex; align-items: center; gap: 10px;
     padding: 8px 10px; background: #fff;
@@ -3770,12 +3815,6 @@
   }
   .img-list-item .img-thumb.thumb-c {
     background: linear-gradient(135deg, #34495e 0%, #1b2a3a 100%);
-  }
-  .img-list-item .rep-badge {
-    position: absolute; top: 2px; left: 2px;
-    background: var(--brand); color: #fff;
-    font-size: 9px; font-weight: 700;
-    padding: 1px 4px; border-radius: 3px; line-height: 1.2;
   }
   .img-list-item .img-name {
     flex: 1; font-size: 13px; color: var(--text);
@@ -3913,6 +3952,70 @@
     cursor: pointer; flex-shrink: 0;
   }
   .yt-select-btn:hover { border-color: var(--brand); color: var(--brand-strong); }
+
+  /* 검색 결과 스크롤 영역 — 결과가 많을 때 스크롤 노출 */
+  .yt-result-scroll {
+    max-height: 348px; overflow-y: auto;
+    margin-right: -4px; padding-right: 4px;
+  }
+  .yt-result-scroll::-webkit-scrollbar { width: 8px; }
+  .yt-result-scroll::-webkit-scrollbar-thumb {
+    background: var(--border-strong); border-radius: 8px;
+  }
+  .yt-result-scroll::-webkit-scrollbar-track { background: transparent; }
+  /* 더보기 버튼 */
+  .yt-more-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    width: 100%; margin-top: 6px; padding: 9px 0;
+    background: #fff; border: 1px solid var(--border); border-radius: 8px;
+    font-size: 13px; font-weight: 600; color: var(--text-2); cursor: pointer;
+  }
+  .yt-more-btn:hover { border-color: var(--brand); color: var(--brand-strong); background: var(--surface-2); }
+  .yt-more-caret { font-size: 11px; line-height: 1; }
+
+  /* 검색 결과 행 — 섬네일+제목 클릭 영역(새 창 미리보기) */
+  .yt-result-open {
+    display: flex; align-items: center; gap: 10px;
+    flex: 1; min-width: 0; cursor: pointer; border-radius: 6px;
+  }
+  .yt-result-open:hover .yt-result-title { color: var(--brand-strong); }
+  .yt-result-open:hover .yt-thumb-play { opacity: 1; }
+  .yt-result-channel { font-size: 11.5px; color: var(--text-3); margin-top: 2px; }
+  /* 섬네일 위 재생 아이콘 */
+  .yt-thumb-play {
+    position: absolute; inset: 0; margin: auto;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: rgba(0,0,0,0.55); opacity: 0.85; transition: opacity .15s;
+  }
+  .yt-thumb-play::after {
+    content: ''; position: absolute; top: 50%; left: 53%; transform: translate(-50%,-50%);
+    border-style: solid; border-width: 5px 0 5px 8px;
+    border-color: transparent transparent transparent #fff;
+  }
+  /* 선택 완료 카드 — 재생 버튼 오버레이 */
+  .yt-play-overlay {
+    position: absolute; inset: 0; margin: auto; z-index: 2;
+    width: 52px; height: 52px; border-radius: 50%;
+    background: rgba(204,0,0,0.92); box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+  }
+  .yt-play-overlay::after {
+    content: ''; position: absolute; top: 50%; left: 54%; transform: translate(-50%,-50%);
+    border-style: solid; border-width: 9px 0 9px 14px;
+    border-color: transparent transparent transparent #fff;
+  }
+  /* 선택 완료 — 인라인 재생 임베드 */
+  .yt-preview-embed {
+    position: relative; aspect-ratio: 16/9;
+    border-radius: 12px; overflow: hidden; background: #000;
+  }
+  .yt-preview-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .yt-embed-close {
+    position: absolute; top: 8px; right: 8px; z-index: 3;
+    width: 28px; height: 28px; border-radius: 50%; border: none; cursor: pointer;
+    background: rgba(0,0,0,0.6); color: #fff; font-size: 16px; line-height: 1;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .yt-embed-close:hover { background: rgba(0,0,0,0.85); }
 
   /* 섬네일 그라데이션 베리에이션 */
   .yt-thumb--a { background: linear-gradient(135deg, #1f2937 0%, #b91c1c 100%); }
@@ -4286,8 +4389,17 @@
     display: flex; align-items: center; gap: 8px; padding: 0 0 14px;
   }
   .sr .search { flex: 1; max-width: 460px; position: relative; }
-  .sr .search input { padding-left: 36px; }
+  .sr .search input { padding-left: 36px; padding-right: 36px; }
   .sr .search .ic { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-3); }
+  /* 검색어 입력 시 노출되는 지우기(x) 버튼 — 클릭 시 검색어만 비우고 하단 검색조건대로 재검색 */
+  .sr .search .clear-q {
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    width: 22px; height: 22px; border: 0; padding: 0; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; background: var(--surface-2); color: var(--text-3);
+    font-size: 13px; line-height: 1;
+  }
+  .sr .search .clear-q:hover { background: var(--border); color: var(--text); }
 
   /* ------------ Enterprise course list table (step 2) ------------ */
   .ent-table-wrap {
@@ -4696,6 +4808,12 @@
   }
   .round-body { display: none; border-top: 1px dashed var(--border); padding: 18px 22px; background: var(--surface-2); }
   .round-card.expanded .round-body { display: block; }
+  /* 단일 회차 — 회차 헤더(붉은 영역) 미노출, 본문(일정)만 바로 표시 */
+  .round-card.single-round .round-header { display: none; }
+  .round-card.single-round .round-body { display: block; border-top: none; }
+  /* drawer 등 compact 컨테이너 — 헤더에 display:grid가 적용되므로 더 높은 특이성으로 덮어씀 */
+  [data-offline-rounds][data-compact] .round-card.single-round .round-header:not(.editing) { display: none; }
+  [data-offline-rounds][data-compact] .round-card.single-round .round-body { display: block; border-top: none; }
 
   /* Inline round edit form */
   .round-header.editing { cursor: default; align-items: center; gap: 14px; padding: 14px 22px; background: #fff; }
@@ -5182,7 +5300,7 @@
 </main>
 
 <!-- ===================== Drawer (Content Add) ===================== -->
-<div class="drawer-mask" id="drawer-mask" onclick="closeDrawer()"></div>
+<div class="drawer-mask" id="drawer-mask" onclick="onDrawerCloseClick()"></div>
 <aside class="drawer" id="drawer" role="dialog" aria-modal="true">
   <div class="dhead">
     <h3>콘텐츠 추가</h3>
@@ -5268,6 +5386,22 @@ let REORDER_BACKUP = null;
 let ACTIVE_TOC_ID = null;   // 클릭으로 활성화된 목차 강조용 (작업 영역 표시)
 let ACTIVE_ROUND_ID = null; // 클릭으로 활성화된 오프라인 회차 카드 강조용
 
+// 날짜 입력(input[type=date]) 연도 4자리 제한 + 연속 입력 자동 이동 — 브라우저 기본 동작은 연도를
+// 최대 6자리(275760년)까지 허용해 4자리를 입력해도 연도 칸에 머문다. max를 9999-12-31로 지정하면
+// 연도 4자리 입력 즉시 월→일로 자동 이동하므로(예: 20260628 → 2026.06.28.) 모든 날짜 입력에 전역 적용한다.
+function enforceDateYearLimit(root) {
+  (root || document).querySelectorAll('input[type="date"]:not([max])').forEach(el => { el.max = '9999-12-31'; });
+}
+new MutationObserver(() => enforceDateYearLimit()).observe(document.documentElement, { childList: true, subtree: true });
+document.addEventListener('DOMContentLoaded', () => enforceDateYearLimit());
+// 안전망 — max 미적용 상태로 연도 5~6자리가 들어온 값은 앞 4자리로 보정
+document.addEventListener('input', (e) => {
+  const el = e.target;
+  if (!el || !el.matches || !el.matches('input[type="date"]')) return;
+  const m = /^(\d{5,6})(-\d{2}-\d{2})$/.exec(el.value);
+  if (m) el.value = m[1].slice(0, 4) + m[2];
+});
+
 // 캡처 단계 클릭 리스너 — 목차 / 오프라인 회차 카드 활성화·해제
 document.addEventListener('click', (e) => {
   const targets = [
@@ -5319,7 +5453,7 @@ const DEFAULTS = {
   courseName: '대리 리더십 전문가 양성과정',
   productionType: 'direct',      // direct | prepackaged | enterprise
   deliveryMode: 'offline',       // online | offline | hybrid | single
-  creationType: 'offline',       // offline | offline-blended | single | single-plus | online | hybrid | mine | hunet
+  creationType: 'offline-blended', // offline-blended | single-plus | online | hybrid | mine | hunet (offline·single 카드 제거됨)
   selectedPackage: null,
   toc: [
     { id: 't1', title: 'Module1. 고객 상품의 이해', expanded: true, draft: true, children: [
@@ -5485,22 +5619,64 @@ function fileIconFor(filename) {
   if (ext === 'zip') return '🗜️';
   return '📎';
 }
+// 유튜브 URL에서 영상 ID 추출 (watch?v= / youtu.be/ / embed/ / shorts/)
+function parseYoutubeId(s) {
+  if (!s) return null;
+  const m = String(s).match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
 function searchYoutube() {
   const q = document.getElementById('ul-yt-query');
   if (q) DRAWER.ytQuery = (q.value || '').trim();
+  // URL 직접 입력 시 → 검색 없이 곧바로 「선택 완료」 단계로 점프
+  const vid = parseYoutubeId(DRAWER.ytQuery);
+  if (vid) {
+    DRAWER.ytUrlPicked = { thumbCls: 'yt-thumb--a', channel: '직접 입력 URL', title: DRAWER.ytQuery, ytId: vid };
+    DRAWER.ytSelectedIdx = -1; // URL 입력 선택을 의미하는 센티넬
+    DRAWER.ytStep = 'selected';
+    DRAWER.ytPlaying = false;
+    DRAWER.ytShowError = false;
+    renderDrawer();
+    return;
+  }
   DRAWER.ytStep = 'results';
+  DRAWER.ytVisibleCount = 10; // 새 검색 시 기본 10개로 초기화
   DRAWER.ytShowError = false;
+  renderDrawer();
+}
+function loadMoreYoutube() {
+  DRAWER.ytVisibleCount = (DRAWER.ytVisibleCount || 10) + 10; // 10개씩 추가 로드
+  renderDrawer();
+}
+// 검색 결과에서 항목 클릭 → 새 창에서 유튜브 미리보기
+function openYoutubeNewWindow(ytId) {
+  if (!ytId) return;
+  window.open('https://www.youtube.com/watch?v=' + encodeURIComponent(ytId), '_blank', 'noopener');
+}
+// 선택 완료 카드 클릭 → 현재 폼 안에서 인라인 재생
+function playYoutubeInline() {
+  DRAWER.ytPlaying = true;
+  renderDrawer();
+}
+function stopYoutubeInline(e) {
+  if (e) e.stopPropagation();
+  DRAWER.ytPlaying = false;
   renderDrawer();
 }
 function selectYoutubeResult(idx) {
   DRAWER.ytStep = 'selected';
   DRAWER.ytSelectedIdx = idx;
+  DRAWER.ytUrlPicked = null;
+  DRAWER.ytPlaying = false;
   DRAWER.ytShowError = false;
   renderDrawer();
 }
 function resetYoutubeSelect() {
   DRAWER.ytStep = 'initial';
   DRAWER.ytSelectedIdx = null;
+  DRAWER.ytUrlPicked = null;
+  DRAWER.ytPlaying = false;
+  DRAWER.ytVisibleCount = 10;
   DRAWER.ytShowError = false;
   renderDrawer();
 }
@@ -5910,9 +6086,11 @@ function renderOpsInstanceTable(item) {
     </div>`;
   }
   // 상단 통계/칩에서 특정 상태로 좁혀진 경우: 해당 상태 인스턴스만 표시 (계약번호는 원본 순번 유지)
-  const list = (OPS_FILTER.phase === 'all')
+  // 표시 순서는 계약번호(originalIdx+1) 내림차순 — 최신 회차가 위로
+  const list = ((OPS_FILTER.phase === 'all')
     ? fullList.map((ins, i) => ({ ins, originalIdx: i }))
-    : fullList.map((ins, i) => ({ ins, originalIdx: i })).filter(x => x.ins.status === OPS_FILTER.phase);
+    : fullList.map((ins, i) => ({ ins, originalIdx: i })).filter(x => x.ins.status === OPS_FILTER.phase))
+    .sort((a, b) => b.originalIdx - a.originalIdx);
   if (list.length === 0) {
     return `<div class="ins-empty">
       <p>현재 필터(${esc(instanceStatusLabel(OPS_FILTER.phase))})에 해당하는 회차가 없습니다.</p>
@@ -5934,8 +6112,8 @@ function renderOpsInstanceTable(item) {
         ${list.map(({ ins, originalIdx }) => `
           <tr class="${(OPS_DRAWER.open && OPS_DRAWER.itemId === item.id && OPS_DRAWER.instanceId === ins.id) ? 'selected' : ''}">
             <td>${originalIdx + 1}</td>
-            <td>${esc(ins.applyFrom || '-')} ~ ${esc(ins.applyTo || '-')}</td>
-            <td>${esc(ins.learnFrom || '-')} ~ ${esc(ins.learnTo || '-')}</td>
+            <td>${esc(fmtDot(ins.applyFrom || '-'))} ~ ${esc(fmtDot(ins.applyTo || '-'))}</td>
+            <td>${esc(fmtDot(ins.learnFrom || '-'))} ~ ${esc(fmtDot(ins.learnTo || '-'))}</td>
             <td><span class="stat-badge ${ins.status}">${instanceStatusLabel(ins.status)}</span></td>
             <td>
               <span class="row-actions">
@@ -6278,8 +6456,8 @@ function renderOpsEnrollAccordion() {
   if (!Array.isArray(e.requiredContents)) e.requiredContents = [];
 
   const periodSummary = (e.mode === 'immediate')
-    ? `<span class="em">즉시 학습</span> · 신청 ${esc(e.applyFrom||'-')} ~ ${esc(e.applyTo||'-')} · 신청일부터 <span class="em">${esc(String(e.days||365))}</span>일 까지 학습`
-    : `<span class="em">기간 학습</span> · 신청 ${esc(e.applyFrom||'-')} ~ ${esc(e.applyTo||'-')} · 학습 ${esc(e.learnFrom||'-')} ~ ${esc(e.learnTo||'-')}`;
+    ? `<span class="em">즉시 학습</span> · 신청 ${esc(fmtDot(e.applyFrom||'-'))} ~ ${esc(fmtDot(e.applyTo||'-'))} · 신청일부터 <span class="em">${esc(String(e.days||365))}</span>일 까지 학습`
+    : `<span class="em">기간 학습</span> · 신청 ${esc(fmtDot(e.applyFrom||'-'))} ~ ${esc(fmtDot(e.applyTo||'-'))} · 학습 ${esc(fmtDot(e.learnFrom||'-'))} ~ ${esc(fmtDot(e.learnTo||'-'))}`;
 
   const completionLabel = (e.completion === 'immediate') ? '즉시 수료' : '학습기간 종료 후 수료';
   const completionDesc  = (e.completion === 'immediate')
@@ -6912,9 +7090,9 @@ function courseCard(item, status, idx) {
   const updatedAt   = isObj && item.updatedAt   ? item.updatedAt   : '';
   const completedAt = isObj && item.completedAt ? item.completedAt : '';
   const updatedEl   = (status !== 'ready' && updatedAt)
-    ? `<span class="updated">업데이트일 ${esc(updatedAt)}</span>` : '';
+    ? `<span class="updated">업데이트일 ${esc(fmtDot(updatedAt))}</span>` : '';
   const completedEl = (status === 'ready' && completedAt)
-    ? `<div class="completed-at">제작완료일 ${esc(completedAt)}</div>` : '';
+    ? `<div class="completed-at">제작완료일 ${esc(fmtDot(completedAt))}</div>` : '';
   const regBtn = (status === 'ready')
     ? `<button class="reg-btn" onclick="event.stopPropagation(); registerOps('${esc(title)}', '${esc(kind)}')">신청·학습설정 등록</button>`
     : '';
@@ -7430,7 +7608,7 @@ function _buildSideOfflineLike(ct) {
     const pre = anchorIdx < 0 ? linked.slice() : linked.slice(0, anchorIdx);
     items.push({ text: '사전학습', indent: 0, isHeader: true });
     if (pre.length === 0) items.push({ text: '미등록', indent: 1, isEmpty: true });
-    else pre.forEach(lc => items.push({ text: lc.title || '제목 없음', indent: 1, draft: !!lc.draft }));
+    else pre.forEach(lc => items.push({ text: lc.title || '제목 없음', indent: 1, draft: isContentDraft(lc) }));
   }
 
   // 오프라인 헤더 (offline-blended에서만 — 회차/일정을 사전·사후학습과 동일하게 한 단계 하위로 표시)
@@ -7487,7 +7665,7 @@ function _buildSideOfflineLike(ct) {
     const post = anchorIdx < 0 ? [] : linked.slice(anchorIdx + 1);
     items.push({ text: '사후학습', indent: 0, isHeader: true });
     if (post.length === 0) items.push({ text: '미등록', indent: 1, isEmpty: true });
-    else post.forEach(lc => items.push({ text: lc.title || '제목 없음', indent: 1, draft: !!lc.draft }));
+    else post.forEach(lc => items.push({ text: lc.title || '제목 없음', indent: 1, draft: isContentDraft(lc) }));
   }
 
   let sub;
@@ -7513,7 +7691,7 @@ function _buildSideSingle() {
   }
   return {
     sub: '메인 콘텐츠 1개',
-    items: [{ text: m.title || '제목 없음', indent: 0, draft: !!m.draft }],
+    items: [{ text: m.title || '제목 없음', indent: 0, draft: isContentDraft(m) }],
     done: !!m.title
   };
 }
@@ -7522,11 +7700,11 @@ function _buildSideSinglePlus() {
   const m = STATE.singleMain;
   const subs = STATE.singleSubs || [];
   const items = [];
-  if (m) items.push({ text: m.title || '제목 없음', indent: 0, draft: !!m.draft });
+  if (m) items.push({ text: m.title || '제목 없음', indent: 0, draft: isContentDraft(m) });
   else items.push({ text: '메인 콘텐츠 미등록', indent: 0, isEmpty: true });
   items.push({ text: '부가교육', indent: 0, isHeader: true });
   if (subs.length === 0) items.push({ text: '미등록', indent: 1, isEmpty: true });
-  else subs.forEach(s => items.push({ text: s.title || '제목 없음', indent: 1, draft: !!s.draft }));
+  else subs.forEach(s => items.push({ text: s.title || '제목 없음', indent: 1, draft: isContentDraft(s) }));
   return {
     sub: m ? `메인 1개 · 부가 ${subs.length}개` : '메인 콘텐츠 미등록',
     items,
@@ -7554,7 +7732,8 @@ function _buildSideToc() {
       text: t.title || '제목 없음',
       indent: 0,
       isHeader: true,
-      draft: !!t.draft,
+      // 목차(섹션) 레벨은 draft 배지 미표시 — draft는 콘텐츠에만 노출 (정책 §1-5-4)
+      draft: false,
       toggleable: !singleToc && children.length > 0,
       open,
       tocId: t.id
@@ -7566,7 +7745,7 @@ function _buildSideToc() {
         children.forEach(c => items.push({
           text: c.title || '제목 없음',
           indent: 1,
-          draft: !!c.draft,
+          draft: isContentDraft(c),
           parentId: t.id,
           contentId: c.id
         }));
@@ -7590,6 +7769,49 @@ function _buildSideToc() {
     done: tocDone,
     tocBased: true
   };
+}
+
+// ============================================================
+//  draft(미완료) 판정 — 단일 출처
+//   정책: wizard-2_커리큘럼_하이브리드_온라인_정책 §1-5-4 draft 배지
+//   - 표시 대상: "콘텐츠" 만. (목차/과정 레벨은 배지 미표시)
+//   - 과정 draft(하위 목차·콘텐츠에 draft 1건 이상 OR 콘텐츠 0건)는
+//     배지로 노출하지 않고 "과정 오픈 시"에만 _canOpenCourse 로 평가한다.
+//
+//   콘텐츠 draft 조건
+//   - [공통] 콘텐츠 명칭만 등록되고 콘텐츠 유형이 연결되지 않은 경우 → draft
+//   - [유형별] 유형은 연결되었으나 필수 구성이 미충족인 경우 → draft
+//
+//   ※ 프로토타입은 유형별 상세 데이터(c.data)가 있을 때만 유형별 조건으로 판정하고,
+//     상세 데이터가 없는 기존 목 콘텐츠는 저장된 c.draft 플래그를 신뢰한다(하위호환).
+//     상세 수치 케이스의 정식 명세는 정책서를 단일 출처로 한다.
+// ============================================================
+function draftByType(type, d) {
+  d = d || {};
+  switch (type) {
+    case '동영상':   // 등록된 동영상이 없거나, 트랜스코딩이 완료되지 않은 경우
+      return !d.hasVideo || (!!d.transcoding && d.transcoding !== 'done');
+    case '이미지':   return !d.imageCount;        // 등록된 이미지가 하나도 없는 경우
+    case '아티클':   return !d.hasText;           // 등록된 텍스트가 없는 경우
+    case '첨부파일': return !d.fileCount;          // 등록된 첨부파일이 하나도 없는 경우
+    case '유튜브':   return !d.youtubeUrl;         // 등록된 유튜브가 없는 경우
+    case '외부링크': return !d.linkUrl;            // 등록된 외부링크 URL이 없는 경우
+    case '오프라인': return !d.roundCount;         // 회차가 하나도 없는 경우
+    case '퀴즈':     // 퀴즈문제가 없거나, 퀴즈 정답개수 > 등록된 퀴즈문항인 경우
+      return !d.quizCount || (d.quizAnswerCount || 0) > d.quizCount;
+    case '시험':     // 시험문제가 없거나, 정답의 합계가 100이 아닌 경우
+      return !d.examCount || (d.examAnswerSum || 0) !== 100;
+    case '과제':     return !d.taskCount;          // 등록된 과제문제가 없는 경우
+    case '설문':     return !d.surveyCount;        // 등록된 설문 문항이 없는 경우
+    case '토론':     return !d.discussionCount;    // 등록된 토론문제가 없는 경우
+    default:         return false;                 // 명세 외 유형은 미정 — 호출부 폴백 사용
+  }
+}
+function isContentDraft(c) {
+  if (!c) return false;
+  if (!c.type) return true;                 // [공통] 명칭만 등록·유형 미연결 → draft
+  if (c.data) return draftByType(c.type, c.data);  // 유형별 상세 데이터가 있으면 조건으로 판정
+  return !!c.draft;                         // 상세 데이터 없는 기존 콘텐츠는 저장 플래그 신뢰
 }
 
 // ============================================================
@@ -7631,7 +7853,7 @@ function _countCourseContents() {
   let draftCount  = 0;
   toc.forEach(t => (t.children || []).forEach(c => {
     contentCount++;
-    if (c.draft) draftCount++;
+    if (isContentDraft(c)) draftCount++;
   }));
   return { tocCount: toc.length, contentCount, draftCount };
 }
@@ -7722,7 +7944,7 @@ function buildStepEnrollSidePanel() {
 
   // 신청기간: applyFrom·applyTo 둘 다 채워졌을 때만 노출
   const applyText = (lp.applyFrom && lp.applyTo)
-    ? `${lp.applyFrom} ~ ${lp.applyTo}`
+    ? `${fmtDot(lp.applyFrom)} ~ ${fmtDot(lp.applyTo)}`
     : '미설정';
 
   // 학습기간:
@@ -7735,7 +7957,7 @@ function buildStepEnrollSidePanel() {
     }
   } else {
     if (lp.learnFrom && lp.learnTo) {
-      learnText = `${lp.learnFrom} ~ ${lp.learnTo}`;
+      learnText = `${fmtDot(lp.learnFrom)} ~ ${fmtDot(lp.learnTo)}`;
     }
   }
 
@@ -7786,6 +8008,16 @@ function sideScrollToTarget(targetId) {
     return;
   }
   _performSideScroll(targetId);
+}
+
+// step 4(최종확인) 누락 행 우측 영역 클릭 → 2단계의 해당 목차/콘텐츠 위치로 이동.
+//  - 콘텐츠 행은 부모 목차가 접혀 있으면 펼친 뒤 스크롤한다(접힘 상태에선 DOM에 숨겨져 스크롤 불가).
+function gotoMissingTarget(tocId, targetId) {
+  if (tocId) {
+    const t = (STATE.toc || []).find(x => x.id === tocId);
+    if (t && !t.expanded) { t.expanded = true; saveState(); }
+  }
+  sideScrollToTarget(targetId);
 }
 
 function _performSideScroll(targetId) {
@@ -7989,9 +8221,11 @@ function wizardActions(step) {
       <button class="btn btn-accent" onclick="finishReorderMode()">저장</button>
     </div>`;
   }
+  // step 2의 '이전'은 등록된 정보 유무에 따라 확인 팝업 분기 (wizardPrevFromStep2)
+  const prevOnclick = step === 2 ? 'wizardPrevFromStep2()' : `go('wizard/${step-1}')`;
   const prev = step === 5
     ? `<button class="btn" onclick="go('dashboard')">‹ 목록</button>`
-    : (step > 1 ? `<button class="btn" onclick="go('wizard/${step-1}')">‹ 이전</button>` : '');
+    : (step > 1 ? `<button class="btn" onclick="${prevOnclick}">‹ 이전</button>` : '');
   let next = '';
   if (step === 4) {
     // step 4(오픈 전 최종확인)는 '🚀 과정 오픈하기' 버튼을 통해서만 다음 단계로 진행
@@ -8019,6 +8253,109 @@ function completeEnrollLearningSettings() {
 
 function nextStep(step) {
   go('wizard/' + (step + 1));
+}
+
+/* ============================================================
+   Step 2 '이전' 버튼 — 등록된 정보 유무에 따른 분기
+   - 비어 있는(초기) 상태: 제작타입 선택(1단계)으로 바로 이동
+   - 이미 작업한 내용이 있는 경우: 확인 팝업 → '신규 과정으로 다시 시작'
+     선택 시 현재 작업 저장 후 새 과정 1단계부터 다시 시작
+============================================================ */
+// 제작유형별 '비어 있는(초기) 상태' 판정 — true면 작업한 내용이 없는 것으로 간주
+function isStep2CleanState() {
+  const ct = STATE.creationType;
+  const dm = STATE.deliveryMode;
+
+  // 오프라인 Only / 오프라인 + 사전학습·평가 : 회차 1개 + 등록된 일정 없음 (+ 블렌디드는 사전/사후 콘텐츠 없음)
+  if (dm === 'offline' || ct === 'offline' || ct === 'offline-blended') {
+    const courses = STATE.offlineCourses || [];
+    if (courses.length > 1) return false;
+    const rounds = (courses[0] && courses[0].rounds) || [];
+    if (rounds.length > 1) return false;
+    const scheduleCount = rounds.reduce((s, r) => s + ((r.schedules || []).length), 0);
+    if (scheduleCount > 0) return false;
+    if (ct === 'offline-blended') {
+      const linked = (STATE.linkedContents || []).filter(x => x.type !== '_offline').length;
+      if (linked > 0) return false;
+    }
+    return true;
+  }
+
+  // 마이크로러닝(콘텐츠 1개) / 콘텐츠 1개 + 부가 교육자료 : 메인 콘텐츠 없음 (+ 부가자료 없음)
+  if (dm === 'single' || ct === 'single' || ct === 'single-plus') {
+    if (STATE.singleMain) return false;
+    if (ct === 'single-plus' && (STATE.singleSubs || []).length > 0) return false;
+    return true;
+  }
+
+  // 온라인 / 하이브리드러닝 : 등록된 콘텐츠 없음 + 등록된 목차 없음(자동 기본 목차 1개 이내)
+  if (dm === 'online' || dm === 'hybrid' || ct === 'online' || ct === 'hybrid') {
+    const toc = STATE.toc || [];
+    if (toc.length > 1) return false;
+    const childCount = toc.reduce((s, m) => s + ((m.children || []).length), 0);
+    if (childCount > 0) return false;
+    return true;
+  }
+
+  // 그 외(불러온 과정 등) — 보수적으로 작업 내용이 있는 것으로 간주
+  return false;
+}
+
+function wizardPrevFromStep2() {
+  if (isStep2CleanState()) {
+    go('wizard/1');
+    return;
+  }
+  openModal({
+    title: '이미 등록된 정보가 있습니다.',
+    body: '이전 제작타입 선택화면으로 이동하면 지금까지 작업한 내용은 저장되고 새로운 과정으로 다시 시작합니다.<br>이동하시겠습니까?',
+    primary: { label: '신규 과정으로 다시 시작', onClick: saveAndRestartNewCourse },
+    secondary: { label: '취소' }
+  });
+}
+
+// 현재 작업 중인 과정을 '제작중인 과정 > 과정생성' 목록에 저장
+function saveCurrentDraftToMakeList() {
+  const createCol = (DASHBOARD_DATA.makeCols || []).find(c => c.id === 'create');
+  if (!createCol) return;
+  const kindMap = {
+    offline: 'offline', 'offline-blended': 'offline',
+    single: 'microlearning', 'single-plus': 'microlearning',
+    online: 'online', hybrid: 'hybrid'
+  };
+  const kind = kindMap[STATE.creationType] || (STATE.deliveryMode === 'single' ? 'microlearning' : STATE.deliveryMode) || 'online';
+  const d = new Date();
+  const ymd = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  const title = (STATE.courseName || '').trim() || '제목 없는 과정';
+  createCol.items.unshift({ title, kind, updatedAt: ymd });
+}
+
+// 새 과정 baseline으로 STATE 초기화 (제작타입 미선택 상태)
+function resetStateForNewCourse() {
+  STATE.courseName = '';
+  STATE.creationType = '';
+  STATE.deliveryMode = '';
+  STATE.productionType = 'direct';
+  STATE.sourceCreationType = undefined;
+  STATE.selectedPackage = null;
+  STATE.toc = [];
+  STATE.offlineCourses = [{ id: 'oc1', name: '', rounds: [{ id: 'r1', no: 1, capacity: '제한없음', expanded: false, schedules: [], linkedContents: [] }] }];
+  STATE.activeOfflineCourseId = 'oc1';
+  STATE.linkedContents = [];
+  STATE.linkedSectionOpen = false;
+  STATE.singleMain = null;
+  STATE.singleSubs = [];
+  STATE.subsSectionOpen = false;
+  STATE._step4Open = [];
+}
+
+function saveAndRestartNewCourse() {
+  closeModal();
+  saveCurrentDraftToMakeList();   // 1) 현재 작업 저장 (제작중인 과정에 추가)
+  resetStateForNewCourse();       // 2) 새 과정으로 초기화
+  saveState();
+  toast('작업 내용이 저장되었습니다. 새 과정을 시작합니다.', 'success');
+  go('wizard/1');                 // 3) 제작타입 선택(1단계)부터 다시 시작
 }
 
 function renderWizard(step) {
@@ -8281,10 +8618,8 @@ function contentTypesBlock(modeId) {
 function typePanel(id) {
   if (id === 'direct') {
     const modes = [
-      { id: 'offline', t: '오프라인 Only', sub: '오프라인 단독 교육을 제작하며, 일정 및 회차를 빠르게 구성할 수 있습니다.', ico: '📅' },
-      { id: 'offline-blended', t: '오프라인<br>+ 사전학습 · 평가', sub: '오프라인 일정 및 회차 설정 후, 사전 및 사후교육 콘텐츠를 추가할 수 있습니다.', ico: '📅' },
-      { id: 'single', t: '콘텐츠 1개 등록<span style="display:block;font-size:11px;font-weight:400;color:#6b7280;margin-top:0;line-height:1.2;">(영상, 유튜브, 아티클, 첨부파일 등)</span>', sub: '1개의 콘텐츠(동영상, 첨부파일, 아티클, 유튜브)를 등록하여 빠르게 제작합니다.', ico: '⚡' },
-      { id: 'single-plus', t: '콘텐츠 1개 등록<br>+ 부가 교육자료<span style="display:block;font-size:11px;font-weight:400;color:#6b7280;margin-top:0;line-height:1.2;">(교안파일·아티클·이미지 등)</span>', sub: '단일 콘텐츠를 등록 후, 연관된 부가 자료를 추가로 등록할 수 있습니다.', ico: '⚡' },
+      { id: 'offline-blended', t: '오프라인', sub: '오프라인 일정 및 회차 설정 후, 사전 및 사후교육 콘텐츠를 추가할 수 있습니다.', ico: '📅' },
+      { id: 'single-plus', t: '콘텐츠 등록<span style="display:block;font-size:11px;font-weight:400;color:#6b7280;margin-top:0;line-height:1.2;">(마이크로러닝)</span>', sub: '단일 콘텐츠를 등록 후, 연관된 부가 자료를 추가로 등록할 수 있습니다.', ico: '⚡' },
       { id: 'online', t: '<span style="font-size:18.5px;">온라인</span><span style="display:block;font-size:11px;font-weight:400;color:#6b7280;margin-top:0;line-height:1.2;">(학습콘텐츠+평가)</span>', sub: '가장 많이 학습하는 온라인과정을 직접 제작할 수 있습니다.', ico: '▶' },
       { id: 'hybrid', t: '<span style="font-size:18.5px;">하이브리드러닝</span><span style="display:block;font-size:11px;font-weight:400;color:#6b7280;margin-top:0;line-height:1.2;">(온라인+오프라인)</span>', sub: '온라인+오프라인 등을 결합하여 다양한 콘텐츠를 활용하여 과정을 제작합니다.', ico: '▶📅' }
     ];
@@ -8319,21 +8654,24 @@ function typePanel(id) {
 /* 무한 스크롤 시연용 페이지 크기 (프로토타입) */
 const ENT_PAGE_SIZE = 8;
 
-/* 기업 제작과정 목록의 한 행(과정) HTML */
-function entRowHtml(c) {
+/* 기업 제작과정 목록의 한 과정 카드 HTML (프리패키지드코스 드로어와 동일한 카드 디자인) */
+function entCardHtml(c) {
   const typeLabel = c.kind === 'online' ? '온라인' : c.kind === 'offline' ? '오프라인' : '하이브리드러닝';
+  // 과정유형 → 썸네일 그라데이션 매핑 (온라인=보라 ki-3 · 오프라인=주황 ki-1 · 하이브리드=초록 ki-2)
+  const ki = c.kind === 'online' ? 3 : c.kind === 'offline' ? 1 : 2;
+  const doneAt = c.createdAt || c.startAt;
   return `
-    <tr>
-      <td class="ttl-cell" onclick="openEnterprisePreview('${c.id}')">
-        <div class="ttl-type"><span class="type-pill t-${c.kind}">${typeLabel}</span></div>
-        <div class="ttl-title">${esc(c.title)}</div>
-        <div class="ttl-cat">${esc(c.category)}</div>
-      </td>
-      <td class="date-cell">${esc(c.startAt)}</td>
-      <td style="text-align:right;">
-        <button class="add-btn" onclick="openEnterprisePreview('${c.id}')">추가 &gt;</button>
-      </td>
-    </tr>
+    <div class="integ-card ki-${ki}" onclick="openEnterprisePreview('${c.id}')">
+      <div class="integ-thumb">
+        <span class="integ-kind-badge">${typeLabel}</span>
+        <span class="integ-play">▶</span>
+      </div>
+      <div class="body">
+        <div class="ttl">${esc(c.title)}</div>
+        <div class="meta">${esc(c.category)}</div>
+        <div class="meta">제작완료일 ${esc(fmtDot(doneAt))}</div>
+      </div>
+    </div>
   `;
 }
 
@@ -8354,22 +8692,11 @@ function enterprisePanel() {
     <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; padding-bottom: 8px;">
       ${tags.map(t => `<span class="chip" onclick="this.classList.toggle('active')">${t}</span>`).join('')}
     </div>
-    <div class="ent-table-wrap">
-      <table class="ent-table">
-        <thead>
-          <tr>
-            <th style="width:65%;">과정명</th>
-            <th style="width:20%;">학습시작일</th>
-            <th style="width:15%; text-align:right;">비고</th>
-          </tr>
-        </thead>
-        <tbody id="ent-tbody">
-          ${firstPage.map(entRowHtml).join('')}
-        </tbody>
-      </table>
-      <div id="ent-loader" class="ent-loader" style="display:${hasMore ? 'flex' : 'none'};">
-        <span class="ent-loader-spin"></span> 불러오는 중…
-      </div>
+    <div class="integ-grid" id="ent-grid">
+      ${firstPage.map(entCardHtml).join('')}
+    </div>
+    <div id="ent-loader" class="ent-loader" style="display:${hasMore ? 'flex' : 'none'};">
+      <span class="ent-loader-spin"></span> 불러오는 중…
     </div>
   `;
 }
@@ -8390,10 +8717,10 @@ function setupEnterpriseInfiniteScroll() {
     if (loader) loader.style.display = 'flex';
     // 추가 로딩을 시각적으로 보여주기 위한 짧은 지연
     setTimeout(function() {
-      const tbody = document.getElementById('ent-tbody');
-      if (!tbody) { DRAWER._entLoading = false; return; }
+      const grid = document.getElementById('ent-grid');
+      if (!grid) { DRAWER._entLoading = false; return; }
       const next = Math.min(DRAWER.entLoaded + ENT_PAGE_SIZE, courses.length);
-      tbody.insertAdjacentHTML('beforeend', courses.slice(DRAWER.entLoaded, next).map(entRowHtml).join(''));
+      grid.insertAdjacentHTML('beforeend', courses.slice(DRAWER.entLoaded, next).map(entCardHtml).join(''));
       DRAWER.entLoaded = next;
       DRAWER._entLoading = false;
       if (DRAWER.entLoaded >= courses.length && loader) loader.style.display = 'none';
@@ -8633,10 +8960,15 @@ function renderStep3Single() {
     'single-plus': '마이크로러닝 콘텐츠 + 부가 교육자료'
   };
   const singleTitle = singleTitleMap[STATE.creationType] || '단일 콘텐츠 구성';
+  const singleDescMap = {
+    'single': '보유한 자료를 등록하여 마이크로러닝을 생성하세요.',
+    'single-plus': '콘텐츠를 등록 후, 콘텐츠의 교안 및 아티클 등 부가 교육자료를 등록하세요.'
+  };
+  const singleDesc = singleDescMap[STATE.creationType] || '콘텐츠를 등록 후, 콘텐츠의 교안 및 아티클 등 부가 교육자료를 등록하세요.';
   return `
     <div class="wizard-intro">
       <h2><span style="color:#fb923c;">⚡</span> ${singleTitle}</h2>
-      <p>콘텐츠를 등록 후, 콘텐츠의 교안 및 아티클 등 부가 교육자료를 등록하세요.</p>
+      <p>${singleDesc}</p>
     </div>
 
     <div class="single-section is-main">
@@ -9154,6 +9486,12 @@ function renderOfflineRounds(course) {
   return course.rounds.map(r => renderRoundCard(course, r)).join('');
 }
 
+// 표시용: ISO 날짜(YYYY-MM-DD)를 YYYY.MM.DD로 치환. 날짜 패턴만 바꾸므로
+// '-'(미설정 fallback)·빈 값·' (요일)' 접미·범위 구분자는 그대로 보존된다.
+// 데이터·input[type=date]·new Date 파싱용 값은 ISO를 유지하고, 화면 출력 직전에만 이 함수를 통과시킨다.
+function fmtDot(s) {
+  return (s == null) ? s : String(s).replace(/(\d{4})-(\d{2})-(\d{2})/g, '$1.$2.$3');
+}
 function formatScheduleDate(d) {
   if (!d) return '';
   // 'YYYY-MM-DD' → 'YYYY.MM.DD' (요일 포함)
@@ -9174,12 +9512,15 @@ function formatScheduleRange(schedules) {
 
 function renderRoundCard(course, round) {
   const hasSchedules = round.schedules && round.schedules.length > 0;
-  const canDelete = (course.rounds || []).length > 1;
+  const roundCount = (course.rounds || []).length;
+  const canDelete = roundCount > 1;
+  // 회차가 1개뿐이면 회차 헤더(붉은 영역)를 숨기고 일정 본문만 표시 (CSS .single-round)
+  const isSingleRound = roundCount <= 1;
   const scheduleBadge = hasSchedules
     ? `<span>일정: <b class="date-range">${formatScheduleRange(round.schedules)}</b><span class="badge-count">${round.schedules.length}건</span></span>`
     : `<span>일정: <span class="badge-warn" onclick="event.stopPropagation(); openScheduleModal('${course.id}','${round.id}')">교육일정 등록 필요</span></span>`;
-  // course.name이 "n회차 - " 접두로 자동 포함된 경우 중복 방지
-  const baseName = (course.name || '').replace(/^\d+\s*회차\s*-\s*/, '') || STATE.courseName || '';
+  // 오프라인 콘텐츠명은 별도 입력 없이 과정명과 동일 — 회차명은 "n회차 - {과정명}"
+  const baseName = (STATE.courseName || '').trim() || (course.name || '').replace(/^\d+\s*회차\s*-\s*/, '') || '';
   const displayTitle = round.title || (baseName ? `${round.no}회차 - ${baseName}` : `${round.no}회차`);
   if (round.editing) {
     return `
@@ -9206,7 +9547,7 @@ function renderRoundCard(course, round) {
     `;
   }
   return `
-    <div class="round-card ${round.expanded?'expanded':''}${ACTIVE_ROUND_ID === round.id ? ' is-active' : ''}" data-round-id="${round.id}">
+    <div class="round-card ${round.expanded?'expanded':''}${isSingleRound ? ' single-round' : ''}${ACTIVE_ROUND_ID === round.id ? ' is-active' : ''}" data-round-id="${round.id}">
       <div class="round-header" onclick="toggleOfflineRound('${course.id}','${round.id}')">
         <div class="lhs">
           <span class="caret">▶</span>
@@ -9730,6 +10071,7 @@ function openScheduleModal(courseId, roundId, scheduleId) {
   }
 
   DRAWER.open = true;
+  DRAWER._dirty = false;
   DRAWER.mode = 'schedule';
   DRAWER.scheduleCtx = { courseId, roundId, scheduleId: scheduleId || null };
   window.__pendingFiles = existing ? JSON.parse(JSON.stringify(existing.files || [])) : [];
@@ -9766,12 +10108,13 @@ function openScheduleModal(courseId, roundId, scheduleId) {
     <div class="form-row"><label class="label">교육정보</label>
       <textarea class="input" id="sc-info" rows="5" placeholder="에디터 영역">${esc(existing?existing.info:'')}</textarea></div>
     <div class="form-row"><label class="label">교안</label>
-      <div class="img-uploader" onclick="addScheduleFileStub()">
+      <div class="img-uploader" id="sc-uploader" onclick="addScheduleFileStub()">
         <div class="add-ic" aria-hidden="true">＋</div>
         <div class="ttl">업로드하려는 파일을 추가해 주세요.</div>
       </div>
+      <div id="sc-upload-progress"></div>
       <ul class="upload-hint">
-        <li>100MB 이하의 JPG, GIF, PNG, XLS, XLXS, PPT, PPTX, DOC, DOCX, HWP, TXT, PDF 파일을 등록해 주세요.</li>
+        <li>100MB 이하의 JPG, JPEG, GIF, PNG, XLS, XLSX, PPT, PPTX, DOC, DOCX, HWP, TXT, PDF, PBIX, ZIP 파일을 등록해 주세요.</li>
         <li>여러 개의 파일을 등록하실 수 있습니다.</li>
       </ul>
       <ul class="file-list" id="sc-files">${(existing && existing.files || []).map((f, i) => `
@@ -9782,7 +10125,7 @@ function openScheduleModal(courseId, roundId, scheduleId) {
         </li>`).join('')}</ul>
     </div>`;
   foot.innerHTML = `
-    <button class="btn" onclick="cancelScheduleDrawer()">취소</button>
+    <button class="btn" onclick="onScheduleCancel()">취소</button>
     <button class="btn btn-primary" onclick="saveScheduleDrawer()">${existing ? '저장' : '추가'}</button>`;
 
   document.getElementById('drawer-mask').classList.add('open');
@@ -9866,9 +10209,13 @@ function restoreDrawerFromSchedule() {
 function addScheduleFileStub() {
   const name = prompt('파일명을 입력하세요 (프로토타입)', '교안_샘플.pdf');
   if (!name) return;
-  window.__pendingFiles = window.__pendingFiles || [];
-  window.__pendingFiles.push({ name });
-  renderScheduleFileList();
+  // 동영상 등록과 동일한 [업로드 중] 진행 표시를 거친 뒤 교안 목록에 추가
+  startFileUploadSim('sc-upload-progress', 'sc-uploader', () => {
+    window.__pendingFiles = window.__pendingFiles || [];
+    window.__pendingFiles.push({ name });
+    renderScheduleFileList();
+    toast('교안 파일이 등록되었습니다.', 'success');
+  });
 }
 
 function renderScheduleFileList() {
@@ -10158,9 +10505,6 @@ function rootContentItem(c) {
          <button class="action-btn click-only-btn" onclick="event.stopPropagation(); openMoveSingleTarget('${c.id}')" title="목차 이동" data-tip="목차 이동" aria-label="목차 이동">
            <span class="ic">${ICON_TOC_MOVE}</span><span class="lbl">목차 이동</span>
          </button>
-         <button class="action-btn click-only-btn" onclick="event.stopPropagation(); copyToc('${c.id}')" title="복사" data-tip="복사" aria-label="복사">
-           <span class="ic">${ICON_COPY}</span><span class="lbl">복사</span>
-         </button>
          ${canUp ? `<button class="action-btn merge-btn" onclick="event.stopPropagation(); mergeUp('${c.id}')" title="위 목차로 합침" data-tip="위 목차로 합침" aria-label="위 목차로 합침">
            <span class="ic">${ICON_MERGE_UP}</span><span class="lbl">위 목차로 합침</span>
          </button>` : ''}
@@ -10194,6 +10538,9 @@ function rootContentItem(c) {
               <span class="ic">⋮</span>
             </button>
             <div class="kebab-pop" role="menu">
+              <button class="kebab-item" onclick="copyToc('${c.id}')" role="menuitem">
+                <span class="ic">${ICON_COPY}</span><span class="lbl">복사</span>
+              </button>
               <button class="kebab-item" onclick="deleteTocConfirm('${c.id}')" role="menuitem">
                 <span class="ic">${ICON_TRASH}</span><span class="lbl">삭제</span>
               </button>
@@ -10209,7 +10556,7 @@ function rootContentItem(c) {
           ${bulkChk}
           ${reorder ? `<span class="reorder-handle" title="드래그하여 순서 변경">⋮⋮</span>` : ''}
           ${titleHtml}
-          ${(c.draft && !reorder) ? `<span class="draft">draft</span>` : ''}
+          ${(isContentDraft(c) && !reorder) ? `<span class="draft">draft</span>` : ''}
         </div>
         ${rowRhs}
       </div>
@@ -10327,9 +10674,6 @@ function tocItem(t) {
          <button class="action-btn click-only-btn" onclick="event.stopPropagation(); openMoveSingleTarget('${t.id}')" title="목차 이동" data-tip="목차 이동" aria-label="목차 이동">
            <span class="ic">${ICON_TOC_MOVE}</span><span class="lbl">목차 이동</span>
          </button>
-         <button class="action-btn click-only-btn" onclick="event.stopPropagation(); copyToc('${t.id}')" title="복사" data-tip="복사" aria-label="복사">
-           <span class="ic">${ICON_COPY}</span><span class="lbl">복사</span>
-         </button>
          ${canUp ? `<button class="action-btn merge-btn" onclick="event.stopPropagation(); mergeUp('${t.id}')" title="위 목차로 합침" data-tip="위 목차로 합침" aria-label="위 목차로 합침">
            <span class="ic">${ICON_MERGE_UP}</span><span class="lbl">위 목차로 합침</span>
          </button>` : ''}
@@ -10366,6 +10710,9 @@ function tocItem(t) {
                 <span class="ic">⋮</span>
               </button>
               <div class="kebab-pop" role="menu">
+                <button class="kebab-item" onclick="copyToc('${t.id}')" role="menuitem">
+                  <span class="ic">${ICON_COPY}</span><span class="lbl">복사</span>
+                </button>
                 <button class="kebab-item" onclick="deleteTocConfirm('${t.id}')" role="menuitem">
                   <span class="ic">${ICON_TRASH}</span><span class="lbl">삭제</span>
                 </button>
@@ -10410,6 +10757,9 @@ function tocItem(t) {
                 <span class="ic">⋮</span>
               </button>
               <div class="kebab-pop" role="menu">
+                <button class="kebab-item" onclick="copyToc('${t.id}')" role="menuitem">
+                  <span class="ic">${ICON_COPY}</span><span class="lbl">복사</span>
+                </button>
                 <button class="kebab-item" onclick="deleteTocConfirm('${t.id}')" role="menuitem">
                   <span class="ic">${ICON_TRASH}</span><span class="lbl">삭제</span>
                 </button>
@@ -10481,6 +10831,9 @@ function tocItem(t) {
                         <span class="ic">⋮</span>
                       </button>
                       <div class="kebab-pop" role="menu">
+                        <button class="kebab-item" onclick="copyChild('${t.id}','${c.id}')" role="menuitem">
+                          <span class="ic">${ICON_COPY}</span><span class="lbl">복사</span>
+                        </button>
                         <button class="kebab-item" onclick="deleteChildConfirm('${t.id}','${c.id}')" role="menuitem">
                           <span class="ic">${ICON_TRASH}</span><span class="lbl">삭제</span>
                         </button>
@@ -10532,9 +10885,6 @@ function tocItem(t) {
                      <button class="action-btn click-only-btn" onclick="event.stopPropagation(); openMoveSingleTarget('${c.id}')" title="목차 이동" data-tip="목차 이동" aria-label="목차 이동">
                        <span class="ic">${ICON_TOC_MOVE}</span><span class="lbl">목차 이동</span>
                      </button>
-                     <button class="action-btn click-only-btn" onclick="event.stopPropagation(); copyChild('${t.id}','${c.id}')" title="복사" data-tip="복사" aria-label="복사">
-                       <span class="ic">${ICON_COPY}</span><span class="lbl">복사</span>
-                     </button>
                      <button class="action-btn" onclick="event.stopPropagation(); deleteChildConfirm('${t.id}','${c.id}')" title="삭제" data-tip="삭제" aria-label="삭제">
                        <span class="ic">${ICON_TRASH}</span><span class="lbl">삭제</span>
                      </button>
@@ -10563,6 +10913,9 @@ function tocItem(t) {
                         <span class="ic">⋮</span>
                       </button>
                       <div class="kebab-pop" role="menu">
+                        <button class="kebab-item" onclick="copyChild('${t.id}','${c.id}')" role="menuitem">
+                          <span class="ic">${ICON_COPY}</span><span class="lbl">복사</span>
+                        </button>
                         <button class="kebab-item" onclick="deleteChildConfirm('${t.id}','${c.id}')" role="menuitem">
                           <span class="ic">${ICON_TRASH}</span><span class="lbl">삭제</span>
                         </button>
@@ -10575,7 +10928,7 @@ function tocItem(t) {
                   ${reorder ? `<span class="reorder-handle" title="드래그하여 순서 변경">⋮⋮</span>` : ''}
                   ${childTypeBlock}
                   <div class="title-block">
-                    <div class="ttl" ${bulk ? '' : `ondblclick="startChildEdit('${t.id}','${c.id}')"`} title="${bulk ? '' : '더블클릭하여 이름 편집'}">${esc(c.title)}${(c.draft && !reorder) ? ` <span class="draft">draft</span>` : ''}</div>
+                    <div class="ttl" ${bulk ? '' : `ondblclick="startChildEdit('${t.id}','${c.id}')"`} title="${bulk ? '' : '더블클릭하여 이름 편집'}">${esc(c.title)}${(isContentDraft(c) && !reorder) ? ` <span class="draft">draft</span>` : ''}</div>
                     ${contentsHtml}
                   </div>
                   ${childActions}
@@ -12350,6 +12703,19 @@ function renderStepCompletion() {
 function renderStep4() {
   applyCreationTypeStep4Defaults();
   const s = STATE.enrollSettings;
+  // 과거 입력으로 연도 5~6자리가 저장된 날짜 값 복구 (YYYY-MM-DD 강제)
+  ['applyFrom', 'applyTo', 'learnFrom', 'learnTo'].forEach(k => {
+    const fixed = normYMD(s.learningPeriod[k]);
+    if (fixed !== (s.learningPeriod[k] || '')) { s.learningPeriod[k] = fixed; saveState(); }
+  });
+  // 과거 입력으로 소수점·범위 밖 값이 저장된 학습 가능일수 복구 (1~10,000 정수, 무효 시 디폴트 365)
+  {
+    const d = s.learningPeriod.days;
+    if (!Number.isInteger(d) || d < 1 || d > 10000) {
+      s.learningPeriod.days = (Number.isFinite(+d) && Math.floor(+d) >= 1) ? Math.min(Math.floor(+d), 10000) : 365;
+      saveState();
+    }
+  }
   const openKeys = step4OpenKeys();
   const isOpen = (k) => openKeys.includes(k);
   // 신청·학습설정 화면(wizard/5) — 수료 항목은 wizard/3(과정 수료설정)로 이동했으므로 제외
@@ -12358,8 +12724,8 @@ function renderStep4() {
       key: 'learningPeriod',
       label: 'ᆞ신청 및 학습기간',
       summary: s.learningPeriod.immediate
-        ? `<span class="em">즉시 학습</span> · 신청 ${esc(s.learningPeriod.applyFrom||'-')} ~ ${esc(s.learningPeriod.applyTo||'-')} · 신청일부터 <span class="em">${s.learningPeriod.days}</span>일 까지 학습`
-        : `<span class="em">기간 학습</span> · 신청 ${esc(s.learningPeriod.applyFrom||'-')} ~ ${esc(s.learningPeriod.applyTo||'-')} · 학습 ${esc(s.learningPeriod.learnFrom||'-')} ~ ${esc(s.learningPeriod.learnTo||'-')}`,
+        ? `<span class="em">즉시 학습</span> · 신청 ${esc(fmtDot(s.learningPeriod.applyFrom||'-'))} ~ ${esc(fmtDot(s.learningPeriod.applyTo||'-'))} · 신청일부터 <span class="em">${s.learningPeriod.days}</span>일 까지 학습`
+        : `<span class="em">기간 학습</span> · 신청 ${esc(fmtDot(s.learningPeriod.applyFrom||'-'))} ~ ${esc(fmtDot(s.learningPeriod.applyTo||'-'))} · 학습 ${esc(fmtDot(s.learningPeriod.learnFrom||'-'))} ~ ${esc(fmtDot(s.learningPeriod.learnTo||'-'))}`,
       body: editPanelLearningPeriod
     },
     {
@@ -12458,6 +12824,47 @@ function toggleStep4(key) {
 }
 
 /* === 학습기간 편집 패널 === */
+/* wizard/5 「기간 학습」 아래 — 오프라인 일정정보 표시
+   2단계 등록 콘텐츠에 오프라인이 포함된 경우(오프라인 Only · 오프라인+사전학습·평가 · 하이브리드러닝 내 오프라인 콘텐츠)
+   등록된 일정을 회차 기준으로 요약 노출. 모든 회차에 일정이 없으면 영역 자체를 표시하지 않음. */
+function hasOfflineContentInCurriculum() {
+  if (STATE.creationType === 'offline' || STATE.creationType === 'offline-blended') return true;
+  if (STATE.creationType === 'hybrid') {
+    for (const t of (STATE.toc || [])) {
+      if (t.isContent && t.type === '오프라인') return true;
+      for (const c of (t.children || [])) if (c.type === '오프라인') return true;
+    }
+  }
+  return false;
+}
+function renderOfflineScheduleInfo() {
+  if (!hasOfflineContentInCurriculum()) return '';
+  const list = (STATE.offlineCourses || []).filter(c => c.id !== '_ops_drawer');
+  const course = list.find(c => c.id === STATE.activeOfflineCourseId) || list[0];
+  if (!course) return '';
+  const rounds = course.rounds || [];
+  const totalSchedules = rounds.reduce((n, r) => n + (r.schedules || []).filter(s => s.date).length, 0);
+  if (totalSchedules === 0) return ''; // 모든 회차에 일정 없음 → 미표시
+  // 회차 1개 표시법: 가장 빠른 일자 ~ 가장 늦은 일자 등 N건 (모든 일자 동일 시 단일 일자)
+  const roundText = (r) => {
+    const dates = (r.schedules || []).map(s => s.date).filter(Boolean).sort();
+    if (dates.length === 0) return '<span class="no-schedule">등록된 일정이 없습니다.</span>';
+    const min = dates[0], max = dates[dates.length - 1];
+    const range = (min === max) ? esc(fmtDot(min)) : `${esc(fmtDot(min))} ~ ${esc(fmtDot(max))}`;
+    return `${range} 등 ${dates.length}건의 일정이 있습니다.`;
+  };
+  if (rounds.length === 1) {
+    return `<div class="offline-schedule-info"><b>오프라인 일정정보</b> : ${roundText(rounds[0])}</div>`;
+  }
+  return `
+    <div class="offline-schedule-info">
+      <b>오프라인 일정정보</b>
+      <ul>
+        ${rounds.map((r, i) => `<li><b>${r.no || (i + 1)}차</b> : ${roundText(r)}</li>`).join('')}
+      </ul>
+    </div>`;
+}
+
 function editPanelLearningPeriod() {
   const s = STATE.enrollSettings.learningPeriod;
   const offlineOnly = isOfflineCreationType();
@@ -12472,18 +12879,20 @@ function editPanelLearningPeriod() {
         <div class="opt-controls">
           <div class="period-grid">
             <div class="period-lbl">ᆞ신청기간</div>
-            <input type="date" class="input" id="lp-imm-apply-from" value="${esc(s.applyFrom||'')}" ${s.immediate?'':'disabled'}/>
+            <input type="date" class="input" id="lp-imm-apply-from" value="${esc(s.applyFrom||'')}" ${s.immediate?'':'disabled'} onchange="lpSyncDateMins()"/>
             <span>~</span>
-            <input type="date" class="input" id="lp-imm-apply-to" value="${esc(s.applyTo||'')}" ${s.immediate?'':'disabled'}/>
+            <input type="date" class="input" id="lp-imm-apply-to" value="${esc(s.applyTo||'')}" ${s.immediate?'':'disabled'} ${s.applyFrom?`min="${esc(s.applyFrom)}"`:''}/>
           </div>
+          <div class="period-error" id="lp-err-imm-apply"></div>
           <div class="period-grid lp-imm-learn">
             <div class="period-lbl">ᆞ학습기간</div>
             <div class="lp-imm-learn-text">
               신청일부터
-              <input type="number" class="input inline-num" id="lp-days" min="1" max="365" value="${s.days}" ${s.immediate?'':'disabled'} />
+              <input type="text" inputmode="numeric" maxlength="5" class="input inline-num" id="lp-days" value="${s.days}" ${s.immediate?'':'disabled'} oninput="onLpDaysInput(this)" onblur="onLpDaysBlur(this)" />
               <b>일 까지 학습</b>
             </div>
           </div>
+          <div class="period-error" id="lp-err-days"></div>
         </div>
       </div>
     </label>
@@ -12497,16 +12906,19 @@ function editPanelLearningPeriod() {
         <div class="opt-controls">
           <div class="period-grid">
             <div class="period-lbl">ᆞ신청기간</div>
-            <input type="date" class="input" id="lp-apply-from" value="${esc(s.applyFrom||'')}" ${s.immediate?'disabled':''}/>
+            <input type="date" class="input" id="lp-apply-from" value="${esc(s.applyFrom||'')}" ${s.immediate?'disabled':''} onchange="lpSyncDateMins()"/>
             <span>~</span>
-            <input type="date" class="input" id="lp-apply-to" value="${esc(s.applyTo||'')}" ${s.immediate?'disabled':''}/>
+            <input type="date" class="input" id="lp-apply-to" value="${esc(s.applyTo||'')}" ${s.immediate?'disabled':''} ${s.applyFrom?`min="${esc(s.applyFrom)}"`:''}/>
           </div>
+          <div class="period-error" id="lp-err-apply"></div>
           <div class="period-grid">
             <div class="period-lbl">ᆞ학습기간</div>
-            <input type="date" class="input" id="lp-learn-from" value="${esc(s.learnFrom||'')}" ${s.immediate?'disabled':''}/>
+            <input type="date" class="input" id="lp-learn-from" value="${esc(s.learnFrom||'')}" ${s.immediate?'disabled':''} ${s.applyFrom?`min="${esc(s.applyFrom)}"`:''} onchange="lpSyncDateMins()"/>
             <span>~</span>
-            <input type="date" class="input" id="lp-learn-to" value="${esc(s.learnTo||'')}" ${s.immediate?'disabled':''}/>
+            <input type="date" class="input" id="lp-learn-to" value="${esc(s.learnTo||'')}" ${s.immediate?'disabled':''} ${s.learnFrom?`min="${esc(s.learnFrom)}"`:''}/>
           </div>
+          <div class="period-error" id="lp-err-learn"></div>
+          ${renderOfflineScheduleInfo()}
         </div>
       </div>
     </label>
@@ -12532,25 +12944,83 @@ function onLPModeChange() {
     if (ck) r.classList.toggle('selected', ck.checked);
   });
 }
+/* 신청·학습기간 캘린더 제약 동기화 — 신청 시작일 변경 시 신청 종료일·학습 시작일의 min,
+   학습 시작일 변경 시 학습 종료일의 min 갱신 (시작일 포함 이후만 선택 가능) */
+function lpSyncDateMins() {
+  const set = (id, v) => { const el = document.getElementById(id); if (el) { if (v) el.min = v; else el.removeAttribute('min'); } };
+  const af = document.getElementById('lp-apply-from');
+  if (af) { set('lp-apply-to', af.value); set('lp-learn-from', af.value); }
+  const lf = document.getElementById('lp-learn-from');
+  if (lf) set('lp-learn-to', lf.value);
+  const iaf = document.getElementById('lp-imm-apply-from');
+  if (iaf) set('lp-imm-apply-to', iaf.value);
+}
+/* 학습 가능일수(즉시 학습) 입력 — 숫자만 허용(소수점·음수·문자 차단), 1~10,000 범위로 즉시 보정 */
+function onLpDaysInput(el) {
+  let v = el.value.replace(/[^0-9]/g, '');   // 소수점(.)·음수(-)·e 등 숫자 외 문자 제거
+  if (v !== '' && +v > 10000) v = '10000';   // 상한 즉시 클램프
+  el.value = v;
+}
+function onLpDaysBlur(el) {
+  if (el.value === '') return;               // 빈 값은 저장 시 「학습일을 입력해주세요.」로 검증
+  const n = +el.value;
+  el.value = n < 1 ? '1' : String(n);        // 선행 0 정리 + 하한 보정 (예: 0 → 1, 007 → 7)
+}
+/* 날짜 문자열 정규화 — 연도가 5~6자리로 들어온 값을 앞 4자리로 잘라 YYYY-MM-DD로 보정 */
+function normYMD(v) {
+  const m = /^(\d{5,6})(-\d{2}-\d{2})$/.exec(v || '');
+  return m ? m[1].slice(0, 4) + m[2] : (v || '');
+}
+/* 신청·학습기간 저장 검증 — 실패 시 토스트 + 인라인 에러 표시 후 첫 실패 지점에서 중단 */
+function lpShowError(errId, inputId, msg) {
+  document.querySelectorAll('.period-error').forEach(e => { e.textContent = ''; e.style.display = 'none'; });
+  const errEl = document.getElementById(errId);
+  if (errEl) { errEl.textContent = msg; errEl.style.display = 'block'; }
+  const inputEl = document.getElementById(inputId);
+  if (inputEl) inputEl.focus();
+  toast(msg, 'warn');
+}
 function saveLearningPeriod() {
   const s = STATE.enrollSettings.learningPeriod;
-  s.immediate = document.querySelector('input[name="lp-mode"]:checked').value === 'immediate';
-  const daysEl = document.getElementById('lp-days');
-  s.days = daysEl ? (+daysEl.value || 365) : s.days;
-  if (s.immediate) {
+  const immediate = document.querySelector('input[name="lp-mode"]:checked').value === 'immediate';
+  document.querySelectorAll('.period-error').forEach(e => { e.textContent = ''; e.style.display = 'none'; });
+
+  if (immediate) {
     const iaf = document.getElementById('lp-imm-apply-from');
     const iat = document.getElementById('lp-imm-apply-to');
-    if (iaf) s.applyFrom = iaf.value;
-    if (iat) s.applyTo = iat.value;
+    const daysEl = document.getElementById('lp-days');
+    // 신청기간 — 시작일·종료일 필수, 종료일 ≥ 시작일
+    if (iaf && !iaf.value) { lpShowError('lp-err-imm-apply', 'lp-imm-apply-from', '신청기간 시작일을 입력해주세요.'); return; }
+    if (iat && !iat.value) { lpShowError('lp-err-imm-apply', 'lp-imm-apply-to', '신청기간 종료일을 입력해주세요.'); return; }
+    if (iaf && iat && iat.value < iaf.value) { lpShowError('lp-err-imm-apply', 'lp-imm-apply-to', '종료일은 시작일 이후로 입력해주세요.'); return; }
+    // 학습 가능일수 — 필수, 1 이상의 정수(1~10,000)
+    const raw = daysEl ? daysEl.value.trim() : '';
+    const n = Number(raw);
+    if (!raw) { lpShowError('lp-err-days', 'lp-days', '학습일을 입력해주세요.'); return; }
+    if (!Number.isInteger(n) || n < 1 || n > 10000) { lpShowError('lp-err-days', 'lp-days', '학습일은 1 이상 10,000 이하의 숫자를 입력해주세요.'); return; }
+    s.immediate = true;
+    s.days = n;
+    if (iaf) s.applyFrom = normYMD(iaf.value);
+    if (iat) s.applyTo = normYMD(iat.value);
   } else {
     const af = document.getElementById('lp-apply-from');
     const at = document.getElementById('lp-apply-to');
     const lf = document.getElementById('lp-learn-from');
     const lt = document.getElementById('lp-learn-to');
-    if (af) s.applyFrom = af.value;
-    if (at) s.applyTo = at.value;
-    if (lf) s.learnFrom = lf.value;
-    if (lt) s.learnTo = lt.value;
+    // 신청기간 — 시작일·종료일 필수, 종료일 ≥ 시작일
+    if (af && !af.value) { lpShowError('lp-err-apply', 'lp-apply-from', '신청기간 시작일을 입력해주세요.'); return; }
+    if (at && !at.value) { lpShowError('lp-err-apply', 'lp-apply-to', '신청기간 종료일을 입력해주세요.'); return; }
+    if (af && at && at.value < af.value) { lpShowError('lp-err-apply', 'lp-apply-to', '종료일은 시작일 이후로 입력해주세요.'); return; }
+    // 학습기간 — 시작일·종료일 필수, 신청 시작일 ≤ 학습 시작일(같은 날 허용), 종료일 ≥ 시작일
+    if (lf && !lf.value) { lpShowError('lp-err-learn', 'lp-learn-from', '학습기간 시작일을 입력해주세요.'); return; }
+    if (lt && !lt.value) { lpShowError('lp-err-learn', 'lp-learn-to', '학습기간의 종료일을 입력해주세요.'); return; }
+    if (lf && lt && lt.value < lf.value) { lpShowError('lp-err-learn', 'lp-learn-to', '종료일은 시작일 이후로 입력해주세요.'); return; }
+    if (af && lf && lf.value < af.value) { lpShowError('lp-err-learn', 'lp-learn-from', '신청기간 이후로 학습시작일을 입력해주세요.'); return; }
+    s.immediate = false;
+    if (af) s.applyFrom = normYMD(af.value);
+    if (at) s.applyTo = normYMD(at.value);
+    if (lf) s.learnFrom = normYMD(lf.value);
+    if (lt) s.learnTo = normYMD(lt.value);
   }
   closeStep4('learningPeriod');
   saveState(); renderWizard(5);
@@ -12929,7 +13399,7 @@ function renderOfflineSchedule() {
         <button class="btn" onclick="addSchedule(1)">+ 일정 추가</button>
       </div>` : `<div>${schedules.map((sc, i) => `
         <div class="schedule-row" style="margin-bottom:8px;">
-          <div><b>${i+1}.</b> ${esc(sc.date)} · ${esc(sc.time)} · ${esc(sc.place)}</div>
+          <div><b>${i+1}.</b> ${esc(fmtDot(sc.date))} · ${esc(sc.time)} · ${esc(sc.place)}</div>
           <button class="btn-icon btn-danger-ghost" onclick="removeSchedule(${i})">${ICON.trash}</button>
         </div>`).join('')}</div>`}
     <div class="info-note">
@@ -13195,7 +13665,15 @@ function savePreview() {
 function renderStep6() {
   const s = STATE.enrollSettings;
   const totalContents = countContents();
+  // 누락 표시 2종 분기
+  //  1) 목차의 콘텐츠 미등록 — 목차는 있으나 하위 콘텐츠 0건
+  //  2) 콘텐츠 미완료      — 콘텐츠는 있으나 draft 상태 (판정: isContentDraft 단일 출처)
+  //  우측 영역 클릭 시 2단계의 해당 목차/콘텐츠 위치로 이동(sideScrollToTarget)
   const missingToc = STATE.toc.filter(t => !t.children || t.children.length === 0);
+  const draftContents = [];
+  STATE.toc.forEach(t => (t.children || []).forEach(c => {
+    if (isContentDraft(c)) draftContents.push({ tocId: t.id, c });
+  }));
   const singleMode = isSingleCreationType();
   const completionLabel = s.completion === 'immediate' ? '즉시 수료' : '학습기간 종료 후 수료';
   const completionDesc  = s.completion === 'immediate'
@@ -13271,12 +13749,18 @@ function renderStep6() {
           <div class="k">총 콘텐츠</div>
           <div class="v">${totalContents}개 콘텐츠 등록 완료</div>
         </div>
-        ${missingToc.length === 0
+        ${(missingToc.length === 0 && draftContents.length === 0)
           ? `<div class="crow"><div class="k">누락 콘텐츠</div><div class="v">없음</div></div>`
           : missingToc.map(t => `
               <div class="crow warn">
-                <div class="k">콘텐츠 누락</div>
-                <div class="v">${esc(t.title)} <span style="color:var(--text-3); font-weight:500;"> — 등록된 콘텐츠가 없습니다.</span></div>
+                <div class="k">목차의 콘텐츠 미등록</div>
+                <div class="v miss-link" onclick="gotoMissingTarget(null, '${t.id}')" title="2단계의 해당 목차로 이동">${esc(t.title)} <span style="color:var(--text-3); font-weight:500;"> 목차에 등록된 콘텐츠가 없습니다.</span></div>
+              </div>
+            `).join('')
+          + draftContents.map(x => `
+              <div class="crow warn">
+                <div class="k">콘텐츠 미완료</div>
+                <div class="v miss-link" onclick="gotoMissingTarget('${x.tocId}', '${x.c.id}')" title="2단계의 해당 콘텐츠로 이동">${esc(x.c.title)} <span style="color:var(--text-3); font-weight:500;"> 콘텐츠가 완료되지 않았습니다.</span></div>
               </div>
             `).join('')}
       </div>
@@ -13607,7 +14091,7 @@ function saveCourseInfoEdit() {
   STATE.courseTagList = d.courseTagList ? d.courseTagList.slice() : [];
   saveState();
   closeDrawer();
-  renderWizard(3);
+  renderWizard(4); // 진입 화면(최종확인) 유지 — 드로어만 닫고 4단계 본문 갱신
   toast('과정정보가 저장되었습니다.', 'success');
 }
 
@@ -13904,7 +14388,11 @@ const DRAWER = {
   favType: '전체',         // 스크랩-콘텐츠 유형 필터
   favCourseKind: '전체',   // 스크랩-과정 유형 필터
   libFavOnly: false,       // 콘텐츠 검색추가 탭: '스크랩 콘텐츠'만 필터
-  integratedFavOnly: false // 과정 검색추가 탭: '스크랩 과정'만 필터
+  integratedFavOnly: false, // 과정 검색추가 탭: '스크랩 과정'만 필터
+  // 동영상 등록 영역 상태: null/empty(등록 전) | uploading(업로드 중) | transcoding(트랜스코딩 중) | done(완료)
+  videoState: null,
+  videoUploadPct: null,    // 업로드 진행률(%)
+  videoFileName: null      // 업로드 중/완료 시 노출할 파일명
 };
 
 const UPLOAD_TYPES = {
@@ -13993,7 +14481,8 @@ const LIB_ITEMS = [
       { qtype: 'mc', text: '팀원의 동기부여를 위해 가장 우선해야 할 행동은? (복수 정답)', options: ['명확한 목표 설정','즉각적 보상 제공','자율성 부여','정기 면담'], correctIdx: [0,2], score: 5 },
       { qtype: 'mc', text: '리더의 의사결정에서 가장 위험한 편향은?', options: ['확증 편향','매몰 비용 오류','평균 회귀 무시','집단 사고'], correctIdx: [0], score: 5 },
       { qtype: 'sa', text: '효과적인 1on1 미팅의 핵심 요소 3가지를 적으세요.', saAnswer: '정기성, 안전한 분위기, 실행 가능한 액션 아이템', score: 10 },
-      { qtype: 'ox', text: '리더는 항상 팀원보다 더 많이 알아야 한다.', oxAnswer: 'X', score: 5 }
+      { qtype: 'ox', text: '리더는 항상 팀원보다 더 많이 알아야 한다.', oxAnswer: 'X', score: 5 },
+      { qtype: 'essay', text: '최근 6개월간 본인이 발휘한 리더십 사례 1가지를 서술하고, 보완할 점을 함께 정리하세요.', score: 15 }
     ]
   },
   { id: 'l9', title: '월간 학습 계획 수립 과제', tags: ['#전략 기본계획'], type: '과제', meta: '서술형', free: true, mine: true, thumb: false,
@@ -14025,7 +14514,8 @@ const LIB_ITEMS = [
     questions: [
       { qtype: 'ox', text: '명함은 받는 즉시 명함 케이스에 넣어두는 것이 예의이다.', oxAnswer: 'X', score: 1 },
       { qtype: 'ox', text: '이메일 회신은 24시간 이내가 비즈니스 표준이다.', oxAnswer: 'O', score: 1 },
-      { qtype: 'mc', text: '회의실 입실 시 가장 적절한 행동은?', options: ['먼저 자리를 잡는다','상석을 비워둔다','음료부터 가져온다','자유롭게 앉는다'], correctIdx: [1], score: 1 }
+      { qtype: 'mc', text: '회의실 입실 시 가장 적절한 행동은?', options: ['먼저 자리를 잡는다','상석을 비워둔다','음료부터 가져온다','자유롭게 앉는다'], correctIdx: [1], score: 1 },
+      { qtype: 'sa', text: '거래처 미팅에 지각이 예상될 때 가장 먼저 해야 할 행동을 적으세요.', saAnswer: '전화로 미리 양해를 구하고 도착 예정 시간을 알린다', score: 1 }
     ]
   },
   { id: 'l13', title: '판매 성공 사례 인포그래픽', tags: ['#판매관리'], type: '이미지', kind: 2, meta: '5개 이미지', free: true, mine: true, thumb: true,
@@ -14819,6 +15309,7 @@ const ONLINE_COURSES = [
 
 function openContentDrawer(opts={}) {
   DRAWER.open = true;
+  DRAWER._dirty = false;
   DRAWER.mode = opts.mode || 'add';
   DRAWER.tab = 'upload';
   DRAWER.uploadMode = null;
@@ -14832,6 +15323,10 @@ function openContentDrawer(opts={}) {
   DRAWER.libPreviewId = null;
   DRAWER.libPreviewImageIdx = 0;
   DRAWER.libPreviewQIdx = 0;
+  // 유사 콘텐츠 추천 무한 스크롤 페이징 초기화
+  DRAWER.libSimShown = 0;
+  DRAWER.libSimLoads = 0;
+  DRAWER._libSimLoading = false;
   DRAWER.onlineExpanded = null;
   if (opts.mode !== 'onlinePreview') {
     DRAWER.onlineQuery = '';
@@ -14842,6 +15337,9 @@ function openContentDrawer(opts={}) {
   DRAWER.ytStep = 'initial';
   DRAWER.ytSelectedIdx = null;
   DRAWER.ytQuery = '';
+  DRAWER.ytVisibleCount = 10;
+  DRAWER.ytUrlPicked = null;
+  DRAWER.ytPlaying = false;
   DRAWER.ytShowError = false;
   DRAWER.parentId = opts.parentId || null;
   DRAWER.targetId = opts.targetId || null;
@@ -15104,19 +15602,55 @@ function closeDrawer() {
   DRAWER.insertAt = null;
   DRAWER.examState = null;
   DRAWER.surveyState = null;
+  if (typeof resetVideoUploadState === 'function') resetVideoUploadState();
   document.getElementById('drawer-mask').classList.remove('open');
   document.getElementById('drawer').classList.remove('open');
   clearEditingCardHighlight();
 }
 
 /* 콘텐츠 추가 드로어 헤더 X 버튼 — 커리큘럼 등록의 오프라인 등록 폼에서
-   '일정 추가' 화면으로 진입한 상태라면 이전 단계로 복귀, 아니면 일반 닫기 */
+   '일정 추가' 화면으로 진입한 상태라면 이전 단계로 복귀, 아니면 일반 닫기.
+   콘텐츠 등록/수정·과정정보·일정 등 '편집 중' 드로어이고 변경사항이 있으면 종료 확인 팝업 */
 function onDrawerCloseClick() {
-  if (DRAWER.mode === 'schedule' && DRAWER._scheduleReturn) {
-    cancelScheduleDrawer();
-    return;
+  maybeConfirmDiscard(() => {
+    if (DRAWER.mode === 'schedule' && DRAWER._scheduleReturn) {
+      cancelScheduleDrawer();
+      return;
+    }
+    closeDrawer();
+  });
+}
+
+/* 콘텐츠 등록/수정 폼·과정정보 수정·오프라인 일정 등 '편집 중' 드로어 여부 판별 */
+function isEditingFormDrawer() {
+  if (DRAWER.mode === 'schedule') return true;
+  if (DRAWER.mode === 'courseinfo') return true;
+  if (DRAWER.tab === 'upload' && DRAWER.uploadMode === 'form') return true;
+  return false;
+}
+
+/* 편집 중 + 변경사항(_dirty)이 있으면 종료 확인 팝업, 그 외에는 즉시 진행 */
+function maybeConfirmDiscard(onConfirm) {
+  if (isEditingFormDrawer() && DRAWER._dirty) {
+    openModal({
+      title: '',
+      body: '<div style="font-size:15px; line-height:1.7; padding:6px 2px;">변경사항이 저장되지 않았습니다.<br>종료하시겠습니까?</div>',
+      secondary: { label: '취소' },
+      primary: { label: '확인', onClick: () => { closeModal(); onConfirm(); } }
+    });
+  } else {
+    onConfirm();
   }
-  closeDrawer();
+}
+
+/* 콘텐츠 등록/수정 폼 '취소' 버튼 — 종료 확인 후 드로어 전체 닫힘 */
+function onUploadFormCancel() {
+  maybeConfirmDiscard(() => closeDrawer());
+}
+
+/* 오프라인 일정 '취소' 버튼 — 종료 확인 후 닫힘(또는 콘텐츠 폼 복귀) */
+function onScheduleCancel() {
+  maybeConfirmDiscard(() => cancelScheduleDrawer());
 }
 
 function bindDrawerTabs() {
@@ -15318,7 +15852,7 @@ function validatePassScoreOnSubmit(inputEl) {
 const SUBJECT_MSG = '주제를 입력해주세요.';
 const CONTENT_MSG = '내용을 입력해주세요.';
 const FILE_MSG = '100MB 이하의 유효한 파일을 등록해주세요.';
-const FILE_ALLOWED_EXT = ['jpg','jpeg','gif','png','xls','xlsx','ppt','pptx','doc','docx','hwp','txt','pdf','pbix'];
+const FILE_ALLOWED_EXT = ['jpg','jpeg','gif','png','xls','xlsx','ppt','pptx','doc','docx','hwp','txt','pdf','pbix','zip'];
 const FILE_MAX_SIZE = 100 * 1024 * 1024;
 function showFieldError(el, errId, msg) {
   if (el) el.classList.add('is-invalid');
@@ -15466,10 +16000,14 @@ function onChangeFile(input) {
   }
   if (uploader) uploader.classList.remove('is-invalid');
   if (errEl) { errEl.textContent = ''; errEl.classList.remove('is-visible'); }
-  if (listEl) {
-    listEl.innerHTML = files.map(function(f) { return '<li>' + esc(f.name) + ' (' + Math.round(f.size/1024) + 'KB)</li>'; }).join('');
-  }
-  toast(files.length + '개 파일이 등록되었습니다.', 'success');
+  // 검증 통과 → 동영상 등록과 동일한 [업로드 중] 진행 표시를 거친 뒤 파일 목록 반영 (과제·토론 공통)
+  const names = files.map(function(f) { return esc(f.name) + ' (' + Math.round(f.size/1024) + 'KB)'; });
+  input.value = '';
+  startFileUploadSim(prefix + '-upload-progress', prefix + '-uploader', function() {
+    const list2 = document.getElementById(prefix + '-file-list');
+    if (list2) list2.innerHTML = names.map(function(n) { return '<li>' + n + '</li>'; }).join('');
+    toast(names.length + '개 파일이 등록되었습니다.', 'success');
+  });
 }
 /* 제출 최소 글자수 — 0 이상의 숫자만 */
 function onInputMinChars(el) {
@@ -15546,35 +16084,42 @@ function renderDrawer() {
   if (DRAWER.mode === 'courseinfo') {
     body.innerHTML = renderCourseInfoEdit();
     foot.innerHTML = `
-      <button class="btn" onclick="closeDrawer()">취소</button>
+      <button class="btn" onclick="onUploadFormCancel()">취소</button>
       <button class="btn btn-primary" onclick="saveCourseInfoEdit()">저장</button>`;
     return;
   }
   if (DRAWER.tab === 'upload') {
     body.innerHTML = renderUploadTab();
-    foot.innerHTML = `<button class="btn" onclick="closeDrawer()">닫기</button>`;
+    // 콘텐츠 등록/수정 폼 하단 '닫기' 버튼 제거 — 종료는 상단 X(또는 폼 '취소')로 통일
+    foot.innerHTML = '';
   } else if (DRAWER.tab === 'favorites') {
     body.innerHTML = renderFavoritesTab();
-    foot.innerHTML = `<button class="btn" onclick="closeDrawer()">닫기</button>`;
+    // 스크랩 추가 탭 하단 '닫기' 제거 — 종료는 상단 X로 통일
+    foot.innerHTML = '';
   } else if (DRAWER.tab === 'library') {
     body.innerHTML = renderLibraryTab();
     renderLibFooter();
+    // 콘텐츠 상세(view)일 때 유사 콘텐츠 추천 무한 스크롤 연결
+    if (DRAWER.libPreviewId && typeof setupLibSimInfiniteScroll === 'function') setupLibSimInfiniteScroll();
   } else if (DRAWER.tab === 'online') {
     body.innerHTML = renderOnlineTab();
-    foot.innerHTML = `<button class="btn" onclick="closeDrawer()">닫기</button>`;
+    // 하단 '닫기' 제거 — 종료는 상단 X로 통일
+    foot.innerHTML = '';
   } else if (DRAWER.tab === 'prepkg') {
     body.innerHTML = renderPkgTab();
-    foot.innerHTML = `<button class="btn" onclick="closeDrawer()">닫기</button>`;
+    // 하단 '닫기' 제거 — 종료는 상단 X로 통일
+    foot.innerHTML = '';
   } else if (DRAWER.tab === 'integrated') {
     body.innerHTML = renderIntegratedTab();
     if (DRAWER.integratedDetail) {
       const selCnt = DRAWER.prevSelectedLeaves.size + getOrphanModuleCount();
+      // 하단 '닫기' 제거 — 종료는 상단 X로 통일 (선택 추가·전체 추가는 유지)
       foot.innerHTML = `
-        <button class="btn" onclick="closeDrawer()">닫기</button>
         <button id="prev-add-selected" class="btn btn-primary" ${selCnt===0?'disabled':''} onclick="prevCourseCopySelected()">선택 추가 (<span id="prev-selected-count">${selCnt}</span>)</button>
         <button class="btn btn-primary" onclick="prevCourseCopyAll()">전체 추가</button>`;
     } else {
-      foot.innerHTML = `<button class="btn" onclick="closeDrawer()">닫기</button>`;
+      // 과정 검색추가 탭 목록 — 하단 '닫기' 제거
+      foot.innerHTML = '';
     }
   } else if (DRAWER.tab === 'prev') {
     // 이전과정 탭 — prevcourse list/detail 단계 본문 재사용
@@ -15584,13 +16129,14 @@ function renderDrawer() {
         ${renderPrevCourseDetail()}
       `;
       const selCnt = DRAWER.prevSelectedLeaves.size + getOrphanModuleCount();
+      // 하단 '닫기' 제거 — 종료는 상단 X로 통일 (선택 추가·전체 추가는 유지)
       foot.innerHTML = `
-        <button class="btn" onclick="closeDrawer()">닫기</button>
         <button id="prev-add-selected" class="btn btn-primary" ${selCnt===0?'disabled':''} onclick="prevCourseCopySelected()">선택 추가 (<span id="prev-selected-count">${selCnt}</span>)</button>
         <button class="btn btn-primary" onclick="prevCourseCopyAll()">전체 추가</button>`;
     } else {
       body.innerHTML = renderPrevCourseList();
-      foot.innerHTML = `<button class="btn" onclick="closeDrawer()">닫기</button>`;
+      // 하단 '닫기' 제거 — 종료는 상단 X로 통일
+      foot.innerHTML = '';
     }
   }
 }
@@ -15602,7 +16148,7 @@ function renderUploadTab() {
     return `
       <div class="row" style="justify-content:space-between; margin-bottom: 28px;">
         <span class="chip active">${esc(t.label)}</span>
-        ${DRAWER.mode === 'contentEdit' ? '' : '<button class="btn-text" onclick="backUploadType()">‹ 콘텐츠 유형 변경</button>'}
+        ${(DRAWER.mode === 'contentEdit' || DRAWER.mode === 'singleMain') ? '' : '<button class="btn-text" onclick="backUploadType()">‹ 콘텐츠 유형 변경</button>'}
       </div>
       ${renderUploadForm(t)}
     `;
@@ -15615,13 +16161,6 @@ function renderUploadTab() {
       <div class="type-icon-grid">
         ${list.map(typeIcon).join('')}
       </div>
-      <div class="info-note" style="margin-top:18px;">
-        <div class="ttl">💡 콘텐츠 유형 안내</div>
-        <ul>
-          <li>동영상·유튜브는 업로드 후 트랜스코딩(인코딩 변환)이 자동 진행됩니다.</li>
-          <li>시험·과제·설문·퀴즈는 학습자의 응답·평가 데이터를 수집합니다.</li>
-        </ul>
-      </div>
     `;
   }
   // 마이크로러닝 부가자료(singleSub) — 부가자료에 사용 가능한 타입만 노출
@@ -15630,13 +16169,6 @@ function renderUploadTab() {
       <div class="section-title">콘텐츠 유형 선택</div>
       <div class="type-icon-grid">
         ${SINGLE_SUB_TYPES.map(typeIcon).join('')}
-      </div>
-      <div class="info-note" style="margin-top:18px;">
-        <div class="ttl">💡 콘텐츠 유형 안내</div>
-        <ul>
-          <li>동영상·유튜브는 업로드 후 트랜스코딩(인코딩 변환)이 자동 진행됩니다.</li>
-          <li>퀴즈·설문은 학습자의 응답·평가 데이터를 수집합니다.</li>
-        </ul>
       </div>
     `;
   }
@@ -15652,14 +16184,6 @@ function renderUploadTab() {
     ${section('콘텐츠', contentTypes)}
     ${section('집합 및 실시간회의', meetingTypes)}
     ${section('상호작용', interactionTypes)}
-    <div class="info-note" style="margin-top:18px;">
-      <div class="ttl">💡 콘텐츠 유형 안내</div>
-      <ul>
-        <li>동영상·유튜브는 업로드 후 트랜스코딩(인코딩 변환)이 자동 진행됩니다.</li>
-        ${meetingTypes.length ? '<li>오프라인은 회차/일정 등록 후 출결 처리로 진도가 인정됩니다.</li>' : ''}
-        <li>상호작용 콘텐츠(시험·과제 등)는 평가 가중치를 별도로 설정합니다.</li>
-      </ul>
-    </div>
   `;
 }
 function typeIcon(t) {
@@ -15668,17 +16192,160 @@ function typeIcon(t) {
 function pickUploadType(id, label, ico) {
   DRAWER.uploadType = { id, label, ico };
   DRAWER.uploadMode = 'form';
+  resetVideoUploadState();
   renderDrawer();
 }
 function backUploadType() {
+  // 콘텐츠 수정(contentEdit) 모드에서는 타입 선택 단계가 없으므로 '취소' = 드로어 닫기
+  if (DRAWER.mode === 'contentEdit') { closeDrawer(); return; }
   DRAWER.uploadType = null; DRAWER.uploadMode = null;
   DRAWER.examState = null;
   DRAWER.surveyState = null;
   DRAWER.ytStep = 'initial';
   DRAWER.ytSelectedIdx = null;
   DRAWER.ytQuery = '';
+  DRAWER.ytVisibleCount = 10;
+  DRAWER.ytUrlPicked = null;
+  DRAWER.ytPlaying = false;
   DRAWER.ytShowError = false;
+  resetVideoUploadState();
   renderDrawer();
+}
+
+/* ============================================================
+   동영상 등록 영역 상태 전이 (등록 전 → 업로드 중 → 트랜스코딩 중 → 완료)
+============================================================ */
+// 진행 중 타이머·상태 일괄 초기화 (등록 전 상태로 복귀)
+function resetVideoUploadState() {
+  clearInterval(window._vidUpTimer);
+  clearTimeout(window._vidTransTimer);
+  DRAWER.videoState = null;
+  DRAWER.videoUploadPct = null;
+  DRAWER.videoFileName = null;
+}
+// 업로더 박스 클릭 → 파일 선택 후 업로드 시뮬레이션 (프로토타입)
+function startVideoUpload() {
+  clearInterval(window._vidUpTimer);
+  clearTimeout(window._vidTransTimer);
+  DRAWER.videoState = 'uploading';
+  DRAWER.videoUploadPct = 10;
+  DRAWER.videoFileName = '05_지속가능한 기업을 위한 행복경영.mp4';
+  renderDrawer();
+  window._vidUpTimer = setInterval(() => {
+    DRAWER.videoUploadPct = Math.min(100, (DRAWER.videoUploadPct || 10) + 18);
+    if (DRAWER.videoUploadPct >= 100) {
+      clearInterval(window._vidUpTimer);
+      // 업로드 완료 → 트랜스코딩 중
+      DRAWER.videoState = 'transcoding';
+      renderDrawer();
+      // 트랜스코딩 완료 → 미리보기(완료)
+      window._vidTransTimer = setTimeout(() => {
+        DRAWER.videoState = 'done';
+        renderDrawer();
+      }, 2600);
+    } else {
+      renderDrawer();
+    }
+  }, 600);
+}
+// 파일 칩 X 클릭 → 삭제 확인 팝업 (업로드 중·트랜스코딩 중·완료 공통)
+function confirmRemoveVideo() {
+  openModal({
+    title: '동영상 삭제',
+    body: '<p>삭제하시겠습니까?</p>',
+    primary: { label: '확인', onClick: () => { closeModal(); removeVideo(); } },
+    secondary: { label: '취소' }
+  });
+}
+// 삭제 확정 → 진행 중이던 업로드·트랜스코딩 중단하고 등록 전 상태로 복귀
+function removeVideo() {
+  resetVideoUploadState();
+  renderDrawer();
+}
+// 캡처·시연용: 특정 상태로 직접 전환 (타이머 없이 정지된 상태 표시)
+function setVideoState(state, pct) {
+  clearInterval(window._vidUpTimer);
+  clearTimeout(window._vidTransTimer);
+  DRAWER.videoState = state;
+  DRAWER.videoUploadPct = (typeof pct === 'number') ? pct : 10;
+  if (state && state !== 'empty' && !DRAWER.videoFileName) {
+    DRAWER.videoFileName = '05_지속가능한 기업을 위한 행복경영.mp4';
+  }
+  if (!state || state === 'empty') { DRAWER.videoFileName = null; DRAWER.videoUploadPct = null; }
+  renderDrawer();
+}
+
+/* ============================================================
+   공통 파일 업로드 진행 상태 (이미지·첨부파일·교안·과제·토론)
+   — 동영상 등록의 [업로드 중] 상태(.video-uploading)와 동일한 UI를 재사용
+============================================================ */
+function fileUploadProgressHtml(pct) {
+  return `
+    <div class="video-uploading" style="margin-top:8px;">
+      <div class="vu-ico" aria-hidden="true">⬆</div>
+      <div class="vu-ttl">업로드 중 ${pct}%</div>
+      <div class="vu-bar"><span class="vu-bar-fill" style="width:${pct}%"></span></div>
+      <p class="vu-desc">파일을 업로드 중입니다.<br>업로드 종료 전에 화면을 종료하는 경우 업로드가 중단될 수 있습니다.</p>
+    </div>`;
+}
+// progressId 컨테이너에 업로드 진행 UI를 띄우고, 완료 시 onDone 콜백 실행.
+// 진행 동안 uploaderId(업로더 박스)는 숨겨 동영상과 동일하게 "박스 자리가 진행 표시로 전환"되는 경험을 만든다.
+function startFileUploadSim(progressId, uploaderId, onDone) {
+  const box = document.getElementById(progressId);
+  const uploader = uploaderId ? document.getElementById(uploaderId) : null;
+  if (!box) { if (onDone) onDone(); return; }
+  if (uploader) uploader.style.display = 'none';
+  let pct = 10;
+  box.innerHTML = fileUploadProgressHtml(pct);
+  const timer = setInterval(() => {
+    pct = Math.min(100, pct + 18);
+    const el = document.getElementById(progressId);
+    if (!el) { clearInterval(timer); return; } // 드로어가 닫히거나 재렌더되면 중단
+    el.innerHTML = fileUploadProgressHtml(pct);
+    if (pct >= 100) {
+      clearInterval(timer);
+      setTimeout(() => {
+        const el2 = document.getElementById(progressId);
+        if (el2) el2.innerHTML = '';
+        const up2 = uploaderId ? document.getElementById(uploaderId) : null;
+        if (up2) up2.style.display = '';
+        if (onDone) onDone();
+      }, 300);
+    }
+  }, 450);
+}
+// 이미지 등록 — 다중 이미지: 업로더 클릭 → 업로드 중 → 목록에 추가
+function startImageUploadSim() {
+  const samples = ['판매 성공 사례 인포그래픽_4.jpg', '고객가치 제안 프레임워크.png', '혁신방법 캔버스.jpg'];
+  window.__imgUpSeq = (window.__imgUpSeq || 0) + 1;
+  const name = samples[window.__imgUpSeq % samples.length];
+  startFileUploadSim('ul-img-upload-progress', 'ul-img-uploader', () => {
+    const list = document.getElementById('ul-img-list');
+    if (list) list.insertAdjacentHTML('beforeend', `
+      <li class="img-list-item">
+        <span class="drag" aria-hidden="true">≡</span>
+        <span class="img-thumb"></span>
+        <span class="img-name">${esc(name)}</span>
+        <button type="button" class="x" onclick="toast('이미지 제거 (프로토타입)')" aria-label="이미지 제거">×</button>
+      </li>`);
+    toast('이미지가 등록되었습니다.', 'success');
+  });
+}
+// 첨부파일 등록 — 다중 파일: 업로더 클릭 → 업로드 중 → 목록에 추가
+function startAttachUploadSim() {
+  const samples = ['신규_업로드_자료.pdf', '교육운영_체크리스트.xlsx', '참고자료_모음.zip'];
+  window.__attachUpSeq = (window.__attachUpSeq || 0) + 1;
+  const name = samples[window.__attachUpSeq % samples.length];
+  startFileUploadSim('ul-attach-upload-progress', 'ul-attach-uploader', () => {
+    const list = document.getElementById('ul-attach-list');
+    if (list) list.insertAdjacentHTML('beforeend', `
+      <li class="file-list-item">
+        <span class="file-ico" aria-hidden="true">${fileIconFor(name)}</span>
+        <span class="file-name">${esc(name)}</span>
+        <button type="button" class="x" onclick="toast('파일 제거 (프로토타입)')" aria-label="파일 제거">×</button>
+      </li>`);
+    toast('파일이 등록되었습니다.', 'success');
+  });
 }
 
 /* ============================================================
@@ -16220,7 +16887,6 @@ function newSurveyQuestion() {
     // 객관식 디폴트: 최소/최대 답변수 = 1
     minAnswers: '1',
     maxAnswers: '1',
-    ratingUseScore: false,
     // 만족도 디폴트: 척도 개수 = 5
     ratingCount: '5',
     // 만족도 디폴트: 안내문구
@@ -16362,13 +17028,6 @@ function surveySetPurpose(id) {
   syncSurveyCurrentFromDom();
   const q = DRAWER.surveyState.questions[DRAWER.surveyState.currentIdx];
   q.purpose = id;
-  renderDrawer();
-}
-
-function surveyToggleRatingScore() {
-  syncSurveyCurrentFromDom();
-  const q = DRAWER.surveyState.questions[DRAWER.surveyState.currentIdx];
-  q.ratingUseScore = !q.ratingUseScore;
   renderDrawer();
 }
 
@@ -16564,7 +17223,7 @@ function surveyEditQuestion() {
   q._snapshot = JSON.parse(JSON.stringify({
     type: q.type, question: q.question, options: q.options,
     allowEtc: q.allowEtc, minAnswers: q.minAnswers, maxAnswers: q.maxAnswers,
-    ratingUseScore: q.ratingUseScore, ratingCount: q.ratingCount,
+    ratingCount: q.ratingCount,
     ratingLeft: q.ratingLeft, ratingRight: q.ratingRight,
     required: q.required, purpose: q.purpose
   }));
@@ -16585,7 +17244,6 @@ function surveyCancelEdit() {
   q.allowEtc = s.allowEtc;
   q.minAnswers = s.minAnswers;
   q.maxAnswers = s.maxAnswers;
-  q.ratingUseScore = s.ratingUseScore;
   q.ratingCount = s.ratingCount;
   q.ratingLeft = s.ratingLeft;
   q.ratingRight = s.ratingRight;
@@ -16630,7 +17288,8 @@ function renderSurveyForm() {
 function renderSurveyBasicForm(headerRegistered) {
   const sv = DRAWER.surveyState;
   const mockTags = ['설문', '교육만족도'];
-  const submitLabel = headerRegistered ? '설문 정보 수정' : '설문 등록';
+  // 등록 시 '등록 및 문항추가'(등록 직후 문항 등록 탭으로 이동), 수정 시 '수정'
+  const submitLabel = headerRegistered ? '수정' : '등록 및 문항추가';
   return `
     <div class="form-row">
       <label class="label">제목<span class="req-mark" aria-hidden="true"></span></label>
@@ -16650,20 +17309,8 @@ function renderSurveyBasicForm(headerRegistered) {
         ${sv.guide ? esc(sv.guide).replace(/\n/g, '<br>') : '<span class="rte-placeholder">설문 안내 문구를 입력해 주세요.</span>'}
       </div>
     </div>
-    <div class="form-row" style="margin-top:18px;">
-      <label class="label">태그 <span class="label-sub">(최대 10개)</span></label>
-      <input class="input" id="ul-tags" placeholder="#태그를 입력해 주세요." />
-      <div class="tag-chip-list">
-        ${mockTags.map(tag => `
-          <span class="tag-chip">
-            <span>${esc(tag)}</span>
-            <button type="button" class="x" onclick="toast('태그 제거 (프로토타입)')" aria-label="태그 제거">×</button>
-          </span>
-        `).join('')}
-      </div>
-    </div>
     <div class="row" style="justify-content:flex-end; margin-top:18px; gap:8px;">
-      <button class="btn" onclick="backUploadType()">취소</button>
+      <button class="btn" onclick="onUploadFormCancel()">취소</button>
       <button class="btn btn-primary" onclick="submitSurveyHeader()">${submitLabel}</button>
     </div>
   `;
@@ -16806,13 +17453,6 @@ function renderSurveyAnswerInputs(q) {
   if (q.type === 'rating') {
     return `
       <div style="margin-top:24px;">
-        <div class="row" style="gap:14px; align-items:center; margin-bottom:14px;">
-          <label class="label" style="min-width:84px; margin:0;">추천점수 반영</label>
-          <div class="row" style="gap:6px; align-items:center;">
-            <input type="checkbox" ${q.ratingUseScore ? 'checked' : ''} onchange="surveyToggleRatingScore()" />
-            <span class="text-muted" style="font-size:12px;">평점 등 추천점수로 반영합니다.</span>
-          </div>
-        </div>
         <div class="row" style="gap:14px; align-items:flex-start; margin-bottom:14px;">
           <label class="label" style="min-width:84px; margin:0; padding-top:8px;">척도 개수</label>
           <div style="flex:1;">
@@ -16921,7 +17561,8 @@ function renderExamBasicForm(headerRegistered) {
   const isQuiz = DRAWER.uploadType && DRAWER.uploadType.id === 'quiz';
   const noun = isQuiz ? '퀴즈' : '시험';
   const mockTags = isQuiz ? ['퀴즈', '종합퀴즈'] : ['시험', '종합시험'];
-  const submitLabel = headerRegistered ? `${noun} 정보 수정` : `${noun} 등록`;
+  // 등록 시 '등록 및 문제추가'(등록 직후 문제 등록 탭으로 이동), 수정 시 '수정'
+  const submitLabel = headerRegistered ? '수정' : '등록 및 문제추가';
   const placeholder = isQuiz ? '10. 퀴즈 (퀴즈문제 선택)' : '10. 시험 (시험문제 선택)';
   const passLabel = isQuiz ? '정답개수' : '시험점수';
   const passUnit = isQuiz ? '개 이상' : '점 이상';
@@ -16953,20 +17594,8 @@ function renderExamBasicForm(headerRegistered) {
       <div class="text-muted" style="font-size:12px; margin-top:6px;">${passHelp}</div>
     </div>
     ${timeRow}
-    <div class="form-row" style="margin-top:18px;">
-      <label class="label">태그 <span class="label-sub">(최대 10개)</span></label>
-      <input class="input" id="ul-tags" placeholder="#태그를 입력해 주세요." />
-      <div class="tag-chip-list">
-        ${mockTags.map(tag => `
-          <span class="tag-chip">
-            <span>${esc(tag)}</span>
-            <button type="button" class="x" onclick="toast('태그 제거 (프로토타입)')" aria-label="태그 제거">×</button>
-          </span>
-        `).join('')}
-      </div>
-    </div>
     <div class="row" style="justify-content:flex-end; margin-top:18px; gap:8px;">
-      <button class="btn" onclick="backUploadType()">취소</button>
+      <button class="btn" onclick="onUploadFormCancel()">취소</button>
       <button class="btn btn-primary" onclick="submitExamHeader()">${submitLabel}</button>
     </div>
   `;
@@ -17147,6 +17776,12 @@ function renderExamAnswerInputs(q) {
 }
 
 function renderUploadForm(t) {
+  // 하단 제출 버튼 라벨 공통 정책 — 등록 시 '등록', 수정 시 '수정'
+  // (퀴즈·시험·설문은 renderExamBasicForm / renderSurveyBasicForm에서 별도 처리)
+  const isEditForm = DRAWER.mode === 'contentEdit'
+    || (DRAWER.mode === 'singleSub' && !!DRAWER.targetId)
+    || (DRAWER.mode === 'singleMain' && !!STATE.singleMain);
+  const submitLabel = isEditForm ? '수정' : '등록';
   if (t.id === 'video') {
     const isEdit = DRAWER.mode === 'contentEdit';
     const mockFileName = '13_거시·미시환경분석과 고객·소비자 분석.mp4';
@@ -17163,37 +17798,54 @@ function renderUploadForm(t) {
         <circle cx="132" cy="74" r="14" fill="#fff" opacity=".25"/>
         <circle cx="138" cy="68" r="6" fill="#fff" opacity=".4"/>
       </svg>`;
-    const videoBlock = isEdit ? `
+    // 동영상 등록 영역 상태: empty(등록 전) → uploading(업로드 중) → transcoding(트랜스코딩 중) → done(완료)
+    // 수정(contentEdit) 진입 시 기본 done, 신규 진입 시 기본 empty
+    const vState = DRAWER.videoState || (isEdit ? 'done' : 'empty');
+    const vFileName = DRAWER.videoFileName || mockFileName;
+    const vPct = typeof DRAWER.videoUploadPct === 'number' ? DRAWER.videoUploadPct : 10;
+    // 업로드 중·트랜스코딩 중·완료 상태에서 노출되는 파일 칩 (X 클릭 시 삭제 확인 팝업)
+    const fileChip = (name) => `
+        <span class="file-chip">
+          <span class="name">${esc(name)}</span>
+          <button type="button" class="x" onclick="confirmRemoveVideo()" aria-label="동영상 제거">×</button>
+        </span>`;
+    let videoBlock;
+    if (vState === 'uploading') {
+      videoBlock = `
+        <div class="video-uploading">
+          <div class="vu-ico" aria-hidden="true">⬆</div>
+          <div class="vu-ttl">업로드 중 ${vPct}%</div>
+          <div class="vu-bar"><span class="vu-bar-fill" style="width:${vPct}%"></span></div>
+          <p class="vu-desc">파일을 업로드 중입니다.<br>업로드 종료 전에 화면을 종료하는 경우 업로드가 중단될 수 있습니다.</p>
+        </div>
+        ${fileChip(vFileName)}`;
+    } else if (vState === 'transcoding') {
+      videoBlock = `
+        <div class="video-transcoding">
+          <div class="vt-spinner" aria-hidden="true"></div>
+          <div class="vt-ttl">파일 등록이 완료되어 트랜스코딩 중입니다.<br>나머지 항목을 입력한 후 저장해 주세요.</div>
+          <p class="vt-desc">트랜스코딩에 일정 시간이 소요되므로<br>콘텐츠 저장 이후에도 계속 트랜스코딩이 진행됩니다.</p>
+        </div>
+        ${fileChip(vFileName)}`;
+    } else if (vState === 'done') {
+      videoBlock = `
         <div class="video-preview">
           ${firstExtractedThumb}
           <span class="play-btn" aria-hidden="true"></span>
           <span class="duration">${mockDuration}</span>
         </div>
-        <span class="file-chip">
-          <span class="name">${esc(mockFileName)}</span>
-          <button type="button" class="x" onclick="toast('동영상 제거 (프로토타입)')" aria-label="동영상 제거">×</button>
-        </span>
-      ` : `
-        <div class="uploader" onclick="toast('파일 선택 (프로토타입)')">
+        ${fileChip(vFileName)}`;
+    } else {
+      videoBlock = `
+        <div class="uploader" onclick="startVideoUpload()">
           <div class="ico">＋</div>
           <div class="ttl">업로드하려는 동영상을 추가해 주세요.</div>
         </div>
         <ul class="upload-hint">
           <li>3GB 이하의 avi, wmv, mpg, mov, mp4 파일을 등록해 주세요.</li>
           <li>파일 업로드 후 트랜스코딩이 진행되며, 추출된 첫 번째 이미지가 동영상의 기본 섬네일로 자동 등록됩니다.</li>
-        </ul>
-      `;
-    const tagChips = isEdit ? `
-        <div class="tag-chip-list">
-          ${mockTags.map(tag => `
-            <span class="tag-chip">
-              <span>${esc(tag)}</span>
-              <button type="button" class="x" onclick="toast('태그 제거 (프로토타입)')" aria-label="태그 제거">×</button>
-            </span>
-          `).join('')}
-        </div>
-      ` : '';
-    const submitLabel = isEdit ? '수정 완료' : '콘텐츠 등록';
+        </ul>`;
+    }
     return `
       <div class="form-row">
         <label class="label">제목<span class="req-mark" aria-hidden="true"></span></label>
@@ -17203,13 +17855,8 @@ function renderUploadForm(t) {
         <label class="label">동영상 등록<span class="req-mark" aria-hidden="true"></span></label>
         ${videoBlock}
       </div>
-      <div class="form-row" style="margin-top:12px;">
-        <label class="label">태그 <span class="label-sub">(최대 10개)</span></label>
-        <input class="input" id="ul-tags" placeholder="#태그를 입력해 주세요." />
-        ${tagChips}
-      </div>
       <div class="row" style="justify-content:flex-end; margin-top:18px; gap:8px;">
-        <button class="btn" onclick="backUploadType()">취소</button>
+        <button class="btn" onclick="onUploadFormCancel()">취소</button>
         <button class="btn btn-primary" onclick="submitUpload()">${submitLabel}</button>
       </div>
     `;
@@ -17217,27 +17864,64 @@ function renderUploadForm(t) {
   if (t.id === 'youtube') {
     const mockYtTags = ['리더십'];
     const ytStep = DRAWER.ytStep || 'initial';
-    const ytResults = [
-      { thumbCls: 'yt-thumb--a', channel: 'THE LEADERSHIP', title: "'좋게 말하는 리더'가 망하는 이유 삼성·애플·쿠팡 ..." },
-      { thumbCls: 'yt-thumb--b', channel: '리더십 채널',    title: '리더가 괜히 리더가 아니었다...' },
-      { thumbCls: 'yt-thumb--c', channel: '비즈니스 인사이트', title: "누구나 한번쯤 '이런' 리더를 만납니다. 구별할 줄..." },
-      { thumbCls: 'yt-thumb--d', channel: '직장러TV',       title: "요즘 성공하는 리더들은 다 '이렇게' 행동합니다!" },
+    const ytThumbCls = ['yt-thumb--a', 'yt-thumb--b', 'yt-thumb--c', 'yt-thumb--d'];
+    const ytTitlePool = [
+      { channel: 'THE LEADERSHIP',  title: "'좋게 말하는 리더'가 망하는 이유 삼성·애플·쿠팡 ...", ytId: 'mockYT00001' },
+      { channel: '리더십 채널',       title: '리더가 괜히 리더가 아니었다...', ytId: 'mockYT00002' },
+      { channel: '비즈니스 인사이트',  title: "누구나 한번쯤 '이런' 리더를 만납니다. 구별할 줄...", ytId: 'mockYT00003' },
+      { channel: '직장러TV',         title: "요즘 성공하는 리더들은 다 '이렇게' 행동합니다!", ytId: 'mockYT00004' },
+      { channel: 'HR 클래스',        title: '팀을 살리는 리더 vs 팀을 죽이는 리더의 결정적 차이', ytId: 'mockYT00005' },
+      { channel: '조직문화연구소',     title: 'MZ세대가 따르는 리더의 7가지 공통점', ytId: 'mockYT00006' },
+      { channel: '경영의 정석',       title: '리더십은 타고나는 것일까, 만들어지는 것일까', ytId: 'mockYT00007' },
+      { channel: '커리어 멘토',       title: '신임 팀장이 첫 90일에 반드시 해야 할 것들', ytId: 'mockYT00008' },
+      { channel: '글로벌 리더십',      title: '잭 웰치가 말한 진짜 리더의 조건', ytId: 'mockYT00009' },
+      { channel: '워크스마트',        title: '회의 시간을 절반으로 줄이는 리더의 기술', ytId: 'mockYT00010' },
+      { channel: '피플 매니지먼트',    title: '동기부여를 못하는 리더들의 결정적 실수', ytId: 'mockYT00011' },
+      { channel: '리더스 다이제스트',  title: '위기를 기회로 바꾼 리더들의 의사결정법', ytId: 'mockYT00012' },
     ];
+    // 검색 결과가 많은 상황 시연 — 24건 생성
+    const ytResults = Array.from({ length: 24 }, (_, i) => {
+      const base = ytTitlePool[i % ytTitlePool.length];
+      return {
+        thumbCls: ytThumbCls[i % ytThumbCls.length],
+        channel: base.channel,
+        title: i < ytTitlePool.length ? base.title : `${base.title} (${Math.floor(i / ytTitlePool.length) + 1})`,
+        ytId: base.ytId,
+      };
+    });
+    const ytPageSize = 10;
+    const ytVisibleCount = typeof DRAWER.ytVisibleCount === 'number' ? DRAWER.ytVisibleCount : ytPageSize;
     const ytSelectedIdx = typeof DRAWER.ytSelectedIdx === 'number' ? DRAWER.ytSelectedIdx : 0;
-    const ytPicked = ytResults[ytSelectedIdx] || ytResults[0];
+    // URL 직접 입력으로 선택된 경우(ytSelectedIdx === -1)는 별도 보관 객체 사용
+    const ytPicked = (ytSelectedIdx === -1 && DRAWER.ytUrlPicked)
+      ? DRAWER.ytUrlPicked
+      : (ytResults[ytSelectedIdx] || ytResults[0]);
     const ytQueryValue = DRAWER.ytQuery || '리더';
     let ytBlock = '';
     if (ytStep === 'selected') {
+      // 선택 완료 상태에서 카드 클릭 시 현재 폼 안에서 인라인 재생
+      const cardInner = DRAWER.ytPlaying
+        ? `
+        <div class="yt-preview-embed">
+          <iframe src="https://www.youtube.com/embed/${esc(ytPicked.ytId || '')}?autoplay=1&rel=0"
+                  title="${esc(ytPicked.title)}" frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen></iframe>
+          <button type="button" class="yt-embed-close" onclick="stopYoutubeInline(event)" aria-label="재생 닫기">×</button>
+        </div>`
+        : `
+        <div class="yt-preview yt-preview-card ${ytPicked.thumbCls}" onclick="playYoutubeInline()" title="클릭하면 현재 폼에서 재생">
+          <span class="yt-card-channel">${esc(ytPicked.channel)}</span>
+          <div class="yt-card-title">${esc(ytPicked.title)}</div>
+          <span class="yt-play-overlay" aria-hidden="true"></span>
+          <span class="yt-badge">YOUTUBE</span>
+        </div>`;
       ytBlock = `
         <div class="yt-row-header">
           <label class="label" style="margin:0;">유튜브 등록<span class="req-mark" aria-hidden="true"></span></label>
           <button type="button" class="yt-edit-btn" onclick="resetYoutubeSelect()">수정</button>
         </div>
-        <div class="yt-preview yt-preview-card ${ytPicked.thumbCls}" onclick="toast('유튜브 미리보기 (프로토타입)')">
-          <span class="yt-card-channel">${esc(ytPicked.channel)}</span>
-          <div class="yt-card-title">${esc(ytPicked.title)}</div>
-          <span class="yt-badge">YOUTUBE</span>
-        </div>
+        ${cardInner}
       `;
     } else if (ytStep === 'results') {
       const errCls = DRAWER.ytShowError ? ' is-visible' : '';
@@ -17249,17 +17933,27 @@ function renderUploadForm(t) {
         </div>
         <div class="yt-result-box yt-result-list-box">
           <button type="button" class="close-x" onclick="resetYoutubeSelect()" aria-label="닫기">×</button>
-          <ul class="yt-result-list">
-            ${ytResults.map((r, i) => `
-              <li class="yt-result-item">
-                <div class="yt-thumb-sm ${r.thumbCls}" aria-hidden="true"></div>
-                <div class="yt-result-meta">
-                  <div class="yt-result-title">${esc(r.title)}</div>
-                </div>
-                <button type="button" class="yt-select-btn" onclick="selectYoutubeResult(${i})">선택</button>
-              </li>
-            `).join('')}
-          </ul>
+          <div class="yt-result-scroll">
+            <ul class="yt-result-list">
+              ${ytResults.slice(0, ytVisibleCount).map((r, i) => `
+                <li class="yt-result-item">
+                  <div class="yt-result-open" onclick="openYoutubeNewWindow('${esc(r.ytId)}')" title="새 창에서 미리보기">
+                    <div class="yt-thumb-sm ${r.thumbCls}" aria-hidden="true"><span class="yt-thumb-play" aria-hidden="true"></span></div>
+                    <div class="yt-result-meta">
+                      <div class="yt-result-title">${esc(r.title)}</div>
+                      <div class="yt-result-channel">${esc(r.channel)}</div>
+                    </div>
+                  </div>
+                  <button type="button" class="yt-select-btn" onclick="selectYoutubeResult(${i})">선택</button>
+                </li>
+              `).join('')}
+            </ul>
+            ${ytVisibleCount < ytResults.length ? `
+              <button type="button" class="yt-more-btn" onclick="loadMoreYoutube()">
+                더보기 <span class="yt-more-caret" aria-hidden="true">∨</span>
+              </button>
+            ` : ''}
+          </div>
         </div>
         <div class="yt-error-msg${errCls}">유튜브 제목 또는 URL을 입력하고 검색 결과에서 선택해 주세요.</div>
       `;
@@ -17287,29 +17981,17 @@ function renderUploadForm(t) {
       <div class="form-row" style="margin-top:18px;">
         ${ytBlock}
       </div>
-      <div class="form-row" style="margin-top:12px;">
-        <label class="label">태그 <span class="label-sub">(최대 10개)</span></label>
-        <input class="input" id="ul-tags" placeholder="#태그를 입력해 주세요." />
-        <div class="tag-chip-list">
-          ${mockYtTags.map(tag => `
-            <span class="tag-chip">
-              <span>${esc(tag)}</span>
-              <button type="button" class="x" onclick="toast('태그 제거 (프로토타입)')" aria-label="태그 제거">×</button>
-            </span>
-          `).join('')}
-        </div>
-      </div>
       <div class="row" style="justify-content:flex-end; margin-top:18px; gap:8px;">
-        <button class="btn" onclick="backUploadType()">취소</button>
-        <button class="btn btn-primary" onclick="submitUpload()">콘텐츠 등록</button>
+        <button class="btn" onclick="onUploadFormCancel()">취소</button>
+        <button class="btn btn-primary" onclick="submitUpload()">${submitLabel}</button>
       </div>
     `;
   }
   if (t.id === 'image') {
     const mockImages = [
-      { name: '디지털 비즈니스 모델은 어떻게 완성되는가.jpg', cls: '', rep: true },
-      { name: '디테일에서 시작하는 위기관리 성공 전략.jpg', cls: 'thumb-b', rep: false },
-      { name: '변화결과 공유.JPG', cls: 'thumb-c', rep: false },
+      { name: '디지털 비즈니스 모델은 어떻게 완성되는가.jpg', cls: '' },
+      { name: '디테일에서 시작하는 위기관리 성공 전략.jpg', cls: 'thumb-b' },
+      { name: '변화결과 공유.JPG', cls: 'thumb-c' },
     ];
     const mockTags = ['고객가치', '혁신방법'];
     return `
@@ -17319,47 +18001,29 @@ function renderUploadForm(t) {
       </div>
       <div class="form-row" style="margin-top:18px;">
         <label class="label">이미지 등록<span class="req-mark" aria-hidden="true"></span></label>
-        <div class="img-uploader" onclick="toast('이미지 추가 (프로토타입)')">
+        <div class="img-uploader" id="ul-img-uploader" onclick="startImageUploadSim()">
           <div class="add-ic" aria-hidden="true">＋</div>
           <div class="ttl">업로드하려는 이미지를 추가해 주세요.</div>
         </div>
+        <div id="ul-img-upload-progress"></div>
         <ul class="upload-hint">
           <li>10MB의 jpg, jpeg, gif, png, bmp 의 이미지 파일을 등록해주세요.</li>
           <li>여러 개의 이미지를 등록하실 수 있습니다.</li>
         </ul>
-        <div class="img-list-header">
-          <span class="img-list-hint">• 이미지를 선택하여 섬네일을 체크해 주세요.</span>
-          <div class="img-view-toggle">
-            <button type="button" class="vbtn" onclick="toast('리스트 보기 (프로토타입)')" aria-label="리스트 보기">≡</button>
-            <button type="button" class="vbtn is-active" onclick="toast('그리드 보기 (프로토타입)')" aria-label="그리드 보기">▦</button>
-          </div>
-        </div>
-        <ul class="img-list">
+        <ul class="img-list" id="ul-img-list">
           ${mockImages.map(img => `
             <li class="img-list-item">
               <span class="drag" aria-hidden="true">≡</span>
-              <span class="img-thumb ${img.cls}">${img.rep ? '<span class="rep-badge">대표</span>' : ''}</span>
+              <span class="img-thumb ${img.cls}"></span>
               <span class="img-name">${esc(img.name)}</span>
               <button type="button" class="x" onclick="toast('이미지 제거 (프로토타입)')" aria-label="이미지 제거">×</button>
             </li>
           `).join('')}
         </ul>
       </div>
-      <div class="form-row" style="margin-top:12px;">
-        <label class="label">태그 <span class="label-sub">(최대 10개)</span></label>
-        <input class="input" id="ul-tags" placeholder="#태그를 입력해 주세요." />
-        <div class="tag-chip-list">
-          ${mockTags.map(tag => `
-            <span class="tag-chip">
-              <span>${esc(tag)}</span>
-              <button type="button" class="x" onclick="toast('태그 제거 (프로토타입)')" aria-label="태그 제거">×</button>
-            </span>
-          `).join('')}
-        </div>
-      </div>
       <div class="row" style="justify-content:flex-end; margin-top:18px; gap:8px;">
-        <button class="btn" onclick="backUploadType()">취소</button>
-        <button class="btn btn-primary" onclick="submitUpload()">콘텐츠 등록</button>
+        <button class="btn" onclick="onUploadFormCancel()">취소</button>
+        <button class="btn btn-primary" onclick="submitUpload()">${submitLabel}</button>
       </div>
     `;
   }
@@ -17382,15 +18046,16 @@ function renderUploadForm(t) {
       </div>
       <div class="form-row" style="margin-top:18px;">
         <label class="label">첨부파일 등록<span class="req-mark" aria-hidden="true"></span></label>
-        <div class="img-uploader" onclick="toast('파일 추가 (프로토타입)')">
+        <div class="img-uploader" id="ul-attach-uploader" onclick="startAttachUploadSim()">
           <div class="add-ic" aria-hidden="true">＋</div>
           <div class="ttl">업로드하려는 파일을 추가해 주세요.</div>
         </div>
+        <div id="ul-attach-upload-progress"></div>
         <ul class="upload-hint">
-          <li>100MB 이하의 jpg, jpeg, gif, png, xls, xlsx, ppt, pptx, doc, docx, hwp, txt, pdf, pbix 파일을 등록해 주세요.</li>
+          <li>100MB 이하의 jpg, jpeg, gif, png, xls, xlsx, ppt, pptx, doc, docx, hwp, txt, pdf, pbix, zip 파일을 등록해 주세요.</li>
           <li>여러 개의 파일을 등록하실 수 있습니다.</li>
         </ul>
-        <ul class="file-list">
+        <ul class="file-list" id="ul-attach-list">
           ${mockFiles.map(name => `
             <li class="file-list-item">
               <span class="file-ico" aria-hidden="true">${fileIconFor(name)}</span>
@@ -17400,21 +18065,9 @@ function renderUploadForm(t) {
           `).join('')}
         </ul>
       </div>
-      <div class="form-row" style="margin-top:12px;">
-        <label class="label">태그 <span class="label-sub">(최대 10개)</span></label>
-        <input class="input" id="ul-tags" placeholder="#태그를 입력해 주세요." />
-        <div class="tag-chip-list">
-          ${mockFileTags.map(tag => `
-            <span class="tag-chip">
-              <span>${esc(tag)}</span>
-              <button type="button" class="x" onclick="toast('태그 제거 (프로토타입)')" aria-label="태그 제거">×</button>
-            </span>
-          `).join('')}
-        </div>
-      </div>
       <div class="row" style="justify-content:flex-end; margin-top:18px; gap:8px;">
-        <button class="btn" onclick="backUploadType()">취소</button>
-        <button class="btn btn-primary" onclick="submitUpload()">콘텐츠 등록</button>
+        <button class="btn" onclick="onUploadFormCancel()">취소</button>
+        <button class="btn btn-primary" onclick="submitUpload()">${submitLabel}</button>
       </div>
     `;
   }
@@ -17441,21 +18094,9 @@ function renderUploadForm(t) {
             : '<span class="rte-placeholder">아티클 내용을 입력해 주세요.</span>'}
         </div>
       </div>
-      <div class="form-row" style="margin-top:18px;">
-        <label class="label">태그 <span class="label-sub">(최대 10개)</span></label>
-        <input class="input" id="ul-tags" placeholder="#태그를 입력해 주세요." />
-        <div class="tag-chip-list">
-          ${mockArticleTags.map(tag => `
-            <span class="tag-chip">
-              <span>${esc(tag)}</span>
-              <button type="button" class="x" onclick="toast('태그 제거 (프로토타입)')" aria-label="태그 제거">×</button>
-            </span>
-          `).join('')}
-        </div>
-      </div>
       <div class="row" style="justify-content:flex-end; margin-top:18px; gap:8px;">
-        <button class="btn" onclick="backUploadType()">취소</button>
-        <button class="btn btn-primary" onclick="submitUpload()">아티클 등록</button>
+        <button class="btn" onclick="onUploadFormCancel()">취소</button>
+        <button class="btn btn-primary" onclick="submitUpload()">${submitLabel}</button>
       </div>
     `;
   }
@@ -17474,21 +18115,9 @@ function renderUploadForm(t) {
         </div>
         <div class="title-error-msg" id="ul-link-url-err"></div>
       </div>
-      <div class="form-row" style="margin-top:18px;">
-        <label class="label">태그 <span class="label-sub">(최대 10개)</span></label>
-        <input class="input" id="ul-tags" placeholder="#태그를 입력해 주세요." />
-        <div class="tag-chip-list">
-          ${mockLinkTags.map(tag => `
-            <span class="tag-chip">
-              <span>${esc(tag)}</span>
-              <button type="button" class="x" onclick="toast('태그 제거 (프로토타입)')" aria-label="태그 제거">×</button>
-            </span>
-          `).join('')}
-        </div>
-      </div>
       <div class="row" style="justify-content:flex-end; margin-top:18px; gap:8px;">
-        <button class="btn" onclick="backUploadType()">취소</button>
-        <button class="btn btn-primary" onclick="submitUpload()">링크 등록</button>
+        <button class="btn" onclick="onUploadFormCancel()">취소</button>
+        <button class="btn btn-primary" onclick="submitUpload()">${submitLabel}</button>
       </div>
     `;
   }
@@ -17520,8 +18149,8 @@ function renderUploadForm(t) {
         <div data-offline-rounds data-compact>${active ? renderOfflineRounds(active) : ''}</div>
       </div>
       <div class="row" style="justify-content:flex-end; margin-top:18px; gap:8px;">
-        <button class="btn" onclick="backUploadType()">취소</button>
-        <button class="btn btn-primary" onclick="submitUpload()">오프라인 등록</button>
+        <button class="btn" onclick="onUploadFormCancel()">취소</button>
+        <button class="btn btn-primary" onclick="submitUpload()">${submitLabel}</button>
       </div>
     `;
   }
@@ -17568,13 +18197,14 @@ function renderUploadForm(t) {
       </div>
       <div class="form-row" style="margin-top:18px;">
         <label class="label">첨부파일</label>
-        <input type="file" id="ul-task-file" multiple style="display:none;" accept=".jpg,.jpeg,.gif,.png,.xls,.xlsx,.ppt,.pptx,.doc,.docx,.hwp,.txt,.pdf,.pbix" onchange="onChangeFile(this)" />
+        <input type="file" id="ul-task-file" multiple style="display:none;" accept=".jpg,.jpeg,.gif,.png,.xls,.xlsx,.ppt,.pptx,.doc,.docx,.hwp,.txt,.pdf,.pbix,.zip" onchange="onChangeFile(this)" />
         <div class="img-uploader" id="ul-task-uploader" onclick="document.getElementById('ul-task-file').click()">
           <div class="add-ic" aria-hidden="true">＋</div>
           <div class="ttl">업로드하려는 파일을 추가해 주세요.</div>
         </div>
+        <div id="ul-task-upload-progress"></div>
         <ul class="upload-hint">
-          <li>100MB 이하의 jpg, jpeg, gif, png, xls, xlsx, ppt, pptx, doc, docx, hwp, txt, pdf, pbix 파일을 등록해 주세요.</li>
+          <li>100MB 이하의 jpg, jpeg, gif, png, xls, xlsx, ppt, pptx, doc, docx, hwp, txt, pdf, pbix, zip 파일을 등록해 주세요.</li>
           <li>여러 개의 파일을 등록하실 수 있습니다.</li>
         </ul>
         <ul class="upload-hint" id="ul-task-file-list" style="margin-top:4px;"></ul>
@@ -17587,21 +18217,9 @@ function renderUploadForm(t) {
           <span>자 이상 필수 입력</span>
         </div>
       </div>
-      <div class="form-row" style="margin-top:18px;">
-        <label class="label">태그 <span class="label-sub">(최대 10개)</span></label>
-        <input class="input" id="ul-tags" placeholder="#태그를 입력해 주세요." />
-        <div class="tag-chip-list">
-          ${mockTaskTags.map(tag => `
-            <span class="tag-chip">
-              <span>${esc(tag)}</span>
-              <button type="button" class="x" onclick="toast('태그 제거 (프로토타입)')" aria-label="태그 제거">×</button>
-            </span>
-          `).join('')}
-        </div>
-      </div>
       <div class="row" style="justify-content:flex-end; margin-top:18px; gap:8px;">
-        <button class="btn" onclick="backUploadType()">취소</button>
-        <button class="btn btn-primary" onclick="submitUpload()">과제 등록</button>
+        <button class="btn" onclick="onUploadFormCancel()">취소</button>
+        <button class="btn btn-primary" onclick="submitUpload()">${submitLabel}</button>
       </div>
     `;
   }
@@ -17639,13 +18257,14 @@ function renderUploadForm(t) {
       </div>
       <div class="form-row" style="margin-top:18px;">
         <label class="label">첨부파일</label>
-        <input type="file" id="ul-discuss-file" multiple style="display:none;" accept=".jpg,.jpeg,.gif,.png,.xls,.xlsx,.ppt,.pptx,.doc,.docx,.hwp,.txt,.pdf,.pbix" onchange="onChangeFile(this)" />
+        <input type="file" id="ul-discuss-file" multiple style="display:none;" accept=".jpg,.jpeg,.gif,.png,.xls,.xlsx,.ppt,.pptx,.doc,.docx,.hwp,.txt,.pdf,.pbix,.zip" onchange="onChangeFile(this)" />
         <div class="img-uploader" id="ul-discuss-uploader" onclick="document.getElementById('ul-discuss-file').click()">
           <div class="add-ic" aria-hidden="true">＋</div>
           <div class="ttl">업로드하려는 파일을 추가해 주세요.</div>
         </div>
+        <div id="ul-discuss-upload-progress"></div>
         <ul class="upload-hint">
-          <li>100MB 이하의 jpg, jpeg, gif, png, xls, xlsx, ppt, pptx, doc, docx, hwp, txt, pdf, pbix 파일을 등록해 주세요.</li>
+          <li>100MB 이하의 jpg, jpeg, gif, png, xls, xlsx, ppt, pptx, doc, docx, hwp, txt, pdf, pbix, zip 파일을 등록해 주세요.</li>
           <li>여러 개의 파일을 등록하실 수 있습니다.</li>
         </ul>
         <ul class="upload-hint" id="ul-discuss-file-list" style="margin-top:4px;"></ul>
@@ -17658,21 +18277,9 @@ function renderUploadForm(t) {
           <span>자 이상 필수 입력</span>
         </div>
       </div>
-      <div class="form-row" style="margin-top:18px;">
-        <label class="label">태그 <span class="label-sub">(최대 10개)</span></label>
-        <input class="input" id="ul-tags" placeholder="#태그를 입력해 주세요." />
-        <div class="tag-chip-list">
-          ${mockDiscussTags.map(tag => `
-            <span class="tag-chip">
-              <span>${esc(tag)}</span>
-              <button type="button" class="x" onclick="toast('태그 제거 (프로토타입)')" aria-label="태그 제거">×</button>
-            </span>
-          `).join('')}
-        </div>
-      </div>
       <div class="row" style="justify-content:flex-end; margin-top:18px; gap:8px;">
-        <button class="btn" onclick="backUploadType()">취소</button>
-        <button class="btn btn-primary" onclick="submitUpload()">토론 등록</button>
+        <button class="btn" onclick="onUploadFormCancel()">취소</button>
+        <button class="btn btn-primary" onclick="submitUpload()">${submitLabel}</button>
       </div>
     `;
   }
@@ -17703,8 +18310,8 @@ function renderUploadForm(t) {
       <input class="input" type="number" value="${t.id==='exam'?'40':'10'}" />
     </div>
     <div class="row" style="justify-content:flex-end; margin-top:18px; gap:8px;">
-      <button class="btn" onclick="backUploadType()">취소</button>
-      <button class="btn btn-primary" onclick="submitUpload()">${esc(t.label)} 등록</button>
+      <button class="btn" onclick="onUploadFormCancel()">취소</button>
+      <button class="btn btn-primary" onclick="submitUpload()">${submitLabel}</button>
     </div>
   `;
 }
@@ -18044,7 +18651,8 @@ function renderLibraryTab() {
     <div class="sr" style="padding-bottom: 12px;">
       <div class="search" style="flex:1; max-width:none;">
         <span class="ic">🔍</span>
-        <input class="input" id="lib-q" placeholder="검색어를 입력해주세요." value="${esc(DRAWER.libQuery)}" oninput="DRAWER.libQuery=this.value; renderLibList();" />
+        <input class="input" id="lib-q" placeholder="검색어를 입력해주세요." value="${esc(DRAWER.libQuery)}" oninput="DRAWER.libQuery=this.value; toggleClearBtn('lib-clear-q', this.value); renderLibList();" />
+        <button type="button" id="lib-clear-q" class="clear-q" title="검색어 지우기" aria-label="검색어 지우기" style="${DRAWER.libQuery ? '' : 'display:none;'}" onclick="clearLibQuery()">✕</button>
       </div>
     </div>
     <div class="pill-row" style="margin-bottom:12px;">
@@ -18065,6 +18673,18 @@ function setLibSource(source, el) {
   DRAWER.libSource = source;
   DRAWER.libType = '전체';   // 출처 변경 시 유형 필터 초기화 (노출 유형이 달라지므로)
   renderDrawer();
+}
+
+// 검색어 입력 상태에 따라 지우기(x) 버튼 표시/숨김 토글 (입력 중에는 입력 행을 재렌더하지 않으므로 직접 제어)
+function toggleClearBtn(id, val) {
+  const btn = document.getElementById(id);
+  if (btn) btn.style.display = val ? '' : 'none';
+}
+
+// 콘텐츠 검색추가 탭 — 검색어 지우기(x). 검색어만 비우고 하단 검색조건(출처·유형·필터)은 유지한 채 재검색
+function clearLibQuery() {
+  DRAWER.libQuery = '';
+  renderDrawer();  // 전체 재렌더 → x 버튼 사라지고 현재 필터 기준으로 목록 갱신
 }
 
 // 라이브러리 아이템의 뱃지 영역 HTML (프리미엄 / 무료 / 유료 가격)
@@ -18174,9 +18794,9 @@ function clearLibChecked() {
 function renderLibFooter() {
   const foot = document.getElementById('drawer-foot');
   if (!foot) return;
+  // 콘텐츠 검색추가 탭 하단 '닫기' 제거 — 종료는 상단 X로 통일 (선택 시 선택 해제·선택 추가 버튼은 유지)
   if (DRAWER.libPreviewId) {
-    const backLabel = DRAWER.libPreviewOrigin === 'prev' ? '‹ 과정 상세로' : '‹ 목록으로';
-    foot.innerHTML = `<button class="btn" onclick="closeLibPreview()">${backLabel}</button><button class="btn" onclick="closeDrawer()">닫기</button>`;
+    foot.innerHTML = '';
     return;
   }
   const cnt = (DRAWER.libChecked && DRAWER.libChecked.size) || 0;
@@ -18185,7 +18805,7 @@ function renderLibFooter() {
       <button class="btn" onclick="clearLibChecked()">선택 해제</button>
       <button class="btn btn-primary" onclick="bulkAddLib()">선택 추가 (${cnt})</button>`;
   } else {
-    foot.innerHTML = `<button class="btn" onclick="closeDrawer()">닫기</button>`;
+    foot.innerHTML = '';
   }
 }
 
@@ -18197,6 +18817,10 @@ function openLibPreview(id, e) {
   // 유형별 미리보기 내부 상태 초기화
   DRAWER.libPreviewImageIdx = 0;
   DRAWER.libPreviewQIdx = 0;
+  // 유사 콘텐츠 추천 페이징 초기화 (다른 콘텐츠 진입 시 첫 페이지부터)
+  DRAWER.libSimShown = 0;
+  DRAWER.libSimLoads = 0;
+  DRAWER._libSimLoading = false;
   renderDrawer();
 }
 
@@ -18204,6 +18828,9 @@ function closeLibPreview() {
   DRAWER.libPreviewId = null;
   DRAWER.libPreviewImageIdx = 0;
   DRAWER.libPreviewQIdx = 0;
+  DRAWER.libSimShown = 0;
+  DRAWER.libSimLoads = 0;
+  DRAWER._libSimLoading = false;
   // prev/통합 탭의 leaf 미리보기에서 진입한 경우 → prev 상세로 복귀
   if (DRAWER.libPreviewOrigin === 'prev') {
     DRAWER.libPreviewOrigin = null;
@@ -18275,7 +18902,7 @@ function renderLibPreview() {
   const isFav = isFavContent(it.id);
   return `
     <div class="lib-prev">
-      <button class="lib-prev-back" onclick="closeLibPreview()">‹ 라이브러리로 돌아가기</button>
+      <button class="lib-prev-back" onclick="closeLibPreview()">‹ 이전 목록으로 돌아가기</button>
       <div class="lib-prev-head">
         <div class="lib-prev-head-main">
           <div class="lib-prev-title">${esc(it.title)}</div>
@@ -18291,49 +18918,92 @@ function renderLibPreview() {
         </div>
       </div>
       ${renderLibPreviewBody(it)}
-      ${it.tags && it.tags.length
-        ? `<div class="lib-prev-tags">${it.tags.map(t => `<span class="chip">${esc(t)}</span>`).join('')}</div>`
-        : ''}
       ${renderLibPreviewSimilar(it)}
     </div>
   `;
 }
 
-function renderLibPreviewSimilar(it) {
-  const similar = findSimilarLibItems(it, 5);
+/* 유사 콘텐츠 추천 무한 스크롤 (프로토타입 시연용) */
+const LIB_SIM_PAGE_SIZE = 5;   // 기본 노출 및 1회 추가 로드 단위
+const LIB_SIM_MAX_LOADS = 20;  // 추가 로드 최대 횟수 (최초 5개 제외 — 최대 노출 5 + 5×20 = 105개)
+
+/* 유사 콘텐츠 추천 목록의 한 행 HTML (최초 렌더 + 스크롤 추가 로딩 공용) */
+function libSimRowHtml(x) {
   const playable = new Set(['동영상', '유튜브', '마이크로러닝']);
+  const sChecked = (DRAWER.libChecked && DRAWER.libChecked.has(x.id));
+  const hasThumb = !!x.thumb;
+  const isPlayable = playable.has(x.type);
+  const thumbCls = hasThumb ? 'k' + (x.kind || 1) : 'no-thumb';
+  const xMetaSame = x.meta && x.meta === x.type;
+  return `
+    <div class="lib-row ${sChecked?'checked':''}" onclick="openLibPreview('${x.id}', event)">
+      <div class="row-thumb ${thumbCls}">
+        ${hasThumb && isPlayable ? `<span class="center play">▶</span>` : ''}
+        ${!hasThumb ? `<div class="no-thumb-icon">${ctIcon(x.type)}</div>` : ''}
+        ${x.meta && !xMetaSame ? `<span class="dur">${esc(x.meta)}</span>` : ''}
+        <button class="row-fav ${isFavContent(x.id)?'on':''}" data-fav-id="${x.id}" onclick="event.stopPropagation(); toggleFavContent('${x.id}', event)" title="${isFavContent(x.id)?'스크랩 취소':'스크랩 추가'}">★</button>
+      </div>
+      <div class="row-info">
+        <div class="ttl">${esc(x.title)}</div>
+        <div class="type-tag">${esc(x.type)}${libBadgesHtml(x)}</div>
+      </div>
+      <div class="row-actions">
+        <button class="row-add" onclick="addLibItem('${x.id}', event)" title="추가">+</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderLibPreviewSimilar(it) {
+  const pool = findSimilarLibItems(it, Infinity);
+  // 최초 진입 시 첫 페이지(5개)만 노출 — 이후 드로어 스크롤 하단 도달 시 5개씩 추가 로딩
+  if (!DRAWER.libSimShown || DRAWER.libSimShown < 1) DRAWER.libSimShown = Math.min(LIB_SIM_PAGE_SIZE, pool.length);
+  const shown = pool.slice(0, DRAWER.libSimShown);
+  const hasMore = DRAWER.libSimShown < pool.length && (DRAWER.libSimLoads || 0) < LIB_SIM_MAX_LOADS;
   return `
     <div class="lib-prev-sim-title">유사 콘텐츠 추천</div>
-    ${similar.length === 0
+    ${pool.length === 0
       ? `<div class="lib-prev-sim-empty">유사한 콘텐츠가 없습니다.</div>`
-      : `<div class="lib-row-list">
-          ${similar.map(x => {
-            const sChecked = (DRAWER.libChecked && DRAWER.libChecked.has(x.id));
-            const hasThumb = !!x.thumb;
-            const isPlayable = playable.has(x.type);
-            const thumbCls = hasThumb ? 'k' + (x.kind || 1) : 'no-thumb';
-            const xMetaSame = x.meta && x.meta === x.type;
-            return `
-              <div class="lib-row ${sChecked?'checked':''}" onclick="openLibPreview('${x.id}', event)">
-                <div class="row-thumb ${thumbCls}">
-                  ${hasThumb && isPlayable ? `<span class="center play">▶</span>` : ''}
-                  ${!hasThumb ? `<div class="no-thumb-icon">${ctIcon(x.type)}</div>` : ''}
-                  ${x.meta && !xMetaSame ? `<span class="dur">${esc(x.meta)}</span>` : ''}
-                  <button class="row-fav ${isFavContent(x.id)?'on':''}" data-fav-id="${x.id}" onclick="event.stopPropagation(); toggleFavContent('${x.id}', event)" title="${isFavContent(x.id)?'스크랩 취소':'스크랩 추가'}">★</button>
-                </div>
-                <div class="row-info">
-                  <div class="ttl">${esc(x.title)}</div>
-                  <div class="type-tag">${esc(x.type)}${libBadgesHtml(x)}</div>
-                </div>
-                <div class="row-actions">
-                  <button class="row-add" onclick="addLibItem('${x.id}', event)" title="추가">+</button>
-                </div>
-              </div>
-            `;
-          }).join('')}
+      : `<div class="lib-row-list" id="lib-sim-list">
+          ${shown.map(libSimRowHtml).join('')}
+        </div>
+        <div id="lib-sim-loader" class="ent-loader" style="display:${hasMore ? 'flex' : 'none'};">
+          <span class="ent-loader-spin"></span> 불러오는 중…
         </div>`
     }
   `;
+}
+
+/* 콘텐츠 상세(view) 유사 콘텐츠 추천 — 드로어 본문 하단 근처 도달 시 5개씩 이어 붙인다 (프로토타입 시연용) */
+function setupLibSimInfiniteScroll() {
+  const scroller = document.getElementById('drawer-body');
+  if (!scroller) return;
+  scroller.onscroll = function() {
+    if (!DRAWER.libPreviewId) return;
+    if (DRAWER._libSimLoading) return;
+    if ((DRAWER.libSimLoads || 0) >= LIB_SIM_MAX_LOADS) return;
+    const it = LIB_ITEMS.find(x => x.id === DRAWER.libPreviewId);
+    if (!it) return;
+    const pool = findSimilarLibItems(it, Infinity);
+    if (DRAWER.libSimShown >= pool.length) return;
+    const nearBottom = (scroller.scrollTop + scroller.clientHeight) >= (scroller.scrollHeight - 120);
+    if (!nearBottom) return;
+    DRAWER._libSimLoading = true;
+    const loader = document.getElementById('lib-sim-loader');
+    if (loader) loader.style.display = 'flex';
+    // 추가 로딩을 시각적으로 보여주기 위한 짧은 지연
+    setTimeout(function() {
+      const list = document.getElementById('lib-sim-list');
+      if (!list) { DRAWER._libSimLoading = false; return; }
+      const next = Math.min(DRAWER.libSimShown + LIB_SIM_PAGE_SIZE, pool.length);
+      list.insertAdjacentHTML('beforeend', pool.slice(DRAWER.libSimShown, next).map(libSimRowHtml).join(''));
+      DRAWER.libSimShown = next;
+      DRAWER.libSimLoads = (DRAWER.libSimLoads || 0) + 1;
+      DRAWER._libSimLoading = false;
+      const exhausted = DRAWER.libSimShown >= pool.length || DRAWER.libSimLoads >= LIB_SIM_MAX_LOADS;
+      if (exhausted && loader) loader.style.display = 'none';
+    }, 450);
+  };
 }
 
 function renderLibPreviewBody(it) {
@@ -18646,7 +19316,7 @@ function renderLibPrevOffline(it) {
         <div class="lib-prev-session">
           <div class="round-badge">${s.round}회차</div>
           <div class="info">
-            <div class="row"><span class="k">📅 일자</span><span class="v">${esc(s.date || '-')}</span></div>
+            <div class="row"><span class="k">📅 일자</span><span class="v">${esc(fmtDot(s.date || '-'))}</span></div>
             <div class="row"><span class="k">⏰ 시간</span><span class="v">${esc(s.time || '-')}</span></div>
             <div class="row"><span class="k">📍 장소</span><span class="v">${esc(s.location || '-')}</span></div>
             ${s.instructor ? `<div class="row"><span class="k">👤 강사</span><span class="v">${esc(s.instructor)}</span></div>` : ''}
@@ -18831,7 +19501,7 @@ function renderOnlinePreview() {
   return `
     <div class="pkg-kind">온라인</div>
     <div class="pkg-course-name">${esc(c.title)}</div>
-    <div class="pkg-meta">${esc(c.path)} · 제작일 ${esc(c.createdAt || '-')}</div>
+    <div class="pkg-meta">${esc(c.path)} · 제작일 ${esc(fmtDot(c.createdAt || '-'))}</div>
 
     ${mods.map((m, i) => `
       <div class="pkg-module ${i===0?'expanded':''}">
@@ -18940,7 +19610,7 @@ function renderPkgPreview() {
     <button type="button" class="ent-back-btn" onclick="pkgPreviewBack()" style="display:inline-flex;align-items:center;gap:6px;margin-bottom:16px;padding:8px 16px;border:1px solid #dfe3e8;border-radius:999px;background:#f4f6f8;color:#3d4a5c;font-size:13px;font-weight:600;cursor:pointer;">‹ 이전 목록으로 돌아가기</button>
     <div class="pkg-kind">${esc(DRAWER.pkgKindLabel || '프리패키지드')}</div>
     <div class="pkg-course-name">${esc(c.title)}</div>
-    <div class="pkg-meta">${esc(c.path || c.meta || '')} · 제작일 ${esc(c.createdAt || '-')}</div>
+    <div class="pkg-meta">${esc(c.path || c.meta || '')} · 제작일 ${esc(fmtDot(c.createdAt || '-'))}</div>
 
     ${mods.map((m, i) => `
       <div class="pkg-module ${i===0?'expanded':''}">
@@ -19138,11 +19808,7 @@ function renderIntegratedTab() {
   // detail 모드: 카드 클릭으로 진입한 상세 화면을 같은 탭 내에서 표시
   if (DRAWER.integratedDetail) {
     return `
-      <div style="margin: 0 0 14px;">
-        <button class="integ-detail-back" onclick="integratedDetailBack()" title="과정 목록으로 돌아가기" aria-label="과정 목록으로 돌아가기">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-        </button>
-      </div>
+      <button type="button" class="ent-back-btn" onclick="integratedDetailBack()" style="display:inline-flex;align-items:center;gap:6px;margin-bottom:16px;padding:8px 16px;border:1px solid #dfe3e8;border-radius:999px;background:#f4f6f8;color:#3d4a5c;font-size:13px;font-weight:600;cursor:pointer;">‹ 이전 목록으로 돌아가기</button>
       ${renderPrevCourseDetail()}
     `;
   }
@@ -19169,7 +19835,8 @@ function renderIntegratedTab() {
       <div class="search" style="flex:1; max-width:none;">
         <span class="ic">🔍</span>
         <input class="input" placeholder="검색어를 입력해주세요." value="${esc(q)}"
-          oninput="DRAWER.integratedQuery=this.value; refreshIntegratedGrid()"/>
+          oninput="DRAWER.integratedQuery=this.value; toggleClearBtn('integ-clear-q', this.value); refreshIntegratedGrid()"/>
+        <button type="button" id="integ-clear-q" class="clear-q" title="검색어 지우기" aria-label="검색어 지우기" style="${q ? '' : 'display:none;'}" onclick="clearIntegratedQuery()">✕</button>
       </div>
     </div>
 
@@ -19217,6 +19884,14 @@ function refreshIntegratedGrid() {
   if (cnt) cnt.textContent = items.length;
 }
 
+// 과정 검색추가 탭 — 검색어 지우기(x). 검색어만 비우고 하단 검색조건(출처·유형·필터)은 유지한 채 재검색
+function clearIntegratedQuery() {
+  DRAWER.integratedQuery = '';
+  // 탭 본문 전체 재렌더 → x 버튼 사라지고 현재 필터 기준으로 카운트·그리드 갱신
+  const tab = document.getElementById('drawer-body');
+  if (tab) tab.innerHTML = renderIntegratedTab();
+}
+
 function toggleIntegratedFilter(group, value) {
   const set = _integSet(group);
   if (value === '__all__') {
@@ -19253,16 +19928,6 @@ function renderIntegratedCardGrid(items) {
                   : (it.price ? `<span class="badge-pill badge-paid">${esc(it.price)}</span>` : ''))}
             <span class="badge-pill src-${it.source}">${esc(it.sourceLabel)}</span>
           </div>
-          ${it.topics.length ? (() => {
-            const MAX_TAGS = 3;
-            const shown = it.topics.slice(0, MAX_TAGS);
-            const rest  = it.topics.length - shown.length;
-            return `
-            <div class="topic-chips">
-              ${shown.map(t => `<span class="topic-chip">${esc(t)}</span>`).join('')}
-              ${rest > 0 ? `<span class="topic-chip topic-chip-more">+${rest}</span>` : ''}
-            </div>`;
-          })() : ''}
           <div class="meta">${esc(it.meta || '')}</div>
         </div>
       </div>
@@ -19512,16 +20177,6 @@ function renderFavCourseGrid() {
                   : (it.price ? `<span class="badge-pill badge-paid">${esc(it.price)}</span>` : ''))}
             <span class="badge-pill src-${it.source}">${esc(it.sourceLabel)}</span>
           </div>
-          ${it.topics.length ? (() => {
-            const MAX_TAGS = 3;
-            const shown = it.topics.slice(0, MAX_TAGS);
-            const rest  = it.topics.length - shown.length;
-            return `
-            <div class="topic-chips">
-              ${shown.map(t => `<span class="topic-chip">${esc(t)}</span>`).join('')}
-              ${rest > 0 ? `<span class="topic-chip topic-chip-more">+${rest}</span>` : ''}
-            </div>`;
-          })() : ''}
           <div class="meta">${esc(it.meta || '')}</div>
         </div>
       </div>
@@ -19580,7 +20235,7 @@ function renderEnterprisePreview() {
     <button type="button" class="ent-back-btn" onclick="enterprisePreviewBack()" style="display:inline-flex;align-items:center;gap:6px;margin-bottom:16px;padding:8px 16px;border:1px solid #dfe3e8;border-radius:999px;background:#f4f6f8;color:#3d4a5c;font-size:13px;font-weight:600;cursor:pointer;">‹ 이전 목록으로 돌아가기</button>
     <div class="pkg-kind">${esc(kindLabel)}</div>
     <div class="pkg-course-name">${esc(c.title)}</div>
-    <div class="pkg-meta">${esc(c.category || '')} · 제작일 ${esc(c.createdAt || '')}</div>
+    <div class="pkg-meta">${esc(c.category || '')} · 제작일 ${esc(fmtDot(c.createdAt || ''))}</div>
 
     ${mods.map((m, i) => `
       <div class="pkg-module ${i===0?'expanded':''}">
@@ -19749,7 +20404,7 @@ function renderPrevCourseDetail() {
                     onclick="event.stopPropagation(); prevToggleLeaf(${mi}, ${li}, this.checked)" />
                   <span class="leaf-title">
                     <span class="leaf-type" title="${esc(leafType)}" aria-label="${esc(leafType)}"><span class="ic">${leafIco}</span></span>
-                    <span class="leaf-name">${esc(l)}</span>
+                    <span class="leaf-name">${esc(l.replace(/^\s*\[[^\]]+\]\s*/, ''))}</span>
                   </span>
                   <span class="leaf-actions">
                     <button class="leaf-preview" title="미리보기"
@@ -20553,6 +21208,16 @@ function closeModal() { document.getElementById('modal-mask').classList.remove('
 document.getElementById('modal-mask').addEventListener('click', (e) => {
   if (e.target.id === 'modal-mask') closeModal();
 });
+
+// 콘텐츠 등록/수정·과정정보·일정 폼에서 입력/변경 발생 시 변경사항(_dirty) 표시
+// (위임 리스너 — 드로어 본문이 재렌더돼도 한 번만 바인딩)
+(function bindDrawerDirtyTracking() {
+  const dbody = document.getElementById('drawer-body');
+  if (!dbody) return;
+  const markDirty = () => { if (isEditingFormDrawer()) DRAWER._dirty = true; };
+  dbody.addEventListener('input', markDirty);
+  dbody.addEventListener('change', markDirty);
+})();
 
 // 과정 제작완료 안내 모달: 배경 클릭/ESC 키로 닫기
 document.getElementById('cd-modal-mask').addEventListener('click', (e) => {

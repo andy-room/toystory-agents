@@ -1142,6 +1142,7 @@ function _submitTocFp() {
     const pos = _tocFpState.insertIdx >= 0 ? _tocFpState.insertIdx : ch.items.length;
     ch.items.splice(pos, 0, newItem);
   }
+  ch.items = ch.items.filter(i => !i._blank);
   ch.contents = ch.items.length;
 
   _tocFpState = null;
@@ -1221,7 +1222,7 @@ function renderTocStep() {
   }
 
   const chapHtml = S.toc.length
-    ? S.toc.map((ch, i) => _tocSection(ch, i)).join('')
+    ? S.toc.map((ch, i) => _tocSection(ch, i)).join('') + `<div id="tocDropEnd" class="toc-drop-end"></div>`
     : `<div class="toc-empty-state">목차를 추가해 콘텐츠를 구성해주세요.</div>`;
 
   const _PLUS_ICO  = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`;
@@ -1241,8 +1242,8 @@ function renderTocStep() {
     <div class="esec-header esec-header-flex">
       <div class="esec-header-left">
         <div class="esec-num">02 / 04</div>
-        <div class="esec-title">목차와 콘텐츠를 구성하세요</div>
-        <div class="esec-desc">목차를 추가하고 각 목차에 콘텐츠를 등록하세요.</div>
+        <div class="esec-title">어떤 커리큘럼 내용으로 구성할까요?</div>
+        <div class="esec-desc">학습자가 이해하기 쉬운 체계적인 커리큘럼을 구성해보세요.</div>
       </div>
       <div class="esec-header-actions">${actionBtns}</div>
     </div>
@@ -1251,9 +1252,9 @@ function renderTocStep() {
 
 /* ── 접힌 상태 프리뷰 ── */
 function _tocCollapsedPreview(ch) {
-  const items = ch.items || [];
+  const items = (ch.items || []).filter(i => !i._blank);
   if (items.length === 0) {
-    return `<div class="toc-col-empty" onclick="event.stopPropagation();toggleTocCollapse('${ch.id}')">콘텐츠를 추가하세요</div>`;
+    return ''; /* 빈 챕터 / blank만 있는 챕터 — 헤더만 표시 */
   }
   const MAX = 5;
   const shown = items.slice(0, MAX);
@@ -1277,6 +1278,12 @@ function _tocCollapsedPreview(ch) {
 
 /* ── 목차 섹션 ── */
 function _tocSection(ch, idx) {
+  if (ch._isFlat) {
+    const items = ch.items || [];
+    return `<div class="toc-sec toc-sec-flat" data-chap-id="${ch.id}" data-chap-idx="${idx}">
+      ${items.map((item, i) => _tocContentCard(item, ch.id, i)).join('')}
+    </div>`;
+  }
   const items      = ch.items || [];
   const isSelected = _tocSelectedChaps.has(ch.id);
   const isCollapsed = _tocCollapsedChaps.has(ch.id);
@@ -1302,23 +1309,26 @@ function _tocSection(ch, idx) {
     ? `<span class="toc-sec-name" data-chap="${ch.id}" ondblclick="editTocTitle('${ch.id}',event)">${esc(ch.title)}</span>`
     : `<span class="toc-sec-name toc-sec-name-empty" data-chap="${ch.id}" ondblclick="editTocTitle('${ch.id}',event)">목차명을 입력해 주세요</span>`;
 
+  const headerDragAttrs = !_tocEditMode
+    ? `draggable="true" data-grip-chap="${ch.id}" data-grip-idx="${idx}"`
+    : '';
+
   return `
-    <div class="toc-sec${isSelected ? ' toc-sec-selected' : ''}">
-      <div class="toc-sec-header" onclick="${_tocEditMode ? `toggleTocChapSelect('${ch.id}')` : ''}">
+    <div class="toc-sec${isSelected ? ' toc-sec-selected' : ''}" data-chap-id="${ch.id}" data-chap-idx="${idx}">
+      <div class="toc-sec-header" ${headerDragAttrs} onclick="${_tocEditMode ? `toggleTocChapSelect('${ch.id}')` : ''}">
         ${leftEl}
         ${toggleEl}
         ${titleHtml}
         ${addBtnEl}
       </div>
-      <div class="toc-sec-body">${isCollapsed ? _tocCollapsedPreview(ch) : _tocRenderItems(ch.id, items)}</div>
+      ${(() => { const c = isCollapsed ? _tocCollapsedPreview(ch) : _tocRenderItems(ch.id, items); return c ? `<div class="toc-sec-body">${c}</div>` : ''; })()}
     </div>`;
 }
 
 /* ── 아이템 목록 + 슬롯 ── */
 function _tocRenderItems(chapId, items) {
   if (items.length === 0) {
-    return `<div class="toc-add-empty" data-chap="${chapId}" data-idx="0"
-      onclick="openTocPicker('${chapId}',0)">+ 콘텐츠 추가</div>`;
+    return `<div class="toc-add-empty toc-add-empty--no-hover">콘텐츠가 없습니다.</div>`;
   }
 
   let html = '';
@@ -1343,6 +1353,10 @@ function _tocSlot(chapId, slotIdx) {
 
 /* ── 개별 콘텐츠 카드 ── */
 function _tocContentCard(item, chapId, idx) {
+  if (item._blank && !_tocEditMode) {
+    return `<div class="toc-content-card toc-blank-placeholder" data-chap="${chapId}" data-idx="${idx}"
+      onclick="event.stopPropagation();openTocPicker('${chapId}',${idx})">콘텐츠를 추가해주세요.</div>`;
+  }
   const _typeImgSrc = item.typeImg || (_TOC_ALL_TYPES.find(t => t.id === item.typeId)?.img) || null;
   const ico = _typeImgSrc
     ? `<img src="${_typeImgSrc}" alt="${esc(item.typeLabel)}">`
@@ -1359,7 +1373,8 @@ function _tocContentCard(item, chapId, idx) {
     ? `toggleTocItemSelect('${chapId}',${idx})`
     : `editTocContent('${chapId}',${idx})`;
 
-  return `<div class="toc-content-card${isItemSel ? ' toc-item-selected' : ''}" onclick="${onclickFn}">
+  const dndAttrs = !_tocEditMode ? `draggable="true" data-dnd-content data-chap="${chapId}" data-idx="${idx}"` : '';
+  return `<div class="toc-content-card${isItemSel ? ' toc-item-selected' : ''}" ${dndAttrs} onclick="${onclickFn}">
     ${cbHtml}
     <div class="toc-cc-icon">${ico}</div>
     <div class="toc-cc-info">
@@ -1659,13 +1674,14 @@ function _saveTocTitle(chapId, val) {
   if (ch) ch.title = val.trim();
   saveState();
   const sv = document.getElementById('stepView');
-  if (sv) sv.innerHTML = renderTocStep();
+  if (sv) { sv.innerHTML = renderTocStep(); updateNav(); }
 }
 
 function addChapter() {
   _chapSeq++;
   const newId = 'ch' + _chapSeq;
-  S.toc.push({ id: newId, title: '', contents: 0, items: [] });
+  const blankItem = { id: 'item_' + _chapSeq, typeId: '', typeLabel: '', typeImg: null, title: '', subtitle: '', tags: [], _blank: true };
+  S.toc.push({ id: newId, title: '', contents: 1, items: [blankItem] });
   saveState();
   const sv = document.getElementById('stepView');
   if (sv) { sv.innerHTML = renderTocStep(); updateNav(); }
@@ -1681,4 +1697,329 @@ function removeChapter(id) {
   saveState();
   const sv = document.getElementById('stepView');
   if (sv) { sv.innerHTML = renderTocStep(); updateNav(); }
+}
+
+/* ══════════════════════════════════════════════════════
+   DnD: sep 딜레이 호버 + 콘텐츠 재정렬 + 목차 재정렬
+   ══════════════════════════════════════════════════════ */
+
+let _dndItem = null; // { chapId, fromIdx }
+let _dndChap = null; // { chapId, fromIdx }
+
+function _initTocDnd() {
+  const sv = document.getElementById('stepView');
+  if (!sv || sv._dndReady) return;
+  sv._dndReady = true;
+
+  /* ── sep 딜레이 호버 (1.5초) ── */
+  let _sepTimer = null, _sepActive = null;
+  sv.addEventListener('mouseover', e => {
+    const sep = e.target.closest && e.target.closest('.toc-item-sep');
+    if (!sep || sep === _sepActive) return;
+    if (_sepActive) { clearTimeout(_sepTimer); _sepActive.classList.remove('sep-active'); }
+    _sepActive = sep;
+    sep.classList.add('sep-active'); _sepTimer = null;
+  });
+  sv.addEventListener('mouseout', e => {
+    const sep = e.target.closest && e.target.closest('.toc-item-sep');
+    if (!sep || sep !== _sepActive) return;
+    if (e.relatedTarget && sep.contains(e.relatedTarget)) return;
+    clearTimeout(_sepTimer); sep.classList.remove('sep-active'); _sepActive = null;
+  });
+
+  /* ── dragstart ── */
+  sv.addEventListener('dragstart', e => {
+    if (_tocEditMode) { e.preventDefault(); return; }
+    const card = e.target.closest && e.target.closest('[data-dnd-content]');
+    if (card) {
+      _dndItem = { chapId: card.dataset.chap, fromIdx: +card.dataset.idx };
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', '');
+      setTimeout(() => card.classList.add('dnd-dragging'), 0);
+      return;
+    }
+    const header = e.target.closest && e.target.closest('.toc-sec-header[data-grip-chap]');
+    if (header && !e.target.closest('button, input, a')) {
+      const fromIdx = +header.dataset.gripIdx;
+      _dndChap = { chapId: header.dataset.gripChap, fromIdx };
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', '');
+      const ghost = _chapDragGhost(S.toc[fromIdx], sv.offsetWidth || 640);
+      document.body.appendChild(ghost);
+      e.dataTransfer.setDragImage(ghost, (sv.offsetWidth || 640) / 2, 30);
+      setTimeout(() => { ghost.remove(); const sec = header.closest('.toc-sec'); if (sec) sec.classList.add('dnd-chap-dragging'); }, 0);
+    }
+  });
+
+  /* ── dragover ── */
+  sv.addEventListener('dragover', e => {
+    if (!_dndItem && !_dndChap) return;
+    /* 매 이벤트마다 hover 인디케이터 초기화 → 마우스 아웃 시 잔류 방지 */
+    _clearDndHover();
+
+    if (_dndItem) {
+      const card = e.target.closest && e.target.closest('[data-dnd-content]');
+      if (card) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        const r = card.getBoundingClientRect();
+        card.classList.add(e.clientY < r.top + r.height / 2 ? 'dnd-over-top' : 'dnd-over-bottom');
+        return;
+      }
+      // 다른 목차 바디 영역에 올리면 → 해당 목차로 이동 (카드 없어도 OK)
+      const secBody = e.target.closest && e.target.closest('.toc-sec[data-chap-idx]');
+      if (secBody && secBody.dataset.chapId !== _dndItem.chapId && !e.target.closest('.toc-sec-header')) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        secBody.classList.add('dnd-chap-merge');
+        return;
+      }
+      // 목차 헤더에 올리면 → 새 목차로 분리 (인디케이터)
+      const header = e.target.closest && e.target.closest('.toc-sec-header[data-grip-chap]');
+      if (header) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        const sec = header.closest('.toc-sec');
+        const r = sec.getBoundingClientRect();
+        sec.classList.add(e.clientY < r.top + r.height / 2 ? 'dnd-item-newchap-top' : 'dnd-item-newchap-bottom');
+        return;
+      }
+      // sentinel 영역 → 맨 아래 새 목차
+      const dropEnd = e.target.closest && e.target.closest('#tocDropEnd');
+      if (dropEnd) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        dropEnd.classList.add('dnd-drop-end-active');
+      }
+    }
+    if (_dndChap) {
+      const dropEnd = e.target.closest && e.target.closest('#tocDropEnd');
+      if (dropEnd) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        dropEnd.classList.add('dnd-drop-end-active');
+        return;
+      }
+      const sec = e.target.closest && e.target.closest('.toc-sec[data-chap-idx]');
+      if (sec && sec.dataset.chapId !== _dndChap.chapId) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        const onHeader = !!e.target.closest('.toc-sec-header');
+        if (onHeader) {
+          const r = sec.getBoundingClientRect();
+          sec.classList.add(e.clientY < r.top + r.height / 2 ? 'dnd-chap-over-top' : 'dnd-chap-over-bottom');
+        } else {
+          sec.classList.add('dnd-chap-merge');
+        }
+      }
+    }
+  });
+
+  /* ── drop ── */
+  sv.addEventListener('drop', e => {
+    e.preventDefault();
+    if (_dndItem) {
+      /* ── 콘텐츠 → 다른 목차 내 카드 위 ── */
+      const card = e.target.closest && e.target.closest('[data-dnd-content]');
+      if (card) {
+        const r = card.getBoundingClientRect();
+        const pos = e.clientY < r.top + r.height / 2 ? 'top' : 'bottom';
+        const toIdx = +card.dataset.idx;
+        const toChapId = card.dataset.chap;
+        const fromIdx = _dndItem.fromIdx;
+        const fromChapId = _dndItem.chapId;
+        _dndItem = null; _clearDndOver(); _clearItemNewChap();
+        if (fromChapId === toChapId) {
+          let ins = pos === 'top' ? toIdx : toIdx + 1;
+          if (fromIdx < ins) ins--;
+          if (fromIdx !== ins) {
+            const ch = S.toc.find(c => c.id === fromChapId);
+            if (ch?.items) {
+              const [itm] = ch.items.splice(fromIdx, 1);
+              ch.items.splice(ins, 0, itm);
+              saveState();
+              const sv2 = document.getElementById('stepView');
+              if (sv2) { sv2.innerHTML = renderTocStep(); updateNav(); }
+            }
+          }
+        } else {
+          const fromCh = S.toc.find(c => c.id === fromChapId);
+          const toCh = S.toc.find(c => c.id === toChapId);
+          if (fromCh?.items && toCh) {
+            const [itm] = fromCh.items.splice(fromIdx, 1);
+            if (!toCh.items) toCh.items = [];
+            const ins = pos === 'top' ? toIdx : toIdx + 1;
+            toCh.items.splice(ins, 0, itm);
+            toCh.items = toCh.items.filter(i => !i._blank);
+            toCh.contents = toCh.items.length;
+            saveState();
+            const sv2 = document.getElementById('stepView');
+            if (sv2) { sv2.innerHTML = renderTocStep(); updateNav(); }
+          }
+        }
+        return;
+      }
+      /* ── 콘텐츠 → 다른 목차 바디 (카드 없는 영역): 맨 뒤로 이동 ── */
+      const secBody = e.target.closest && e.target.closest('.toc-sec[data-chap-idx]');
+      if (secBody && secBody.dataset.chapId !== _dndItem.chapId && !e.target.closest('.toc-sec-header')) {
+        const toChapId = secBody.dataset.chapId;
+        const fromIdx = _dndItem.fromIdx;
+        const fromChapId = _dndItem.chapId;
+        _dndItem = null; _clearDndOver(); _clearItemNewChap();
+        const fromCh = S.toc.find(c => c.id === fromChapId);
+        const toCh = S.toc.find(c => c.id === toChapId);
+        if (fromCh?.items && toCh) {
+          const [itm] = fromCh.items.splice(fromIdx, 1);
+          if (!toCh.items) toCh.items = [];
+          toCh.items.push(itm);
+          toCh.items = toCh.items.filter(i => !i._blank);
+          toCh.contents = toCh.items.length;
+          saveState();
+          const sv2 = document.getElementById('stepView');
+          if (sv2) { sv2.innerHTML = renderTocStep(); updateNav(); }
+        }
+        return;
+      }
+      /* ── 콘텐츠 → 목차 헤더 위: 새 목차로 분리 ── */
+      const header = e.target.closest && e.target.closest('.toc-sec-header[data-grip-chap]');
+      if (header) {
+        const sec = header.closest('.toc-sec');
+        const isTop = sec.classList.contains('dnd-item-newchap-top');
+        const toChapIdx = +sec.dataset.chapIdx;
+        const fromIdx = _dndItem.fromIdx;
+        const fromChapId = _dndItem.chapId;
+        _dndItem = null; _clearDndOver(); _clearItemNewChap();
+        const fromCh = S.toc.find(c => c.id === fromChapId);
+        if (fromCh?.items) {
+          const [itm] = fromCh.items.splice(fromIdx, 1);
+          _chapSeq++;
+          const newChap = { id: 'ch' + _chapSeq, title: '', contents: 1, items: [itm], _isFlat: true };
+          const insertAt = isTop ? toChapIdx : toChapIdx + 1;
+          S.toc.splice(insertAt, 0, newChap);
+          saveState();
+          const sv2 = document.getElementById('stepView');
+          if (sv2) { sv2.innerHTML = renderTocStep(); updateNav(); }
+        }
+        return;
+      }
+      /* ── 콘텐츠 → sentinel: 맨 아래 새 목차 ── */
+      const dropEnd = e.target.closest && e.target.closest('#tocDropEnd');
+      if (dropEnd) {
+        const fromIdx = _dndItem.fromIdx;
+        const fromChapId = _dndItem.chapId;
+        _dndItem = null; _clearDndOver(); _clearItemNewChap();
+        dropEnd.classList.remove('dnd-drop-end-active');
+        const fromCh = S.toc.find(c => c.id === fromChapId);
+        if (fromCh?.items) {
+          const [itm] = fromCh.items.splice(fromIdx, 1);
+          _chapSeq++;
+          S.toc.push({ id: 'ch' + _chapSeq, title: '', contents: 1, items: [itm], _isFlat: true });
+          saveState();
+          const sv2 = document.getElementById('stepView');
+          if (sv2) { sv2.innerHTML = renderTocStep(); updateNav(); }
+        }
+        return;
+      }
+    }
+    if (_dndChap) {
+      const dropEnd = e.target.closest && e.target.closest('#tocDropEnd');
+      if (dropEnd) {
+        const fromIdx = _dndChap.fromIdx;
+        _dndChap = null; _clearChapOver();
+        dropEnd.classList.remove('dnd-drop-end-active');
+        if (fromIdx < S.toc.length - 1) {
+          const [ch] = S.toc.splice(fromIdx, 1);
+          S.toc.push(ch);
+          saveState();
+          const sv2 = document.getElementById('stepView');
+          if (sv2) { sv2.innerHTML = renderTocStep(); updateNav(); }
+        }
+        return;
+      }
+      const sec = e.target.closest && e.target.closest('.toc-sec[data-chap-idx]');
+      if (sec && sec.dataset.chapId !== _dndChap.chapId) {
+        const isMerge = sec.classList.contains('dnd-chap-merge');
+        const fromIdx = _dndChap.fromIdx;
+        const fromChapId = _dndChap.chapId;
+        _dndChap = null; _clearChapOver();
+        if (isMerge) {
+          // 목차 그룹 해제: 드래그한 목차의 콘텐츠를 대상 목차에 병합
+          const toChapId = sec.dataset.chapId;
+          const fromCh = S.toc.find(c => c.id === fromChapId);
+          const toCh = S.toc.find(c => c.id === toChapId);
+          if (fromCh && toCh) {
+            toCh.items = [...(toCh.items || []), ...(fromCh.items || [])];
+            S.toc = S.toc.filter(c => c.id !== fromChapId);
+            saveState();
+            const sv2 = document.getElementById('stepView');
+            if (sv2) { sv2.innerHTML = renderTocStep(); updateNav(); }
+          }
+        } else {
+          const r = sec.getBoundingClientRect();
+          const pos = e.clientY < r.top + r.height / 2 ? 'top' : 'bottom';
+          const toIdx = +sec.dataset.chapIdx;
+          let ins = pos === 'top' ? toIdx : toIdx + 1;
+          if (fromIdx < ins) ins--;
+          if (fromIdx !== ins) {
+            const [ch] = S.toc.splice(fromIdx, 1);
+            S.toc.splice(ins, 0, ch);
+            saveState();
+            const sv2 = document.getElementById('stepView');
+            if (sv2) { sv2.innerHTML = renderTocStep(); updateNav(); }
+          }
+        }
+      }
+    }
+  });
+
+  /* ── dragend ── */
+  sv.addEventListener('dragend', () => {
+    _dndItem = null; _dndChap = null;
+    _clearDndOver(); _clearChapOver(); _clearItemNewChap();
+    document.getElementById('tocDropEnd')?.classList.remove('dnd-drop-end-active');
+  });
+}
+
+function _clearDndOver() {
+  document.querySelectorAll('.dnd-over-top,.dnd-over-bottom,.dnd-dragging').forEach(el =>
+    el.classList.remove('dnd-over-top', 'dnd-over-bottom', 'dnd-dragging'));
+}
+function _clearChapOver() {
+  document.querySelectorAll('.dnd-chap-over-top,.dnd-chap-over-bottom,.dnd-chap-dragging,.dnd-chap-merge').forEach(el =>
+    el.classList.remove('dnd-chap-over-top', 'dnd-chap-over-bottom', 'dnd-chap-dragging', 'dnd-chap-merge'));
+}
+function _clearItemNewChap() {
+  document.querySelectorAll('.dnd-item-newchap-top,.dnd-item-newchap-bottom').forEach(el =>
+    el.classList.remove('dnd-item-newchap-top', 'dnd-item-newchap-bottom'));
+}
+/* dragover 시 모든 hover 인디케이터 제거 (.dnd-dragging · .dnd-chap-dragging 는 유지) */
+function _clearDndHover() {
+  document.querySelectorAll(
+    '.dnd-over-top,.dnd-over-bottom,.dnd-chap-over-top,.dnd-chap-over-bottom,.dnd-chap-merge,.dnd-item-newchap-top,.dnd-item-newchap-bottom'
+  ).forEach(el => el.classList.remove(
+    'dnd-over-top','dnd-over-bottom','dnd-chap-over-top','dnd-chap-over-bottom',
+    'dnd-chap-merge','dnd-item-newchap-top','dnd-item-newchap-bottom'
+  ));
+  const de = document.getElementById('tocDropEnd');
+  if (de) de.classList.remove('dnd-drop-end-active');
+}
+
+function _chapDragGhost(ch, width) {
+  const items = ch ? (ch.items || []) : [];
+  const title = ch ? (ch.title || '목차') : '목차';
+  const MAX = 5, shown = items.slice(0, MAX), rest = items.length - MAX;
+  const iconsHtml = shown.map((item, i) => {
+    const src = item.typeImg || ((_TOC_ALL_TYPES.find(t => t.id === item.typeId)) || {}).img || null;
+    return `<div class="toc-col-icon" style="z-index:${MAX - i}">${src ? `<img src="${src}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:3px">` : ''}</div>`;
+  }).join('');
+  const moreHtml = rest > 0 ? `<div class="toc-col-more" style="z-index:0">+${rest}</div>` : '';
+  const colHtml = items.length > 0
+    ? `<div class="toc-col-stack">${iconsHtml}${moreHtml}</div><span class="toc-col-label">${items.length}개 콘텐츠</span>`
+    : `<span class="toc-col-label" style="color:var(--text-3)">콘텐츠 없음</span>`;
+  const ghost = document.createElement('div');
+  ghost.style.cssText = `position:fixed;top:-2000px;left:0;width:${width}px;background:var(--surface);border-radius:12px;padding:12px 16px;box-shadow:0 4px 24px rgba(0,0,0,.14);pointer-events:none;font-family:Pretendard,sans-serif`;
+  ghost.innerHTML = `
+    <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px">${title}</div>
+    <div class="toc-sec-collapsed" style="cursor:default">${colHtml}</div>`;
+  return ghost;
 }

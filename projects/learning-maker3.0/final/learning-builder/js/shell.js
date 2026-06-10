@@ -124,7 +124,7 @@ function renderPage() {
 function _leftTocMapHtml() {
   if (!S.toc || S.toc.length === 0) return '';
   const chapHtml = S.toc.map((ch, ci) => {
-    const items = ch.items || [];
+    const items = (ch.items || []).filter(i => !i._blank);
     const itemsHtml = items.map(item => {
       const ico = item.typeImg
         ? `<img src="${item.typeImg}" alt="" style="width:14px;height:14px;border-radius:3px;object-fit:cover;flex-shrink:0;display:block">`
@@ -161,7 +161,12 @@ function updateNav() {
     titleEl.className = 'eleft-title' + (S.courseName ? '' : ' placeholder');
   }
   const tocMapEl = document.getElementById('leftTocMap');
-  if (tocMapEl) tocMapEl.innerHTML = _leftTocMapHtml();
+  if (tocMapEl) {
+    tocMapEl.innerHTML = _leftTocMapHtml();
+    requestAnimationFrame(() => {
+      tocMapEl.classList.toggle('overflow-active', tocMapEl.scrollHeight > 400);
+    });
+  }
 }
 
 /* ── 과정명 더블클릭 인라인 편집 ── */
