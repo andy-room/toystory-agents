@@ -1281,7 +1281,7 @@ function _tocSection(ch, idx) {
   if (ch._isFlat) {
     const items = ch.items || [];
     return `<div class="toc-sec toc-sec-flat" data-chap-id="${ch.id}" data-chap-idx="${idx}">
-      ${items.map((item, i) => _tocContentCard(item, ch.id, i)).join('')}
+      ${items.map((item, i) => _tocContentCard(item, ch.id, i, true)).join('')}
     </div>`;
   }
   const items      = ch.items || [];
@@ -1298,11 +1298,18 @@ function _tocSection(ch, idx) {
     <svg class="toc-toggle-ico${isCollapsed ? ' collapsed' : ''}" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
   </button>`;
 
-  const addBtnEl = !_tocEditMode
-    ? `<button class="toc-ch-add-btn" data-chap="${ch.id}" data-idx="${items.length}"
-         onclick="event.stopPropagation();openTocPicker('${ch.id}',${items.length})" title="콘텐츠 추가">
-         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-       </button>`
+  const _copySvg12 = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+  const _trashSvg12 = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>`;
+
+  const chapBtns = !_tocEditMode
+    ? `<div class="toc-ch-btns">
+         <button class="toc-ch-add-btn" onclick="event.stopPropagation();duplicateChapter('${ch.id}')" title="목차 복제">${_copySvg12}</button>
+         <button class="toc-ch-add-btn" data-chap="${ch.id}" data-idx="${items.length}"
+           onclick="event.stopPropagation();openTocPicker('${ch.id}',${items.length})" title="콘텐츠 추가">
+           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+         </button>
+         <button class="toc-ch-add-btn toc-ch-del-btn" onclick="event.stopPropagation();removeChapter('${ch.id}')" title="목차 삭제">${_trashSvg12}</button>
+       </div>`
     : '';
 
   const titleHtml = ch.title
@@ -1319,7 +1326,7 @@ function _tocSection(ch, idx) {
         ${leftEl}
         ${toggleEl}
         ${titleHtml}
-        ${addBtnEl}
+        ${chapBtns}
       </div>
       ${(() => { const c = isCollapsed ? _tocCollapsedPreview(ch) : _tocRenderItems(ch.id, items); return c ? `<div class="toc-sec-body">${c}</div>` : ''; })()}
     </div>`;
@@ -1352,15 +1359,17 @@ function _tocSlot(chapId, slotIdx) {
 }
 
 /* ── 개별 콘텐츠 카드 ── */
-function _tocContentCard(item, chapId, idx) {
+function _tocContentCard(item, chapId, idx, isFlat = false) {
   if (item._blank && !_tocEditMode) {
     return `<div class="toc-content-card toc-blank-placeholder" data-chap="${chapId}" data-idx="${idx}"
       onclick="event.stopPropagation();openTocPicker('${chapId}',${idx})">콘텐츠를 추가해주세요.</div>`;
   }
   const _typeImgSrc = item.typeImg || (_TOC_ALL_TYPES.find(t => t.id === item.typeId)?.img) || null;
-  const ico = _typeImgSrc
-    ? `<img src="${_typeImgSrc}" alt="${esc(item.typeLabel)}">`
-    : `<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%">${_CLIP_SVG_SM}</span>`;
+  const ico = item.typeId === 'blank-content'
+    ? `<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--text-3)">${_BLANK_CONTENT_SVG}</span>`
+    : _typeImgSrc
+      ? `<img src="${_typeImgSrc}" alt="${esc(item.typeLabel)}">`
+      : `<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%">${_CLIP_SVG_SM}</span>`;
   const trashSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>`;
   const itemKey = `${chapId}:${idx}`;
   const isItemSel = _tocSelectedItems.has(itemKey);
@@ -1371,17 +1380,23 @@ function _tocContentCard(item, chapId, idx) {
     : '';
   const onclickFn = _tocEditMode
     ? `toggleTocItemSelect('${chapId}',${idx})`
-    : `editTocContent('${chapId}',${idx})`;
+    : item.typeId === 'blank-content'
+      ? `openTocPickerForBlank('${chapId}',${idx})`
+      : `editTocContent('${chapId}',${idx})`;
 
   const dndAttrs = !_tocEditMode ? `draggable="true" data-dnd-content data-chap="${chapId}" data-idx="${idx}"` : '';
   return `<div class="toc-content-card${isItemSel ? ' toc-item-selected' : ''}" ${dndAttrs} onclick="${onclickFn}">
     ${cbHtml}
     <div class="toc-cc-icon">${ico}</div>
     <div class="toc-cc-info">
-      <div class="toc-cc-title">${esc(item.title)}</div>
+      <div class="toc-cc-title" data-chap="${chapId}" data-idx="${idx}" ${!_tocEditMode ? `ondblclick="event.stopPropagation();editTocItemTitle('${chapId}',${idx})"` : ''}>${esc(item.title) || '<span style="color:var(--text-3);font-weight:400">콘텐츠 명 입력</span>'}</div>
       <div class="toc-cc-sub">${esc(item.typeLabel)}${item.subtitle ? ' · ' + esc(item.subtitle) : ''}</div>
     </div>
-    ${!_tocEditMode ? `<button class="toc-cc-del" onclick="event.stopPropagation();removeTocContent('${chapId}',${idx})">${trashSvg}</button>` : ''}
+    ${!_tocEditMode ? `
+      <div class="toc-cc-actions">
+        <button class="toc-cc-copy" onclick="event.stopPropagation();duplicateTocContent('${chapId}',${idx})" title="콘텐츠 복제"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        <button class="toc-cc-del" onclick="event.stopPropagation();removeTocContent('${chapId}',${idx})">${trashSvg}</button>
+      </div>` : ''}
   </div>`;
 }
 
@@ -1407,13 +1422,21 @@ const _TOC_ALL_TYPES = [
   {id:'task',       name:'과제',     img:'images/과제.png'    },
   {id:'survey',     name:'설문',     img:'images/설문.png'    },
   {id:'discuss',    name:'토론',     img:'images/토론.png'    },
+  {id:'blank-content', name:'빈 콘텐츠', img:null, _isBlankType:true},
 ];
+
+const _BLANK_CONTENT_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`;
 
 function _tocPickerInner(chapId, insertIdx) {
   const items = _TOC_ALL_TYPES.map(t => {
-    const ico = t.img
-      ? `<div class="toc-picker-icon"><img src="${t.img}" alt="${esc(t.name)}"></div>`
-      : `<div class="toc-picker-icon toc-picker-icon-clip">${_CLIP_SVG_SM}</div>`;
+    let ico;
+    if (t._isBlankType) {
+      ico = `<div class="toc-picker-icon toc-picker-icon-blank">${_BLANK_CONTENT_SVG}</div>`;
+    } else if (t.img) {
+      ico = `<div class="toc-picker-icon"><img src="${t.img}" alt="${esc(t.name)}"></div>`;
+    } else {
+      ico = `<div class="toc-picker-icon toc-picker-icon-clip">${_CLIP_SVG_SM}</div>`;
+    }
     return `<div class="toc-picker-item" onclick="pickTocType('${chapId}',${insertIdx},'${t.id}')">
       ${ico}<span class="toc-picker-label">${esc(t.name)}</span>
     </div>`;
@@ -1492,20 +1515,129 @@ function openTocPicker(chapId, insertIdx) {
   });
 }
 
+let _replaceBlankState = null; // { chapId, idx } — 빈 콘텐츠 교체 모드
+
 function closeTocPicker() {
+  _replaceBlankState = null;
   _chapPickerState = null;
   document.getElementById('tocPickerTooltip')?.remove();
   document.getElementById('tocPickerOverlay')?.remove();
 }
 
 function pickTocType(chapId, insertIdx, typeId) {
+  /* 빈 콘텐츠 교체 모드: 선택 시점에 blank 아이템 제거 후 같은 위치에 삽입 */
+  const replaceBlank = _replaceBlankState &&
+    _replaceBlankState.chapId === chapId &&
+    _replaceBlankState.idx === insertIdx;
   closeTocPicker();
+
+  if (typeId === 'blank-content') { _addBlankTocContent(chapId, insertIdx); return; }
+
+  if (replaceBlank) {
+    const ch = S.toc.find(c => c.id === chapId);
+    if (ch) {
+      ch.items.splice(insertIdx, 1);
+      ch.contents = ch.items.filter(i => !i._blank).length;
+    }
+  }
+
   _chapFormState   = null;
   _tocFpState      = { chapId, insertIdx, editIdx: -1 };
   S.contentType    = typeId;
   _cregTags = []; _cregFiles = []; _cregImages = []; _cregYtResults = []; _cregYtSelected = null; _cregExtResult = null;
   saveState();
   openContentPanel(typeId);
+}
+
+function openTocPickerForBlank(chapId, idx) {
+  /* 빈 콘텐츠 카드를 앵커로 피커 열기 — 유형 선택 전까지 blank 아이템 유지 */
+  _replaceBlankState = { chapId, idx };
+  _chapPickerState   = { chapId, insertIdx: idx };
+  _chapFormState     = null;
+
+  document.getElementById('tocPickerTooltip')?.remove();
+  document.getElementById('tocPickerOverlay')?.remove();
+
+  const ov = document.createElement('div');
+  ov.id = 'tocPickerOverlay';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:299';
+  ov.onclick = closeTocPicker;
+  document.body.appendChild(ov);
+
+  const tt = document.createElement('div');
+  tt.id        = 'tocPickerTooltip';
+  tt.className = 'toc-picker-tooltip';
+  tt.innerHTML = _tocPickerInner(chapId, idx);
+  tt.onclick   = e => e.stopPropagation();
+  document.body.appendChild(tt);
+
+  requestAnimationFrame(() => {
+    /* 빈 콘텐츠 카드 자체를 앵커로 사용 */
+    const card = document.querySelector(`.toc-content-card[data-chap="${chapId}"][data-idx="${idx}"]`);
+    if (!card) return;
+    const r  = card.getBoundingClientRect();
+    const tw = tt.offsetWidth || 300;
+    const th = tt.offsetHeight || 200;
+    let left = r.left + r.width / 2 - tw / 2;
+    left = Math.max(16, Math.min(left, window.innerWidth - tw - 16));
+    /* 카드 아래 공간이 충분하면 아래쪽, 없으면 위쪽 */
+    const spaceBelow = window.innerHeight - r.bottom - 10;
+    const top = spaceBelow >= th ? r.bottom + 6 : r.top - th - 6;
+    tt.style.top  = top + 'px';
+    tt.style.left = left + 'px';
+  });
+}
+
+function _addBlankTocContent(chapId, insertIdx) {
+  const ch = S.toc.find(c => c.id === chapId);
+  if (!ch) return;
+  if (!ch.items) ch.items = [];
+  const newId = String(Date.now());
+  const newItem = { id: newId, typeId: 'blank-content', typeLabel: '빈 콘텐츠', typeImg: null, title: '', subtitle: '', tags: [] };
+  const pos = insertIdx >= 0 ? insertIdx : ch.items.length;
+  ch.items.splice(pos, 0, newItem);
+  ch.items = ch.items.filter(i => !i._blank);
+  ch.contents = ch.items.length;
+  saveState();
+  const sv = document.getElementById('stepView');
+  if (sv) {
+    sv.innerHTML = renderTocStep(); updateNav();
+    requestAnimationFrame(() => {
+      const actualIdx = ch.items.findIndex(i => i.id === newId);
+      if (actualIdx >= 0) editTocItemTitle(chapId, actualIdx);
+    });
+  }
+}
+
+function editTocItemTitle(chapId, idx) {
+  const el = document.querySelector(`.toc-cc-title[data-chap="${chapId}"][data-idx="${idx}"]`);
+  if (!el || el.tagName === 'INPUT') return;
+  const ch = S.toc.find(c => c.id === chapId);
+  const item = ch?.items?.[idx];
+  if (!item) return;
+  const cur = item.title;
+  const input = document.createElement('input');
+  input.className = 'toc-cc-title-input';
+  input.value = cur;
+  input.placeholder = '콘텐츠 명을 입력해 주세요';
+  input.onblur = () => _saveTocItemTitle(chapId, idx, input.value);
+  input.onkeydown = e => {
+    if (e.key === 'Enter') input.blur();
+    if (e.key === 'Escape') { input.value = cur; input.blur(); }
+    e.stopPropagation();
+  };
+  input.onclick = e => e.stopPropagation();
+  input.ondblclick = e => e.stopPropagation();
+  el.replaceWith(input);
+  input.focus(); input.select();
+}
+
+function _saveTocItemTitle(chapId, idx, val) {
+  const ch = S.toc.find(c => c.id === chapId);
+  if (ch?.items?.[idx]) ch.items[idx].title = val.trim();
+  saveState();
+  const sv = document.getElementById('stepView');
+  if (sv) { sv.innerHTML = renderTocStep(); updateNav(); }
 }
 function editTocContent(chapId, idx) {
   const ch = S.toc.find(c => c.id === chapId);
@@ -1694,6 +1826,35 @@ function addChapter() {
 
 function removeChapter(id) {
   S.toc = S.toc.filter(c => c.id !== id);
+  saveState();
+  const sv = document.getElementById('stepView');
+  if (sv) { sv.innerHTML = renderTocStep(); updateNav(); }
+}
+
+function duplicateChapter(chapId) {
+  const ch = S.toc.find(c => c.id === chapId);
+  if (!ch) return;
+  _chapSeq++;
+  const newId = 'ch' + _chapSeq;
+  const newCh = {
+    ...ch,
+    id: newId,
+    items: (ch.items || []).map(item => ({ ...item, id: String(Date.now() + Math.random()), tags: item.tags ? [...item.tags] : [] }))
+  };
+  const pos = S.toc.findIndex(c => c.id === chapId);
+  S.toc.splice(pos + 1, 0, newCh);
+  saveState();
+  const sv = document.getElementById('stepView');
+  if (sv) { sv.innerHTML = renderTocStep(); updateNav(); }
+}
+
+function duplicateTocContent(chapId, idx) {
+  const ch = S.toc.find(c => c.id === chapId);
+  if (!ch || !ch.items || !ch.items[idx]) return;
+  const orig = ch.items[idx];
+  const copy = { ...orig, id: String(Date.now()), tags: orig.tags ? [...orig.tags] : [] };
+  ch.items.splice(idx + 1, 0, copy);
+  ch.contents = ch.items.length;
   saveState();
   const sv = document.getElementById('stepView');
   if (sv) { sv.innerHTML = renderTocStep(); updateNav(); }
@@ -1948,7 +2109,10 @@ function _initTocDnd() {
           const fromCh = S.toc.find(c => c.id === fromChapId);
           const toCh = S.toc.find(c => c.id === toChapId);
           if (fromCh && toCh) {
-            toCh.items = [...(toCh.items || []), ...(fromCh.items || [])];
+            const merged = [...(toCh.items || []), ...(fromCh.items || [])];
+            const hasReal = merged.some(i => !i._blank);
+            toCh.items = hasReal ? merged.filter(i => !i._blank) : merged.filter(i => i._blank).slice(0, 1);
+            toCh.contents = toCh.items.filter(i => !i._blank).length;
             S.toc = S.toc.filter(c => c.id !== fromChapId);
             saveState();
             const sv2 = document.getElementById('stepView');

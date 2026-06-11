@@ -2,11 +2,16 @@
    CURRENT_STEP (0~3) 은 각 HTML 페이지에서 선언
 ══════════════════════════════════════════════ */
 
-const _isMicroType = () => S.creationType === 'micro' || S.creationType === 'micro+';
+const _isMicroType    = () => S.creationType === 'micro' || S.creationType === 'micro+';
+const _isOfflineType  = () => S.creationType === 'offline';
 
 const STEPS = [
   { id: 'sec-start',  label: '과정명 · 유형',  href: 'index.html' },
-  { id: 'sec-toc',    get label() { return _isMicroType() ? '콘텐츠 등록' : '목차·콘텐츠'; }, href: 'step2-toc.html' },
+  {
+    id: 'sec-toc',
+    get label() { return _isMicroType() ? '콘텐츠 등록' : _isOfflineType() ? '차시 등록' : '목차·콘텐츠'; },
+    get href()  { return _isOfflineType() ? 'step2-offline.html' : 'step2-toc.html'; },
+  },
   { id: 'sec-enroll', label: '신청·학습 설정', href: 'step3-enroll.html' },
   { id: 'sec-extra',  label: '부가 설정',      href: 'step4-extra.html' },
 ];
@@ -19,7 +24,8 @@ function getStepStatus(id) {
       if (S.courseName.trim().length > 0 && S.courseName.trim().length < 2) return 'no';
       return '';
     case 'sec-toc':
-      if (_isMicroType()) return S.contentType ? 'ok' : '';
+      if (_isMicroType())   return S.contentType ? 'ok' : '';
+      if (_isOfflineType()) return (S.offlineSessions || []).length > 0 ? 'ok' : '';
       return S.toc.length ? 'ok' : '';
     case 'sec-enroll': return (S.enroll.immediate || (S.enroll.learnFrom && S.enroll.learnTo)) ? 'ok' : '';
     case 'sec-extra':  return 'ok';
@@ -42,7 +48,15 @@ function getStepSummary(id) {
       if (_isMicroType()) return S.contentType
         ? (CONTENT_TYPE_LABELS[S.contentType] || S.contentType)
         : '유형 미선택';
-      return S.toc.length ? `${S.toc.length}개 챕터` : '목차 없음';
+      if (_isOfflineType()) {
+        const cnt = (S.offlineSessions || []).length;
+        return cnt ? `${cnt}개 차시` : '차시 없음';
+      }
+      const _visibleToc = S.toc.filter(ch => {
+        const ri = (ch.items || []).filter(i => !i._blank);
+        return (ch.title && ch.title.trim()) || ri.length > 0;
+      });
+      return _visibleToc.length ? `${_visibleToc.length}개 챕터` : '목차 없음';
     case 'sec-enroll': return S.enroll.immediate
       ? `즉시 · ${S.enroll.days}일`
       : (S.enroll.learnFrom ? `${S.enroll.learnFrom} ~` : '기간 미설정');
@@ -70,7 +84,9 @@ function goNext() { if (CURRENT_STEP < STEPS.length - 1) navigateTo(STEPS[CURREN
 
 /* ── 전체 레이아웃 렌더 ── */
 function renderPage() {
-  const stepRenderers = [renderStartAndType, renderTocStep, renderEnrollStep, renderExtraStep];
+  const _step2Renderer = _isOfflineType() && typeof renderOfflineStep === 'function'
+    ? renderOfflineStep : renderTocStep;
+  const stepRenderers = [renderStartAndType, _step2Renderer, renderEnrollStep, renderExtraStep];
   const isFirst = CURRENT_STEP === 0;
   const isLast  = CURRENT_STEP === STEPS.length - 1;
 
@@ -122,8 +138,15 @@ function renderPage() {
 
 /* ── 레프트 TOC 맵 렌더 ── */
 function _leftTocMapHtml() {
+  if (_isOfflineType()) return _leftOfflineMapHtml();
   if (!S.toc || S.toc.length === 0) return '';
-  const chapHtml = S.toc.map((ch, ci) => {
+  /* 이름도 없고 실제 콘텐츠도 없는 빈 챕터는 미니맵에서 숨김 */
+  const visibleChaps = S.toc.filter(ch => {
+    const realItems = (ch.items || []).filter(i => !i._blank);
+    return (ch.title && ch.title.trim()) || realItems.length > 0;
+  });
+  if (!visibleChaps.length) return '';
+  const chapHtml = visibleChaps.map((ch, ci) => {
     const items = (ch.items || []).filter(i => !i._blank);
     const itemsHtml = items.map(item => {
       const ico = item.typeImg
@@ -216,4 +239,30 @@ function toggleTheme() {
   const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', t);
   document.querySelector('.theme-btn').textContent = t === 'dark' ? '☀️ 라이트모드' : '🌙 다크모드';
+}
+
+/* ── 오프라인 차시 미니맵 ── */
+function _leftOfflineMapHtml() {
+  const sessions = S.offlineSessions || [];
+  if (!sessions.length) return '';
+  const rows = sessions.map((s, i) => {
+    const scheds = s.schedules || [];
+    const firstDate = scheds[0]?.date || '';
+    const dateShort = firstDate ? firstDate.slice(5).replace('-', '/') : '';
+    const itemsHtml = scheds.map(sch =>
+      `<div class="ltoc-item">
+        <div class="ltoc-item-ico"><span style="width:14px;height:14px;border-radius:3px;background:var(--surface-3);display:inline-block"></span></div>
+        <span class="ltoc-item-name">${esc(sch.name)}</span>
+      </div>`
+    ).join('');
+    return `<div class="ltoc-chapter">
+      <div class="ltoc-ch-row">
+        <span class="ltoc-arrow">▾</span>
+        <span class="ltoc-ch-name">${esc(s.name || `${i + 1}차시`)}</span>
+        ${dateShort ? `<span class="ltoc-cnt">${dateShort}</span>` : scheds.length ? `<span class="ltoc-cnt">${scheds.length}건</span>` : ''}
+      </div>
+      ${scheds.length ? `<div class="ltoc-items">${itemsHtml}</div>` : ''}
+    </div>`;
+  }).join('');
+  return `<div class="ltoc-map"><div class="ltoc-label">차시 구성</div>${rows}</div>`;
 }
