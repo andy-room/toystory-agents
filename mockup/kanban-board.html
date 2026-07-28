@@ -1,632 +1,616 @@
-<title>러닝메이커 대시보드 — 과정만들기</title>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>러닝메이커 보드 — 과정만들기</title>
 <style>
-:root {
-  --g: #F3F3F1; --s: #FFFFFF; --s2: #FAFAFB;
-  --b: #E2E2E6; --b2: #EBEBEF;
-  --t1: #1A1A1C; --t2: #6B6B72; --t3: #9B9BA4;
-  --br: #1D64F2; --br-d: #EEF3FE; --br-h: #1552D4;
-  --blue: #3B6EE8; --blue-bg: #EEF3FD; --blue-t: rgba(59,110,232,.055);
-  --amb: #C97D0A;  --amb-bg: #FDF5E6;  --amb-t: rgba(201,125,10,.055);
-  --rose: #BE3070; --rose-bg: #FBF0F5; --rose-t: rgba(190,48,112,.048);
-  --vio: #6741D9;  --vio-bg: #F2EFFE;  --vio-t: rgba(103,65,217,.048);
-  --sl: #52606D;   --sl-bg: #F0F3F5;   --sl-t: rgba(82,96,109,.048);
-  --ok: #0D8A4E; --ok-bg: #EDFBF3;
-  --warn: #D4780A; --warn-bg: #FEF6E6;
-  --err: #C8302A; --err-bg: #FEF0EF;
-  --hov: rgba(0,0,0,.04);
-  --sc: 0 1px 2px rgba(0,0,0,.06),0 0 0 1px rgba(0,0,0,.05);
-  --sc-h: 0 4px 14px rgba(0,0,0,.10),0 0 0 1px rgba(0,0,0,.07);
-  --sf: 0 8px 24px rgba(0,0,0,.13),0 2px 8px rgba(0,0,0,.06),0 0 0 1px rgba(0,0,0,.06);
-  --fn: -apple-system,'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',system-ui,sans-serif;
+/* ===== Reset ===== */
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;min-height:100%}
+body{font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;-webkit-font-smoothing:antialiased;background:var(--bg);color:var(--text)}
+button{font-family:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+
+/* ===== HDS Tokens ===== */
+:root{
+  --bg:#F7F7F8;--surface:#FFFFFF;--surface-2:#F4F4F5;
+  --border:#E1E2E4;--border-strong:#C2C4C8;
+  --text:#171719;--text-2:#46474C;--text-3:#70737C;--muted:#AEB0B6;
+  --brand:#0066FF;--brand-soft:#EBF3FF;--brand-strong:#0052CC;
+  --warn:#FF9200;--warn-soft:#FFF3E0;
+  --success:#00BF40;--success-soft:#E8FFF0;
+  --danger:#FA2E43;
+  --purple:#8B5CF6;--purple-soft:#F5F3FF;
+  --pink:#EC4899;--pink-soft:#FDF2F8;
+  --header-bg:#171719;
+  --shadow-sm:0px 1px 2px rgba(0,0,0,.05);
+  --shadow-md:0px 4px 8px rgba(0,0,0,.12);
+  --radius:12px;--radius-sm:8px;
+  --sidebar-w:240px;--header-h:56px;
+  --col1:#0066FF;--col2:#FF9200;--col3:#EC4899;--col4:#8B5CF6;--col5:#70737C;
 }
 @media(prefers-color-scheme:dark){:root{
-  --g:#101012;--s:#1A1A1E;--s2:#212126;--b:#2E2E34;--b2:#26262C;
-  --t1:#F0EFF2;--t2:#8C8C98;--t3:#5A5A68;
-  --br:#4D84F5;--br-d:#1A2640;--br-h:#6398F7;
-  --blue:#4D84F5;--blue-bg:#0F1A2E;--blue-t:rgba(77,132,245,.09);
-  --amb:#D4900A;--amb-bg:#1E1608;--amb-t:rgba(212,144,10,.09);
-  --rose:#D4508A;--rose-bg:#1E0C16;--rose-t:rgba(212,80,138,.08);
-  --vio:#8B6EF5;--vio-bg:#140F24;--vio-t:rgba(139,110,245,.08);
-  --sl:#7A8A96;--sl-bg:#10141A;--sl-t:rgba(122,138,150,.08);
-  --ok:#1DB86A;--ok-bg:#0A1F14;--warn:#E08C12;--warn-bg:#1F1608;--err:#E5524C;--err-bg:#1F0B0A;
-  --sc:0 1px 3px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.04);
-  --sc-h:0 4px 18px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.06);
-  --sf:0 8px 32px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.06);
+  --bg:#111113;--surface:#1C1C1F;--surface-2:#242428;
+  --border:#2E2F33;--border-strong:#3E3F45;
+  --text:#F0EFF2;--text-2:#B8B9BF;--text-3:#7A7B84;--muted:#555660;
+  --brand:#4D84F5;--brand-soft:#0F1F45;--brand-strong:#7AA8F8;
+  --warn:#FFB347;--warn-soft:#2A1800;
+  --success:#1DB86A;--success-soft:#0A1F14;
+  --danger:#FF6B6B;
+  --purple:#A78BFA;--purple-soft:#1A1035;
+  --pink:#F472B6;--pink-soft:#2A0E20;
+  --header-bg:#0C0C0E;
+  --shadow-sm:0px 1px 2px rgba(0,0,0,.3);--shadow-md:0px 4px 8px rgba(0,0,0,.4);
+  --col1:#4D84F5;--col2:#FFB347;--col3:#F472B6;--col4:#A78BFA;--col5:#9A9BA6;
 }}
-:root[data-theme=dark]{
-  --g:#101012;--s:#1A1A1E;--s2:#212126;--b:#2E2E34;--b2:#26262C;
-  --t1:#F0EFF2;--t2:#8C8C98;--t3:#5A5A68;
-  --br:#4D84F5;--br-d:#1A2640;--br-h:#6398F7;
-  --blue:#4D84F5;--blue-bg:#0F1A2E;--blue-t:rgba(77,132,245,.09);
-  --amb:#D4900A;--amb-bg:#1E1608;--amb-t:rgba(212,144,10,.09);
-  --rose:#D4508A;--rose-bg:#1E0C16;--rose-t:rgba(212,80,138,.08);
-  --vio:#8B6EF5;--vio-bg:#140F24;--vio-t:rgba(139,110,245,.08);
-  --sl:#7A8A96;--sl-bg:#10141A;--sl-t:rgba(122,138,150,.08);
-  --ok:#1DB86A;--ok-bg:#0A1F14;--warn:#E08C12;--warn-bg:#1F1608;--err:#E5524C;--err-bg:#1F0B0A;
-  --sc:0 1px 3px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.04);
-  --sc-h:0 4px 18px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.06);
-  --sf:0 8px 32px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.06);
+:root[data-theme="light"]{
+  --bg:#F7F7F8;--surface:#FFFFFF;--surface-2:#F4F4F5;--border:#E1E2E4;--border-strong:#C2C4C8;
+  --text:#171719;--text-2:#46474C;--text-3:#70737C;--muted:#AEB0B6;
+  --brand:#0066FF;--brand-soft:#EBF3FF;--brand-strong:#0052CC;
+  --warn:#FF9200;--warn-soft:#FFF3E0;--success:#00BF40;--success-soft:#E8FFF0;--danger:#FA2E43;
+  --purple:#8B5CF6;--purple-soft:#F5F3FF;--pink:#EC4899;--pink-soft:#FDF2F8;--header-bg:#171719;
+  --shadow-sm:0px 1px 2px rgba(0,0,0,.05);--shadow-md:0px 4px 8px rgba(0,0,0,.12);
+  --col1:#0066FF;--col2:#FF9200;--col3:#EC4899;--col4:#8B5CF6;--col5:#70737C;
 }
-:root[data-theme=light]{
-  --g:#F3F3F1;--s:#FFFFFF;--s2:#FAFAFB;--b:#E2E2E6;--b2:#EBEBEF;
-  --t1:#1A1A1C;--t2:#6B6B72;--t3:#9B9BA4;
-  --br:#1D64F2;--br-d:#EEF3FE;--br-h:#1552D4;
-  --blue:#3B6EE8;--blue-bg:#EEF3FD;--blue-t:rgba(59,110,232,.055);
-  --amb:#C97D0A;--amb-bg:#FDF5E6;--amb-t:rgba(201,125,10,.055);
-  --rose:#BE3070;--rose-bg:#FBF0F5;--rose-t:rgba(190,48,112,.048);
-  --vio:#6741D9;--vio-bg:#F2EFFE;--vio-t:rgba(103,65,217,.048);
-  --sl:#52606D;--sl-bg:#F0F3F5;--sl-t:rgba(82,96,109,.048);
-  --ok:#0D8A4E;--ok-bg:#EDFBF3;--warn:#D4780A;--warn-bg:#FEF6E6;--err:#C8302A;--err-bg:#FEF0EF;
-  --sc:0 1px 2px rgba(0,0,0,.06),0 0 0 1px rgba(0,0,0,.05);
-  --sc-h:0 4px 14px rgba(0,0,0,.10),0 0 0 1px rgba(0,0,0,.07);
-  --sf:0 8px 24px rgba(0,0,0,.13),0 2px 8px rgba(0,0,0,.06),0 0 0 1px rgba(0,0,0,.06);
+:root[data-theme="dark"]{
+  --bg:#111113;--surface:#1C1C1F;--surface-2:#242428;--border:#2E2F33;--border-strong:#3E3F45;
+  --text:#F0EFF2;--text-2:#B8B9BF;--text-3:#7A7B84;--muted:#555660;
+  --brand:#4D84F5;--brand-soft:#0F1F45;--brand-strong:#7AA8F8;
+  --warn:#FFB347;--warn-soft:#2A1800;--success:#1DB86A;--success-soft:#0A1F14;--danger:#FF6B6B;
+  --purple:#A78BFA;--purple-soft:#1A1035;--pink:#F472B6;--pink-soft:#2A0E20;--header-bg:#0C0C0E;
+  --shadow-sm:0px 1px 2px rgba(0,0,0,.3);--shadow-md:0px 4px 8px rgba(0,0,0,.4);
+  --col1:#4D84F5;--col2:#FFB347;--col3:#F472B6;--col4:#A78BFA;--col5:#9A9BA6;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden}
-body{background:var(--g);color:var(--t1);font-family:var(--fn);font-size:14px;line-height:1.6;letter-spacing:-.3px}
-.app{display:flex;flex-direction:column;height:100vh}
 
-/* GNB */
-.gnb{flex-shrink:0;height:50px;background:var(--s);border-bottom:1px solid var(--b);
-  display:flex;align-items:center;padding:0 16px;gap:10px;z-index:50}
-.gnb-logo{font-size:13px;font-weight:700;color:var(--br);letter-spacing:-.4px}
-.gnb-sep{width:1px;height:14px;background:var(--b)}
-.gnb-crumb{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t3)}
-.gnb-crumb b{color:var(--t1);font-weight:600}
-.gnb-sp{flex:1}
-.icon-btn{width:30px;height:30px;border-radius:7px;border:1px solid var(--b);background:transparent;
-  display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;
-  color:var(--t2);transition:background .14s}
-.icon-btn:hover{background:var(--hov)}
-.av{width:28px;height:28px;border-radius:50%;background:var(--br-d);color:var(--br);
-  font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+/* ===== Topbar ===== */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--header-h);background:var(--header-bg);color:#fff;z-index:50;display:flex;align-items:center;padding:0 24px;gap:0;border-bottom:1px solid rgba(0,0,0,.3)}
+.hamburger{display:none;background:transparent;border:0;color:#fff;padding:8px;border-radius:6px;font-size:20px;line-height:1;margin-right:8px}
+.hamburger:hover{background:rgba(255,255,255,.1)}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{display:inline-flex;align-items:center;gap:8px;font-weight:800}
+.logo .l{color:#fff;font-size:16px}
+.logo .n{color:#ff7a00;font-size:16px}
+.brand .tag{background:#2a2f3a;color:#d1d5db;font-size:11px;padding:3px 8px;border-radius:999px}
+.brand .tenant{background:#1f242e;color:#9ca3af;font-size:11px;padding:3px 8px;border-radius:4px;font-variant-numeric:tabular-nums}
+.spacer{flex:1}
+.theme-btn{background:transparent;border:1px solid rgba(255,255,255,.18);color:#d1d5db;padding:6px 10px;border-radius:6px;font-size:12px;margin-right:12px}
+.theme-btn:hover{background:rgba(255,255,255,.1);color:#fff}
+.user{display:flex;align-items:center;gap:14px;font-size:13px}
+.user .name{color:#fff;font-weight:600}
+.user .logout{background:transparent;border:1px solid #2f3640;color:#d1d5db;padding:6px 12px;border-radius:6px;font-size:12px}
+.user .logout:hover{background:#2a2f3a;color:#fff}
 
-/* Board header */
-.bh{flex-shrink:0;background:var(--s);border-bottom:1px solid var(--b);padding:0 16px}
-.bh-top{display:flex;align-items:center;height:52px;gap:10px}
-.bh-title{font-size:17px;font-weight:700;letter-spacing:-.6px;color:var(--t1)}
-.bh-sp{flex:1}
-.btn-make{display:inline-flex;align-items:center;gap:5px;height:34px;padding:0 12px;
-  background:var(--br);color:#fff;border:none;border-radius:7px;font-family:var(--fn);
-  font-size:12px;font-weight:600;letter-spacing:-.2px;cursor:pointer;transition:background .14s,transform .1s}
-.btn-make:hover{background:var(--br-h)}
-.btn-make:active{transform:scale(.97)}
-.btn-make .arr{transition:transform .2s}
-.btn-make:hover .arr{transform:translateX(3px)}
+/* ===== Sidebar ===== */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:39}
+.sidebar-overlay.open{display:block}
+.sidebar{position:fixed;top:var(--header-h);left:0;bottom:0;width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);z-index:40;display:flex;flex-direction:column;overflow-y:auto}
+.studio{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;margin:12px 12px 8px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface-2);font-weight:700}
+.studio:hover{background:var(--surface);box-shadow:var(--shadow-sm)}
+.studio .slbl{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-2)}
+.studio .ext{color:var(--text-3)}
+.menu{padding:4px 8px 24px}
+.menu .group{margin-bottom:2px}
+.menu .item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:8px;color:var(--text-2);font-weight:600;cursor:pointer;user-select:none}
+.menu .item:hover{background:rgba(0,0,0,.04);color:var(--text)}
+.menu .item.active{background:var(--brand-soft);color:var(--brand-strong)}
+.menu .item .lhs{display:flex;align-items:center;gap:10px}
+.menu .item .caret{transition:transform .2s;color:var(--text-3)}
+.menu .group.open .item .caret{transform:rotate(180deg)}
+.menu .sub{padding:4px 8px 6px 36px;display:none}
+.menu .group.open .sub{display:block}
+.menu .sub a{display:block;padding:8px 10px;border-radius:6px;color:var(--text-2);font-size:13px}
+.menu .sub a:hover{background:rgba(0,0,0,.04);color:var(--text)}
+.menu .sub a.active{background:rgba(0,0,0,.05);color:var(--text);font-weight:600}
 
-/* Lifecycle bar */
-.lc{display:flex;align-items:center;height:28px;gap:0;overflow-x:auto;scrollbar-width:none}
-.lc::-webkit-scrollbar{display:none}
-.lc-s{display:flex;align-items:center;gap:5px;padding:0 6px;flex-shrink:0}
-.lc-dot{width:6px;height:6px;border-radius:50%}
-.lc-n{font-size:10px;color:var(--t3);font-weight:500;white-space:nowrap}
-.lc-arr{font-size:9px;color:var(--t3);opacity:.45}
+/* ===== Main ===== */
+.main{margin-left:var(--sidebar-w);padding-top:var(--header-h);background:var(--bg);min-height:100vh}
+.main-inner{max-width:1800px;padding:24px 32px 64px;margin:0 auto}
+.breadcrumb{font-size:12px;color:var(--text-3);margin-bottom:8px}
+.breadcrumb .sep{color:var(--muted);margin:0 6px}
+.breadcrumb .current{color:var(--text-2);font-weight:600}
+.page-header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:14px}
+.page-header .left h1{font-size:28px;margin:0;font-weight:800;letter-spacing:-0.5px}
+.page-header .left p{margin:4px 0 0;color:var(--text-3);font-size:13px}
 
-/* Board body */
-.bb{flex:1;overflow:hidden;display:flex}
-.bs{flex:1;overflow-x:auto;overflow-y:hidden;padding:10px 12px;
-  scrollbar-width:thin;scrollbar-color:var(--b) transparent}
-.bs::-webkit-scrollbar{height:4px}
-.bs::-webkit-scrollbar-thumb{background:var(--b);border-radius:2px}
-.cols{display:flex;gap:8px;height:100%;min-width:max-content}
+/* ===== Buttons ===== */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);font-weight:600;font-size:13px;color:var(--text-2);transition:background .15s,border-color .15s,color .15s}
+.btn:hover{border-color:var(--border-strong);color:var(--text)}
+.btn-primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn-primary:hover{background:var(--brand-strong);border-color:var(--brand-strong)}
+.btn-lg{padding:11px 18px;font-size:14px}
 
-/* Column */
-.col{width:252px;height:100%;flex-shrink:0;display:flex;flex-direction:column;
-  border-radius:12px;overflow:hidden;border:1px solid var(--b);background:var(--g)}
+/* ===== Tabs ===== */
+.dash-tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:18px}
+.dash-tabs .tab{padding:12px 22px;cursor:pointer;font-size:14px;font-weight:600;color:var(--text-3);border-bottom:2px solid transparent;margin-bottom:-2px;background:transparent;border-left:0;border-right:0;border-top:0;transition:color .15s,border-color .15s}
+.dash-tabs .tab:hover{color:var(--text-2)}
+.dash-tabs .tab.active{color:var(--brand-strong);border-bottom-color:var(--brand)}
 
-.ch{flex-shrink:0;display:flex;align-items:center;gap:7px;padding:9px 12px;
-  background:var(--s);border-bottom:1px solid var(--b);position:relative}
-.ch::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:12px 12px 0 0}
-.col-blue .ch::after{background:var(--blue)}
-.col-amb  .ch::after{background:var(--amb)}
-.col-rose .ch::after{background:var(--rose)}
-.col-vio  .ch::after{background:var(--vio)}
-.col-sl   .ch::after{background:var(--sl)}
+/* ===== Status summary row ===== */
+.status-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .05s;display:flex;flex-direction:column;gap:8px}
+.stat-card:hover{border-color:var(--brand);box-shadow:var(--shadow-sm);transform:translateY(-1px)}
+.stat-card .slbl{font-size:12.5px;color:var(--text-3);font-weight:600;display:flex;align-items:center;gap:6px}
+.stat-card .slbl .dot{width:8px;height:8px;border-radius:999px;display:inline-block;flex-shrink:0}
+.stat-card .sval{font-size:24px;font-weight:800;color:var(--text);line-height:1;font-variant-numeric:tabular-nums}
+.stat-card .sval .unit{font-size:13px;color:var(--text-3);font-weight:500;margin-left:4px}
 
-.ci{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.col-blue .ci{background:var(--blue)}
-.col-amb  .ci{background:var(--amb)}
-.col-rose .ci{background:var(--rose)}
-.col-vio  .ci{background:var(--vio)}
-.col-sl   .ci{background:var(--sl)}
+/* ===== Mobile column selector (hidden on desktop) ===== */
+.col-selector{display:none;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:8px;margin-bottom:12px;padding-bottom:4px;scrollbar-width:none}
+.col-selector::-webkit-scrollbar{display:none}
+.col-selector .ctab{flex-shrink:0;padding:6px 14px;border-radius:999px;border:1.5px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;color:var(--text-2);white-space:nowrap;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.col-selector .ctab .cnt{background:var(--surface-2);color:var(--text-3);font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;transition:all .15s}
+.col-selector .ctab.c0.active{background:var(--col1);border-color:var(--col1);color:#fff}
+.col-selector .ctab.c1.active{background:var(--col2);border-color:var(--col2);color:#fff}
+.col-selector .ctab.c2.active{background:var(--col3);border-color:var(--col3);color:#fff}
+.col-selector .ctab.c3.active{background:var(--col4);border-color:var(--col4);color:#fff}
+.col-selector .ctab.c4.active{background:var(--col5);border-color:var(--col5);color:#fff}
+.col-selector .ctab.active .cnt{background:rgba(255,255,255,.25);color:#fff}
 
-.cl{font-size:11px;font-weight:600;letter-spacing:.1px;color:var(--t1);flex:1}
-.cc{font-size:10px;font-weight:700;font-variant-numeric:tabular-nums;
-  padding:1px 6px;border-radius:50px;line-height:1.5}
-.col-blue .cc{background:var(--blue-bg);color:var(--blue)}
-.col-amb  .cc{background:var(--amb-bg); color:var(--amb)}
-.col-rose .cc{background:var(--rose-bg);color:var(--rose)}
-.col-vio  .cc{background:var(--vio-bg); color:var(--vio)}
-.col-sl   .cc{background:var(--sl-bg);  color:var(--sl)}
+/* ===== Kanban ===== */
+.kanban-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px}
+.kanban{display:grid;grid-template-columns:repeat(5,minmax(220px,1fr));gap:16px}
 
-/* Help button + popover */
-.hbtn{width:20px;height:20px;border-radius:50%;border:1px solid var(--b);background:var(--s);
-  display:flex;align-items:center;justify-content:center;cursor:pointer;
-  font-size:9px;font-weight:700;color:var(--t3);transition:border-color .14s;
-  position:relative;flex-shrink:0}
-.hbtn:hover{border-color:var(--t3)}
-.hpop{display:none;position:absolute;top:calc(100% + 6px);right:0;width:210px;
-  background:var(--s);border:1px solid var(--b);border-radius:10px;box-shadow:var(--sf);
-  padding:10px;z-index:200}
-.hbtn.on .hpop{display:block}
-.hpop-t{font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;
-  padding-bottom:7px;margin-bottom:7px;border-bottom:1px solid var(--b2)}
-.hpop ol{padding-left:14px;display:flex;flex-direction:column;gap:3px}
-.hpop li{font-size:10px;line-height:1.55;color:var(--t2)}
-.hpop li b{color:var(--t1)}
+.kancol{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);display:flex;flex-direction:column;min-height:360px}
+.kancol-head{display:flex;align-items:center;justify-content:space-between;padding:14px 14px 10px;border-bottom:1px solid var(--border)}
+.kancol-title{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;color:var(--text)}
+.kancol-title .dot{width:8px;height:8px;border-radius:999px;display:inline-block;flex-shrink:0}
+.kancol[data-col="0"] .kancol-title .dot{background:var(--col1)}
+.kancol[data-col="1"] .kancol-title .dot{background:var(--col2)}
+.kancol[data-col="2"] .kancol-title .dot{background:var(--col3)}
+.kancol[data-col="3"] .kancol-title .dot{background:var(--col4)}
+.kancol[data-col="4"] .kancol-title .dot{background:var(--col5)}
+.kancol-count{background:var(--surface-2);color:var(--text-3);font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px}
+.kancol-body{padding:8px 10px 12px;display:flex;flex-direction:column;gap:8px;overflow:visible}
 
-/* Column body */
-.cb{flex:1;overflow-y:auto;padding:7px;display:flex;flex-direction:column;gap:5px;
-  scrollbar-width:thin;scrollbar-color:var(--b2) transparent}
-.cb::-webkit-scrollbar{width:3px}
-.cb::-webkit-scrollbar-thumb{background:var(--b);border-radius:2px}
+/* ===== Course card ===== */
+.course-card{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;cursor:pointer;transition:background .15s,transform .05s,border-color .15s,box-shadow .15s;position:relative}
+.course-card:hover{background:var(--surface);border-color:var(--brand);box-shadow:var(--shadow-sm);transform:translateY(-1px)}
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:6px}
+.card-badges{display:flex;align-items:center;gap:4px;flex-wrap:wrap;flex:1;min-width:0}
+.badge-kind{display:inline-block;padding:1px 8px;border-radius:4px;font-weight:700;border:1px solid;font-size:11px;white-space:nowrap}
+.badge-kind.online{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+.badge-kind.offline{background:#fff7ed;color:#c2410c;border-color:#fed7aa}
+.badge-kind.hybrid{background:#f5f3ff;color:#6d28d9;border-color:#ddd6fe}
+.badge-kind.microlearning{background:#ecfeff;color:#0e7490;border-color:#a5f3fc}
+.badge-copy{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;white-space:nowrap}
+.badge-reject{background:#fef2f2;color:#dc2626;border:1px solid #fecaca;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;white-space:nowrap}
+.more-wrap{position:relative;flex-shrink:0}
+.more-btn{background:transparent;border:0;color:var(--text-3);padding:0 4px;font-size:18px;line-height:1;cursor:pointer;border-radius:4px}
+.more-btn:hover{background:rgba(0,0,0,.06);color:var(--text)}
+.course-menu{display:none;position:absolute;top:calc(100% + 4px);right:0;background:var(--surface);border:1px solid var(--border);border-radius:6px;box-shadow:0 6px 18px rgba(15,23,42,.12);min-width:130px;z-index:30;overflow:hidden}
+.course-menu.open{display:block}
+.course-card:has(.course-menu.open){z-index:40}
+.cmi{display:block;width:100%;text-align:left;background:transparent;border:0;padding:7px 12px;font-size:12px;color:var(--text-2);cursor:pointer;white-space:nowrap;font-family:inherit}
+.cmi:hover{background:var(--surface-2)}
+.cmi.danger{color:#dc2626}
+.cmi.danger:hover{background:#fef2f2}
+.card-title{font-weight:700;font-size:13px;color:var(--text);line-height:1.4;margin-bottom:4px;word-break:keep-all}
+.card-meta{font-size:11px;color:var(--text-3);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.card-action{margin-top:10px}
+.btn-action{display:block;width:100%;padding:7px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;border:1px solid;font-family:inherit}
+.btn-enroll{background:var(--brand-soft);border-color:var(--brand);color:var(--brand-strong)}
+.btn-enroll:hover{background:var(--brand);color:#fff}
+.btn-redo{background:#fef2f2;border-color:#fecaca;color:#dc2626}
+.btn-redo:hover{background:#dc2626;color:#fff}
+.learn-status{margin-top:8px}
+.learn-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;border:1px solid}
+.learn-badge.not-started{background:var(--surface-2);color:var(--text-3);border-color:var(--border)}
+.learn-badge.ongoing{background:var(--brand-soft);color:var(--brand-strong);border-color:var(--brand)}
+.learn-badge.processing{background:var(--warn-soft);color:#c05c00;border-color:#fed7aa}
+.learn-badge.finished{background:var(--success-soft);color:#065f46;border-color:#a7f3d0}
 
-/* Empty state */
-.empty{flex:1;display:flex;align-items:center;justify-content:center;min-height:90px;
-  border-radius:8px;font-size:11px;color:var(--t3);text-align:center;padding:16px}
-.col-blue .empty{background:var(--blue-t)}
-.col-amb  .empty{background:var(--amb-t)}
-.col-rose .empty{background:var(--rose-t)}
-.col-vio  .empty{background:var(--vio-t)}
-.col-sl   .empty{background:var(--sl-t)}
-
-/* Card */
-.card{background:var(--s);border-radius:8px;box-shadow:var(--sc);cursor:pointer;
-  display:flex;flex-direction:column;position:relative;overflow:hidden;
-  transition:box-shadow .16s,transform .12s}
-.card:hover{box-shadow:var(--sc-h);transform:translateY(-1px)}
-.card::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px}
-.col-blue .card::before{background:var(--blue)}
-.col-amb  .card::before{background:var(--amb)}
-.col-rose .card::before{background:var(--rose)}
-.col-vio  .card::before{background:var(--vio)}
-.col-sl   .card::before{background:var(--sl)}
-
-.ci2{padding:8px 8px 7px calc(8px + 3px);display:flex;flex-direction:column;gap:5px}
-
-.chead{display:flex;align-items:flex-start;gap:4px}
-.ctcol{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
-.clabel{display:inline-flex;align-items:center;font-size:9px;font-weight:700;
-  letter-spacing:.3px;padding:1px 5px;border-radius:50px;width:fit-content;text-transform:uppercase}
-.lbl-copy{background:var(--blue-bg);color:var(--blue)}
-.lbl-rej{background:var(--err-bg);color:var(--err)}
-.ctitle{font-size:12px;font-weight:600;line-height:1.44;letter-spacing:-.3px;color:var(--t1);
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-
-/* More button + menu */
-.mbtn{width:22px;height:22px;border-radius:5px;border:none;background:transparent;
-  display:flex;align-items:center;justify-content:center;cursor:pointer;
-  color:var(--t3);font-size:13px;font-weight:700;flex-shrink:0;
-  transition:background .12s,color .12s;position:relative;margin-top:-1px}
-.mbtn:hover{background:var(--hov);color:var(--t1)}
-.cmenu{display:none;position:absolute;top:100%;right:0;background:var(--s);
-  border:1px solid var(--b);border-radius:9px;box-shadow:var(--sf);
-  z-index:300;min-width:132px;padding:3px;overflow:hidden}
-.mbtn.on .cmenu{display:block}
-.cmi{display:flex;align-items:center;padding:5px 8px;font-size:11px;color:var(--t1);
-  cursor:pointer;border-radius:6px;transition:background .1s;white-space:nowrap;letter-spacing:-.2px}
-.cmi:hover{background:var(--hov)}
-.cmi-d{color:var(--err)}
-.cdiv{height:1px;background:var(--b2);margin:3px 0}
-
-/* Meta */
-.cmeta{display:flex;flex-direction:column;gap:4px}
-.mrow{display:flex;align-items:center;gap:5px}
-.mk{font-size:9px;font-weight:500;color:var(--t3);width:26px;flex-shrink:0}
-.mchip{display:inline-flex;font-size:9px;font-weight:500;padding:1px 6px;
-  border-radius:50px;border:1px solid var(--b2);background:var(--s2);color:var(--t2)}
-.mv{font-size:10px;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
-/* Dates */
-.cdates{display:flex;flex-direction:column;gap:2px;padding-top:6px;border-top:1px solid var(--b2)}
-.drow{display:flex;align-items:baseline;gap:5px}
-.dk{font-size:9px;font-weight:600;color:var(--t3);width:24px;flex-shrink:0;letter-spacing:.1px}
-.dv{font-size:10px;color:var(--t2);font-variant-numeric:tabular-nums;letter-spacing:0}
-
-/* Footer */
-.cfoot{border-top:1px solid var(--b2);padding:6px 8px 6px calc(8px + 3px)}
-.fact{display:flex;align-items:center;justify-content:center;width:100%;padding:5px 8px;
-  border-radius:6px;border:none;font-family:var(--fn);font-size:11px;font-weight:600;
-  letter-spacing:-.2px;cursor:pointer;transition:background .14s}
-.fact-add{background:var(--br-d);color:var(--br)}
-.fact-add:hover{background:#D4E4FD}
-.fact-rem{background:var(--err-bg);color:var(--err)}
-.fact-rem:hover{background:#FDDCDA}
-.sbadge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:1px 0}
-.sb-enroll{color:var(--vio)}
-.sb-before{color:var(--t3)}
-.sb-active{color:var(--blue)}
-.sb-proc{color:var(--warn)}
-.sb-pass{color:var(--ok)}
-.sb-fail{color:var(--err)}
-.srow{display:flex;gap:10px;flex-wrap:wrap}
-
-/* Backdrop */
-.bk{display:none;position:fixed;inset:0;z-index:180}
-.bk.on{display:block}
-
-/* Responsive */
+/* ===== Responsive ===== */
+/* Tablet: horizontal scroll kicks in when columns can't fit */
+@media(max-width:1279px){
+  .kanban{grid-template-columns:repeat(5,220px)}
+}
+/* Small/medium: hide sidebar, show hamburger */
+@media(max-width:1023px){
+  .hamburger{display:flex;align-items:center;justify-content:center}
+  .sidebar{transform:translateX(-100%);transition:transform .22s ease-out}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+}
+/* Mobile: column tabs + single column */
 @media(max-width:767px){
-  html,body{overflow:auto}
-  .app{height:auto;min-height:100vh}
-  .bb{overflow:visible}
-  .bs{overflow-x:auto;padding:8px}
-  .cols{height:auto}
-  .col{height:auto;min-height:280px}
-  .cb{overflow:visible;max-height:none}
-  .gnb-crumb{display:none}
+  .main-inner{padding:16px 16px 48px}
+  .page-header .left h1{font-size:22px}
+  .status-row{grid-template-columns:repeat(2,1fr);gap:8px}
+  .status-row .stat-card:nth-child(5){grid-column:1/-1}
+  .col-selector{display:flex}
+  .kanban.tab-mode{display:block}
+  .kanban.tab-mode .kancol{display:none}
+  .kanban.tab-mode .kancol.visible{display:flex}
 }
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important}}
+@media(max-width:480px){
+  .topbar{padding:0 12px}
+  .brand .tag,.brand .tenant{display:none}
+  .theme-btn{display:none}
+}
+
+/* ===== Toast ===== */
+.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:200;display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none}
+.toast{background:var(--header-bg);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:500;box-shadow:0 4px 16px rgba(0,0,0,.25);animation:tin .2s ease;max-width:300px;pointer-events:auto}
+@keyframes tin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 </style>
+</head>
+<body>
 
-<div class="bk" id="bk" onclick="ca()"></div>
-<div class="app">
-
-<!-- GNB -->
-<header class="gnb">
-  <span class="gnb-logo">러닝메이커</span>
-  <div class="gnb-sep"></div>
-  <nav class="gnb-crumb">
-    <span>my Canvas</span>
-    <span style="opacity:.5">›</span>
-    <b>과정만들기</b>
-  </nav>
-  <div class="gnb-sp"></div>
-  <button class="icon-btn" id="tt" title="테마 전환">🌙</button>
-  <div class="av">앤</div>
+<header class="topbar">
+  <button class="hamburger" onclick="toggleSidebar()" aria-label="메뉴 열기">☰</button>
+  <div class="brand">
+    <a class="logo" href="#"><span class="l">LABS</span><span class="n">New EDMS</span></a>
+    <span class="tag">LABS showcase</span>
+    <span class="tenant">1000012</span>
+  </div>
+  <div class="spacer"></div>
+  <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">🌙 다크모드</button>
+  <div class="user">
+    <span class="name">이재길 <span style="font-weight:400;color:#9ca3af">님</span></span>
+    <button class="logout" onclick="toast('로그아웃되었습니다.','success')">로그아웃</button>
+  </div>
 </header>
 
-<!-- Board Header -->
-<div class="bh">
-  <div class="bh-top">
-    <h1 class="bh-title">러닝메이커 대시보드</h1>
-    <div class="bh-sp"></div>
-    <button class="btn-make">과정 제작 <span class="arr">→</span></button>
-  </div>
-  <div class="lc" aria-hidden="true">
-    <div class="lc-s"><span class="lc-dot" style="background:var(--blue)"></span><span class="lc-n">제작중</span></div>
-    <span class="lc-arr">›</span>
-    <div class="lc-s"><span class="lc-dot" style="background:var(--amb)"></span><span class="lc-n">검수 대기</span></div>
-    <span class="lc-arr">›</span>
-    <div class="lc-s"><span class="lc-dot" style="background:var(--rose)"></span><span class="lc-n">검수 완료</span></div>
-    <span class="lc-arr">›</span>
-    <div class="lc-s"><span class="lc-dot" style="background:var(--vio)"></span><span class="lc-n">신청중</span></div>
-    <span class="lc-arr">›</span>
-    <div class="lc-s"><span class="lc-dot" style="background:var(--sl)"></span><span class="lc-n">학습 과정</span></div>
-  </div>
-</div>
+<div class="sidebar-overlay" id="sov" onclick="closeSidebar()"></div>
+<aside class="sidebar" id="sidebar">
+  <a class="studio" href="#" onclick="return false">
+    <span class="slbl"><span style="color:var(--brand)">◉</span> LABS Studio</span>
+    <span class="ext">↗</span>
+  </a>
+  <nav class="menu">
+    <div class="group"><div class="item" onclick="this.parentElement.classList.toggle('open')"><span class="lhs"><span>👤</span> 임직원</span><span class="caret">▾</span></div><div class="sub"><a href="#" onclick="return false">임직원 관리</a></div></div>
+    <div class="group"><div class="item" onclick="this.parentElement.classList.toggle('open')"><span class="lhs"><span>📝</span> 수강신청</span><span class="caret">▾</span></div><div class="sub"><a href="#" onclick="return false">신청 가능 과정</a><a href="#" onclick="return false">신청 이력</a></div></div>
+    <div class="group"><div class="item" onclick="this.parentElement.classList.toggle('open')"><span class="lhs"><span>📖</span> 학습</span><span class="caret">▾</span></div><div class="sub"><a href="#" onclick="return false">학습중 과정</a><a href="#" onclick="return false">학습완료 과정</a></div></div>
+    <div class="group"><div class="item" onclick="this.parentElement.classList.toggle('open')"><span class="lhs"><span>📊</span> 결과</span><span class="caret">▾</span></div><div class="sub"><a href="#" onclick="return false">학습 이력</a><a href="#" onclick="return false">수료증</a></div></div>
+    <div class="group open">
+      <div class="item active" onclick="this.parentElement.classList.toggle('open')"><span class="lhs"><span>⚙️</span> 러닝메이커</span><span class="caret">▾</span></div>
+      <div class="sub">
+        <a href="#" class="active" onclick="return false">러닝메이커 보드</a>
+        <a href="#" onclick="return false">새 과정 만들기</a>
+      </div>
+    </div>
+    <div class="group"><div class="item" onclick="this.parentElement.classList.toggle('open')"><span class="lhs"><span>📰</span> 게시글</span><span class="caret">▾</span></div><div class="sub"><a href="#" onclick="return false">공지사항</a><a href="#" onclick="return false">FAQ</a></div></div>
+  </nav>
+</aside>
 
-<!-- Board -->
-<div class="bb"><div class="bs"><div class="cols">
+<main class="main">
+  <div class="main-inner">
 
-<!-- ① 제작중 -->
-<div class="col col-blue">
-  <div class="ch">
-    <span class="ci"></span><span class="cl">제작중</span><span class="cc">3</span>
-    <button class="hbtn" onclick="th(this,event)">?
-      <div class="hpop"><div class="hpop-t">노출 기준</div><ol>
-        <li>제작 중인 과정이 표시됩니다.</li>
-        <li>완료했으나 검수 요청 전인 과정도 포함됩니다.</li>
-        <li>검수 불필요 과정은 자동으로 '검수 완료'에 이동됩니다.</li>
-        <li>복사 과정은 상태와 무관하게 표시되며 과정명 위에 <b>[Copy]</b> 라벨이 붙습니다.</li>
-      </ol></div>
-    </button>
-  </div>
-  <div class="cb">
-    <div class="card">
-      <div class="ci2">
-        <div class="chead">
-          <div class="ctcol"><div class="ctitle">2026 하반기 리더십 역량 강화 과정</div></div>
-          <button class="mbtn" onclick="tm(this,event)">⋮<div class="cmenu">
-            <div class="cmi">과정정보 수정</div><div class="cmi">검수 요청</div><div class="cmi">과정 복사</div><div class="cdiv"></div><div class="cmi cmi-d">삭제</div>
-          </div></button>
-        </div>
-        <div class="cmeta">
-          <div class="mrow"><span class="mk">분류</span><span class="mchip">리더십</span></div>
-          <div class="mrow"><span class="mk">대상</span><span class="mv">중간관리자</span></div>
-        </div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="ci2">
-        <div class="chead">
-          <div class="ctcol"><span class="clabel lbl-copy">Copy</span><div class="ctitle">AI 활용 업무 생산성 향상</div></div>
-          <button class="mbtn" onclick="tm(this,event)">⋮<div class="cmenu">
-            <div class="cmi">과정정보 수정</div><div class="cmi">검수 요청</div><div class="cmi">과정 복사</div><div class="cdiv"></div><div class="cmi cmi-d">삭제</div>
-          </div></button>
-        </div>
-        <div class="cmeta">
-          <div class="mrow"><span class="mk">분류</span><span class="mchip">AI·디지털</span></div>
-          <div class="mrow"><span class="mk">대상</span><span class="mv">전 직원</span></div>
-        </div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="ci2">
-        <div class="chead">
-          <div class="ctcol"><div class="ctitle">신입사원 온보딩 교육 프로그램</div></div>
-          <button class="mbtn" onclick="tm(this,event)">⋮<div class="cmenu">
-            <div class="cmi">과정정보 수정</div><div class="cmi">검수 요청</div><div class="cmi">과정 복사</div><div class="cdiv"></div><div class="cmi cmi-d">삭제</div>
-          </div></button>
-        </div>
-        <div class="cmeta">
-          <div class="mrow"><span class="mk">분류</span><span class="mchip">조직문화</span></div>
-          <div class="mrow"><span class="mk">대상</span><span class="mv">신입사원</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+    <div class="breadcrumb">러닝메이커 <span class="sep">›</span><span class="current">보드</span></div>
 
-<!-- ② 검수 대기 -->
-<div class="col col-amb">
-  <div class="ch">
-    <span class="ci"></span><span class="cl">검수 대기</span><span class="cc">2</span>
-    <button class="hbtn" onclick="th(this,event)">?
-      <div class="hpop"><div class="hpop-t">노출 기준</div><ol>
-        <li>검수 요청을 완료했으나 관리자가 아직 검수하지 않은 과정이 노출됩니다.</li>
-        <li>반려 후 수정하여 재검수 요청한 과정이 노출됩니다.</li>
-      </ol></div>
-    </button>
-  </div>
-  <div class="cb">
-    <div class="card">
-      <div class="ci2">
-        <div class="chead">
-          <div class="ctcol"><div class="ctitle">직장인 재무 설계 기초 과정</div></div>
-          <button class="mbtn" onclick="tm(this,event)">⋮<div class="cmenu">
-            <div class="cmi">과정정보 수정</div><div class="cmi">검수 요청 취소</div><div class="cmi">과정 복사</div><div class="cdiv"></div><div class="cmi cmi-d">삭제</div>
-          </div></button>
-        </div>
-        <div class="cmeta">
-          <div class="mrow"><span class="mk">분류</span><span class="mchip">경제·금융</span></div>
-          <div class="mrow"><span class="mk">대상</span><span class="mv">사원~대리</span></div>
-        </div>
+    <div class="page-header">
+      <div class="left">
+        <h1>러닝메이커</h1>
+        <p>과정의 전체 생애주기(제작 → 검수 → 신청 → 학습)를 한눈에 관리하세요.</p>
       </div>
+      <button class="btn btn-primary btn-lg" onclick="toast('새 과정 만들기 화면으로 이동합니다.','info')">+ 과정 만들기</button>
     </div>
-    <div class="card">
-      <div class="ci2">
-        <div class="chead">
-          <div class="ctcol"><div class="ctitle">디자인 씽킹 워크숍</div></div>
-          <button class="mbtn" onclick="tm(this,event)">⋮<div class="cmenu">
-            <div class="cmi">과정정보 수정</div><div class="cmi">검수 요청 취소</div><div class="cmi">과정 복사</div><div class="cdiv"></div><div class="cmi cmi-d">삭제</div>
-          </div></button>
-        </div>
-        <div class="cmeta">
-          <div class="mrow"><span class="mk">분류</span><span class="mchip">창의·혁신</span></div>
-          <div class="mrow"><span class="mk">대상</span><span class="mv">기획팀</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- ③ 검수 완료 -->
-<div class="col col-rose">
-  <div class="ch">
-    <span class="ci"></span><span class="cl">검수 완료</span><span class="cc">3</span>
-    <button class="hbtn" onclick="th(this,event)">?
-      <div class="hpop"><div class="hpop-t">노출 기준</div><ol>
-        <li>승인/반려된 과정이 노출됩니다.</li>
-        <li>승인 과정은 <b>＋ 신청·학습 추가</b>로 학습자를 모집하세요.</li>
-        <li>반려 과정은 카드 하단 <b>과정 다시 제작</b> 버튼을 클릭하세요.</li>
-      </ol></div>
-    </button>
-  </div>
-  <div class="cb">
-    <div class="card">
-      <div class="ci2">
-        <div class="chead">
-          <div class="ctcol"><div class="ctitle">커뮤니케이션 스킬 향상 과정</div></div>
-          <button class="mbtn" onclick="tm(this,event)">⋮<div class="cmenu">
-            <div class="cmi">과정정보 수정</div><div class="cmi">과정 복사</div><div class="cdiv"></div><div class="cmi cmi-d">삭제</div>
-          </div></button>
-        </div>
-        <div class="cmeta">
-          <div class="mrow"><span class="mk">분류</span><span class="mchip">커뮤니케이션</span></div>
-          <div class="mrow"><span class="mk">대상</span><span class="mv">팀장급</span></div>
-        </div>
-      </div>
-      <div class="cfoot"><button class="fact fact-add">＋ 신청·학습 추가</button></div>
+    <div class="dash-tabs">
+      <button class="tab active">제작중인 과정</button>
+      <button class="tab" onclick="toast('학습중인 과정 (운영 탭) — 프로토타입','info')">학습중인 과정</button>
     </div>
-    <div class="card">
-      <div class="ci2">
-        <div class="chead">
-          <div class="ctcol"><div class="ctitle">프로젝트 관리 방법론(PMP 기초)</div></div>
-          <button class="mbtn" onclick="tm(this,event)">⋮<div class="cmenu">
-            <div class="cmi">과정정보 수정</div><div class="cmi">과정 복사</div><div class="cdiv"></div><div class="cmi cmi-d">삭제</div>
-          </div></button>
-        </div>
-        <div class="cmeta">
-          <div class="mrow"><span class="mk">분류</span><span class="mchip">프로젝트관리</span></div>
-          <div class="mrow"><span class="mk">대상</span><span class="mv">과장~부장</span></div>
-        </div>
-      </div>
-      <div class="cfoot"><button class="fact fact-add">＋ 신청·학습 추가</button></div>
-    </div>
-    <div class="card">
-      <div class="ci2">
-        <div class="chead">
-          <div class="ctcol"><span class="clabel lbl-rej">반려</span><div class="ctitle">글로벌 비즈니스 에티켓</div></div>
-          <button class="mbtn" onclick="tm(this,event)">⋮<div class="cmenu">
-            <div class="cmi">과정정보 수정</div><div class="cdiv"></div><div class="cmi cmi-d">삭제</div>
-          </div></button>
-        </div>
-        <div class="cmeta">
-          <div class="mrow"><span class="mk">분류</span><span class="mchip">글로벌</span></div>
-          <div class="mrow"><span class="mk">대상</span><span class="mv">해외사업부</span></div>
-        </div>
-      </div>
-      <div class="cfoot"><button class="fact fact-rem">과정 다시 제작</button></div>
-    </div>
-  </div>
-</div>
 
-<!-- ④ 신청중 -->
-<div class="col col-vio">
-  <div class="ch">
-    <span class="ci"></span><span class="cl">신청중</span><span class="cc">2</span>
-    <button class="hbtn" onclick="th(this,event)">?
-      <div class="hpop"><div class="hpop-t">노출 기준</div><ol>
-        <li>현재 수강신청중인 과정이 노출됩니다.</li>
-        <li>신청기간이 끝나면 즉시 <b>학습 과정</b> 컬럼으로 이동합니다.</li>
-      </ol></div>
-    </button>
-  </div>
-  <div class="cb">
-    <div class="card">
-      <div class="ci2">
-        <div class="chead">
-          <div class="ctcol"><div class="ctitle">OKR 목표설정 실전 과정 1기</div></div>
-          <button class="mbtn" onclick="tm(this,event)">⋮<div class="cmenu">
-            <div class="cmi">과정정보 수정</div><div class="cmi">과정 복사</div><div class="cdiv"></div><div class="cmi cmi-d">삭제</div>
-          </div></button>
-        </div>
-        <div class="cmeta">
-          <div class="mrow"><span class="mk">분류</span><span class="mchip">성과관리</span></div>
-          <div class="mrow"><span class="mk">대상</span><span class="mv">팀장 이상</span></div>
-        </div>
-        <div class="cdates">
-          <div class="drow"><span class="dk">신청</span><span class="dv">2026.07.01 ~ 07.31</span></div>
-          <div class="drow"><span class="dk">학습</span><span class="dv">2026.08.01 ~ 08.31</span></div>
-        </div>
-      </div>
-      <div class="cfoot"><div class="sbadge sb-enroll">👤 신청자 14명</div></div>
+    <!-- 상태 요약 -->
+    <div class="status-row">
+      <div class="stat-card" onclick="focusCol(0)"><div class="slbl"><span class="dot" style="background:var(--col1)"></span>제작중</div><div class="sval">3<span class="unit">과정</span></div></div>
+      <div class="stat-card" onclick="focusCol(1)"><div class="slbl"><span class="dot" style="background:var(--col2)"></span>검수 대기</div><div class="sval">2<span class="unit">과정</span></div></div>
+      <div class="stat-card" onclick="focusCol(2)"><div class="slbl"><span class="dot" style="background:var(--col3)"></span>검수 완료</div><div class="sval">2<span class="unit">과정</span></div></div>
+      <div class="stat-card" onclick="focusCol(3)"><div class="slbl"><span class="dot" style="background:var(--col4)"></span>신청중</div><div class="sval">2<span class="unit">과정</span></div></div>
+      <div class="stat-card" onclick="focusCol(4)"><div class="slbl"><span class="dot" style="background:var(--col5)"></span>학습 과정</div><div class="sval">4<span class="unit">과정</span></div></div>
     </div>
-    <div class="card">
-      <div class="ci2">
-        <div class="chead">
-          <div class="ctcol"><div class="ctitle">데이터 분석 기초(엑셀·SQL) 실무</div></div>
-          <button class="mbtn" onclick="tm(this,event)">⋮<div class="cmenu">
-            <div class="cmi">과정정보 수정</div><div class="cmi">과정 복사</div><div class="cdiv"></div><div class="cmi cmi-d">삭제</div>
-          </div></button>
-        </div>
-        <div class="cmeta">
-          <div class="mrow"><span class="mk">분류</span><span class="mchip">데이터분석</span></div>
-          <div class="mrow"><span class="mk">대상</span><span class="mv">전 직원</span></div>
-        </div>
-        <div class="cdates">
-          <div class="drow"><span class="dk">신청</span><span class="dv">2026.07.10 ~ 07.25</span></div>
-          <div class="drow"><span class="dk">학습</span><span class="dv">2026.08.04 ~ 08.29</span></div>
-        </div>
-      </div>
-      <div class="cfoot"><div class="sbadge sb-enroll">👤 신청자 27명</div></div>
-    </div>
-  </div>
-</div>
 
-<!-- ⑤ 학습 과정 -->
-<div class="col col-sl">
-  <div class="ch">
-    <span class="ci"></span><span class="cl">학습 과정</span><span class="cc">4</span>
-    <button class="hbtn" onclick="th(this,event)">?
-      <div class="hpop"><div class="hpop-t">노출 기준</div><ol>
-        <li>수강신청 종료 후(또는 학습 시작일 도달 시) 노출됩니다.</li>
-        <li>학습기간 종료/수료처리 이후 <b>1달간 유지</b>됩니다.</li>
-      </ol></div>
-    </button>
-  </div>
-  <div class="cb">
-    <div class="card">
-      <div class="ci2">
-        <div class="chead">
-          <div class="ctcol"><div class="ctitle">마케팅 전략 수립 실무 과정 2기</div></div>
-          <button class="mbtn" onclick="tm(this,event)">⋮<div class="cmenu">
-            <div class="cmi">과정정보 수정</div><div class="cmi">과정 복사</div><div class="cdiv"></div><div class="cmi cmi-d">삭제</div>
-          </div></button>
-        </div>
-        <div class="cmeta">
-          <div class="mrow"><span class="mk">분류</span><span class="mchip">마케팅</span></div>
-          <div class="mrow"><span class="mk">대상</span><span class="mv">마케팅팀</span></div>
-        </div>
-        <div class="cdates">
-          <div class="drow"><span class="dk">신청</span><span class="dv">2026.06.15 ~ 07.15</span></div>
-          <div class="drow"><span class="dk">학습</span><span class="dv">2026.08.01 ~ 08.30</span></div>
-        </div>
-      </div>
-      <div class="cfoot"><div class="sbadge sb-before">🗓 학습 시작 전</div></div>
+    <!-- 모바일 컬럼 선택 탭 -->
+    <div class="col-selector" id="col-selector">
+      <button class="ctab c0 active" onclick="selectCol(0)">제작중 <span class="cnt">3</span></button>
+      <button class="ctab c1" onclick="selectCol(1)">검수 대기 <span class="cnt">2</span></button>
+      <button class="ctab c2" onclick="selectCol(2)">검수 완료 <span class="cnt">2</span></button>
+      <button class="ctab c3" onclick="selectCol(3)">신청중 <span class="cnt">2</span></button>
+      <button class="ctab c4" onclick="selectCol(4)">학습 과정 <span class="cnt">4</span></button>
     </div>
-    <div class="card">
-      <div class="ci2">
-        <div class="chead">
-          <div class="ctcol"><div class="ctitle">비즈니스 영어 회화 집중 과정</div></div>
-          <button class="mbtn" onclick="tm(this,event)">⋮<div class="cmenu">
-            <div class="cmi">과정정보 수정</div><div class="cmi">과정 복사</div><div class="cdiv"></div><div class="cmi cmi-d">삭제</div>
-          </div></button>
-        </div>
-        <div class="cmeta">
-          <div class="mrow"><span class="mk">분류</span><span class="mchip">어학</span></div>
-          <div class="mrow"><span class="mk">대상</span><span class="mv">해외영업팀</span></div>
-        </div>
-        <div class="cdates">
-          <div class="drow"><span class="dk">신청</span><span class="dv">2026.06.01 ~ 06.30</span></div>
-          <div class="drow"><span class="dk">학습</span><span class="dv">2026.07.01 ~ 07.31</span></div>
-        </div>
-      </div>
-      <div class="cfoot"><div class="sbadge sb-active">👤 학습자 18명</div></div>
-    </div>
-    <div class="card">
-      <div class="ci2">
-        <div class="chead">
-          <div class="ctcol"><div class="ctitle">안전보건교육 정기 과정 (상반기)</div></div>
-          <button class="mbtn" onclick="tm(this,event)">⋮<div class="cmenu">
-            <div class="cmi">과정정보 수정</div><div class="cmi">과정 복사</div><div class="cdiv"></div><div class="cmi cmi-d">삭제</div>
-          </div></button>
-        </div>
-        <div class="cmeta">
-          <div class="mrow"><span class="mk">분류</span><span class="mchip">법정교육</span></div>
-          <div class="mrow"><span class="mk">대상</span><span class="mv">전 직원</span></div>
-        </div>
-        <div class="cdates">
-          <div class="drow"><span class="dk">신청</span><span class="dv">2026.05.01 ~ 05.31</span></div>
-          <div class="drow"><span class="dk">학습</span><span class="dv">2026.06.01 ~ 06.30</span></div>
-        </div>
-      </div>
-      <div class="cfoot"><div class="sbadge sb-proc">⏱ 수료 처리중</div></div>
-    </div>
-    <div class="card">
-      <div class="ci2">
-        <div class="chead">
-          <div class="ctcol"><div class="ctitle">조직활성화 워크숍 — 팀장 리트릿</div></div>
-          <button class="mbtn" onclick="tm(this,event)">⋮<div class="cmenu">
-            <div class="cmi">과정정보 수정</div><div class="cmi">과정 복사</div><div class="cdiv"></div><div class="cmi cmi-d">삭제</div>
-          </div></button>
-        </div>
-        <div class="cmeta">
-          <div class="mrow"><span class="mk">분류</span><span class="mchip">조직문화</span></div>
-          <div class="mrow"><span class="mk">대상</span><span class="mv">팀장</span></div>
-        </div>
-        <div class="cdates">
-          <div class="drow"><span class="dk">신청</span><span class="dv">2026.04.01 ~ 04.30</span></div>
-          <div class="drow"><span class="dk">학습</span><span class="dv">2026.05.01 ~ 06.30</span></div>
-        </div>
-      </div>
-      <div class="cfoot">
-        <div class="srow">
-          <div class="sbadge sb-pass">✔ 수료 22명</div>
-          <div class="sbadge sb-fail">❗ 미수료 3명</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
-</div></div></div><!-- /cols /bs /bb -->
-</div><!-- /app -->
+    <!-- 칸반 보드 -->
+    <div class="kanban-scroll">
+      <div class="kanban" id="kanban">
+
+        <!-- ① 제작중 -->
+        <div class="kancol" data-col="0">
+          <div class="kancol-head">
+            <div class="kancol-title"><span class="dot"></span>제작중</div>
+            <span class="kancol-count">3</span>
+          </div>
+          <div class="kancol-body">
+
+            <div class="course-card" onclick="toast('과정 상세 (프로토타입)','info')">
+              <div class="card-top">
+                <div class="card-badges"><span class="badge-kind online">온라인</span></div>
+                <div class="more-wrap"><button class="more-btn" onclick="event.stopPropagation();toggleMenu(this)">⋮</button>
+                  <div class="course-menu"><button class="cmi" onclick="toast('편집 화면으로 이동','info')">편집</button><button class="cmi danger" onclick="toast('삭제되었습니다.','info')">삭제</button></div>
+                </div>
+              </div>
+              <div class="card-title">AI 마스터 전문교육과정</div>
+              <div class="card-meta">업데이트 2026-05-15</div>
+            </div>
+
+            <div class="course-card" onclick="toast('과정 상세 (프로토타입)','info')">
+              <div class="card-top">
+                <div class="card-badges"><span class="badge-kind online">온라인</span></div>
+                <div class="more-wrap"><button class="more-btn" onclick="event.stopPropagation();toggleMenu(this)">⋮</button>
+                  <div class="course-menu"><button class="cmi">편집</button><button class="cmi danger">삭제</button></div>
+                </div>
+              </div>
+              <div class="card-title">생생경영학</div>
+              <div class="card-meta">업데이트 2026-05-18</div>
+            </div>
+
+            <div class="course-card" onclick="toast('과정 상세 (프로토타입)','info')">
+              <div class="card-top">
+                <div class="card-badges"><span class="badge-kind offline">오프라인</span><span class="badge-copy">복사</span></div>
+                <div class="more-wrap"><button class="more-btn" onclick="event.stopPropagation();toggleMenu(this)">⋮</button>
+                  <div class="course-menu"><button class="cmi">편집</button><button class="cmi danger">삭제</button></div>
+                </div>
+              </div>
+              <div class="card-title">2026 리더십 심화과정</div>
+              <div class="card-meta">업데이트 2026-06-12</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ② 검수 대기 -->
+        <div class="kancol" data-col="1">
+          <div class="kancol-head">
+            <div class="kancol-title"><span class="dot"></span>검수 대기</div>
+            <span class="kancol-count">2</span>
+          </div>
+          <div class="kancol-body">
+
+            <div class="course-card" onclick="toast('과정 상세 (프로토타입)','info')">
+              <div class="card-top">
+                <div class="card-badges"><span class="badge-kind hybrid">하이브리드러닝</span></div>
+                <div class="more-wrap"><button class="more-btn" onclick="event.stopPropagation();toggleMenu(this)">⋮</button>
+                  <div class="course-menu"><button class="cmi">검수 취소</button><button class="cmi danger">삭제</button></div>
+                </div>
+              </div>
+              <div class="card-title">CNA(12기) 오리엔테이션</div>
+              <div class="card-meta">검수 요청 2026-06-14</div>
+            </div>
+
+            <div class="course-card" onclick="toast('과정 상세 (프로토타입)','info')">
+              <div class="card-top">
+                <div class="card-badges"><span class="badge-kind online">온라인</span></div>
+                <div class="more-wrap"><button class="more-btn" onclick="event.stopPropagation();toggleMenu(this)">⋮</button>
+                  <div class="course-menu"><button class="cmi">검수 취소</button><button class="cmi danger">삭제</button></div>
+                </div>
+              </div>
+              <div class="card-title">AI 리터러시 교육</div>
+              <div class="card-meta">검수 요청 2026-06-10</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ③ 검수 완료 -->
+        <div class="kancol" data-col="2">
+          <div class="kancol-head">
+            <div class="kancol-title"><span class="dot"></span>검수 완료</div>
+            <span class="kancol-count">2</span>
+          </div>
+          <div class="kancol-body">
+
+            <!-- 승인 → 신청·학습 추가 버튼 -->
+            <div class="course-card" onclick="toast('과정 상세 (프로토타입)','info')">
+              <div class="card-top">
+                <div class="card-badges"><span class="badge-kind microlearning">마이크로러닝</span></div>
+                <div class="more-wrap"><button class="more-btn" onclick="event.stopPropagation();toggleMenu(this)">⋮</button>
+                  <div class="course-menu"><button class="cmi">과정정보</button><button class="cmi">과정/콘텐츠 편집</button><button class="cmi">과정복사</button><button class="cmi danger">삭제</button></div>
+                </div>
+              </div>
+              <div class="card-title">데이터기반 문제해결 기본과정</div>
+              <div class="card-meta">검수 완료 2026-05-26</div>
+              <div class="card-action">
+                <button class="btn-action btn-enroll" onclick="event.stopPropagation();toast('신청·학습 설정 화면으로 이동합니다.','info')">＋ 신청·학습 추가</button>
+              </div>
+            </div>
+
+            <!-- 반려 → 과정 다시 제작 버튼 -->
+            <div class="course-card" onclick="toast('과정 상세 (프로토타입)','info')">
+              <div class="card-top">
+                <div class="card-badges"><span class="badge-kind offline">오프라인</span><span class="badge-reject">반려</span></div>
+                <div class="more-wrap"><button class="more-btn" onclick="event.stopPropagation();toggleMenu(this)">⋮</button>
+                  <div class="course-menu"><button class="cmi">반려 사유 보기</button><button class="cmi danger">삭제</button></div>
+                </div>
+              </div>
+              <div class="card-title">2026년 2차 DVP Ⅳ 과정</div>
+              <div class="card-meta">반려 2026-05-28</div>
+              <div class="card-action">
+                <button class="btn-action btn-redo" onclick="event.stopPropagation();toast('과정 편집 화면으로 이동합니다.','info')">과정 다시 제작</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ④ 신청중 -->
+        <div class="kancol" data-col="3">
+          <div class="kancol-head">
+            <div class="kancol-title"><span class="dot"></span>신청중</div>
+            <span class="kancol-count">2</span>
+          </div>
+          <div class="kancol-body">
+
+            <div class="course-card" onclick="toast('과정 상세 (프로토타입)','info')">
+              <div class="card-top">
+                <div class="card-badges"><span class="badge-kind hybrid">하이브리드러닝</span></div>
+                <div class="more-wrap"><button class="more-btn" onclick="event.stopPropagation();toggleMenu(this)">⋮</button>
+                  <div class="course-menu"><button class="cmi">신청자 확인</button><button class="cmi">설정 수정</button></div>
+                </div>
+              </div>
+              <div class="card-title">2026년 신입사원 Jump Up 과정 (2차)</div>
+              <div class="card-meta">신청기간 2026-05-15 ~ 2026-06-10</div>
+            </div>
+
+            <div class="course-card" onclick="toast('과정 상세 (프로토타입)','info')">
+              <div class="card-top">
+                <div class="card-badges"><span class="badge-kind online">온라인</span></div>
+                <div class="more-wrap"><button class="more-btn" onclick="event.stopPropagation();toggleMenu(this)">⋮</button>
+                  <div class="course-menu"><button class="cmi">신청자 확인</button><button class="cmi">설정 수정</button></div>
+                </div>
+              </div>
+              <div class="card-title">CNA(11기)</div>
+              <div class="card-meta">신청기간 2026-05-10 ~ 2026-05-30</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ⑤ 학습 과정 -->
+        <div class="kancol" data-col="4">
+          <div class="kancol-head">
+            <div class="kancol-title"><span class="dot"></span>학습 과정</div>
+            <span class="kancol-count">4</span>
+          </div>
+          <div class="kancol-body">
+
+            <div class="course-card" onclick="toast('과정 상세 (프로토타입)','info')">
+              <div class="card-top">
+                <div class="card-badges"><span class="badge-kind online">온라인</span></div>
+                <div class="more-wrap"><button class="more-btn" onclick="event.stopPropagation();toggleMenu(this)">⋮</button>
+                  <div class="course-menu"><button class="cmi">학습현황</button><button class="cmi">신청자 확인</button></div>
+                </div>
+              </div>
+              <div class="card-title">디지털 마케팅 기초</div>
+              <div class="card-meta">학습기간 2026-07-01 ~ 2026-07-31</div>
+              <div class="learn-status"><span class="learn-badge not-started">● 학습 시작 전</span></div>
+            </div>
+
+            <div class="course-card" onclick="toast('과정 상세 (프로토타입)','info')">
+              <div class="card-top">
+                <div class="card-badges"><span class="badge-kind hybrid">하이브리드러닝</span></div>
+                <div class="more-wrap"><button class="more-btn" onclick="event.stopPropagation();toggleMenu(this)">⋮</button>
+                  <div class="course-menu"><button class="cmi">학습현황</button><button class="cmi">신청자 확인</button></div>
+                </div>
+              </div>
+              <div class="card-title">2026년 신입사원 Jump Up 과정</div>
+              <div class="card-meta">학습기간 2026-04-15 ~ 2026-06-15</div>
+              <div class="learn-status"><span class="learn-badge ongoing">● 학습중</span></div>
+            </div>
+
+            <div class="course-card" onclick="toast('과정 상세 (프로토타입)','info')">
+              <div class="card-top">
+                <div class="card-badges"><span class="badge-kind offline">오프라인</span></div>
+                <div class="more-wrap"><button class="more-btn" onclick="event.stopPropagation();toggleMenu(this)">⋮</button>
+                  <div class="course-menu"><button class="cmi">수료처리</button><button class="cmi">학습현황</button></div>
+                </div>
+              </div>
+              <div class="card-title">2025년 7차 DVP Ⅱ 과정</div>
+              <div class="card-meta">학습기간 2025-12-04 ~ 2026-02-15</div>
+              <div class="learn-status"><span class="learn-badge processing">● 수료 처리중</span></div>
+            </div>
+
+            <div class="course-card" onclick="toast('과정 상세 (프로토타입)','info')">
+              <div class="card-top">
+                <div class="card-badges"><span class="badge-kind offline">오프라인</span></div>
+                <div class="more-wrap"><button class="more-btn" onclick="event.stopPropagation();toggleMenu(this)">⋮</button>
+                  <div class="course-menu"><button class="cmi">학습 이력</button><button class="cmi">수료증 발급</button></div>
+                </div>
+              </div>
+              <div class="card-title">경력사원 입문교육</div>
+              <div class="card-meta">학습기간 2025-12-04 ~ 2026-02-28</div>
+              <div class="learn-status"><span class="learn-badge finished">● 종료</span></div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- /kanban -->
+    </div><!-- /kanban-scroll -->
+
+  </div>
+</main>
+
+<div class="toast-wrap" id="toast-wrap"></div>
 
 <script>
-function ca(){
-  document.querySelectorAll('.mbtn.on,.hbtn.on').forEach(e=>e.classList.remove('on'));
-  document.getElementById('bk').classList.remove('on');
+/* ── Theme ── */
+let dark = window.matchMedia('(prefers-color-scheme:dark)').matches;
+function applyTheme(d) {
+  document.documentElement.setAttribute('data-theme', d ? 'dark' : 'light');
+  document.getElementById('theme-btn').textContent = d ? '☀️ 라이트모드' : '🌙 다크모드';
 }
-function tm(b,e){e.stopPropagation();var o=b.classList.contains('on');ca();if(!o){b.classList.add('on');document.getElementById('bk').classList.add('on');}}
-function th(b,e){e.stopPropagation();var o=b.classList.contains('on');ca();if(!o){b.classList.add('on');document.getElementById('bk').classList.add('on');}}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')ca();});
+function toggleTheme() { dark = !dark; applyTheme(dark); }
+applyTheme(dark);
 
-// Theme
-var h=document.documentElement,tb=document.getElementById('tt');
-function gt(){return h.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')}
-function st(t){h.dataset.theme=t;tb.textContent=t==='dark'?'☀️':'🌙';}
-tb.addEventListener('click',()=>st(gt()==='dark'?'light':'dark'));
-st(gt());
+/* ── Sidebar ── */
+function toggleSidebar() {
+  const s = document.getElementById('sidebar');
+  const o = document.getElementById('sov');
+  const open = s.classList.toggle('open');
+  o.classList.toggle('open', open);
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sov').classList.remove('open');
+}
+
+/* ── More menu ── */
+function toggleMenu(btn) {
+  const menu = btn.nextElementSibling;
+  document.querySelectorAll('.course-menu.open').forEach(m => { if (m !== menu) m.classList.remove('open'); });
+  menu.classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.more-wrap')) {
+    document.querySelectorAll('.course-menu.open').forEach(m => m.classList.remove('open'));
+  }
+});
+
+/* ── Mobile column tabs ── */
+let activeCol = 0;
+function selectCol(idx) {
+  activeCol = idx;
+  document.querySelectorAll('.col-selector .ctab').forEach((t, i) => t.classList.toggle('active', i === idx));
+  const kanban = document.getElementById('kanban');
+  if (kanban.classList.contains('tab-mode')) {
+    kanban.querySelectorAll('.kancol').forEach((c, i) => c.classList.toggle('visible', i === idx));
+  }
+}
+function focusCol(idx) {
+  if (window.innerWidth <= 767) {
+    selectCol(idx);
+    document.querySelector('.col-selector').scrollTo({ left: idx * 120 - 20, behavior: 'smooth' });
+  } else {
+    document.querySelectorAll('.kancol')[idx]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+  }
+}
+
+/* ── Responsive toggle ── */
+function checkLayout() {
+  const kanban = document.getElementById('kanban');
+  const mobile = window.innerWidth <= 767;
+  if (mobile) {
+    kanban.classList.add('tab-mode');
+    kanban.querySelectorAll('.kancol').forEach((c, i) => c.classList.toggle('visible', i === activeCol));
+  } else {
+    kanban.classList.remove('tab-mode');
+    kanban.querySelectorAll('.kancol').forEach(c => { c.classList.remove('visible'); });
+  }
+}
+window.addEventListener('resize', checkLayout);
+checkLayout();
+
+/* ── Toast ── */
+function toast(msg, type) {
+  const wrap = document.getElementById('toast-wrap');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  if (type === 'success') t.style.background = '#0052CC';
+  if (type === 'warn') t.style.background = '#c05c00';
+  wrap.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .3s'; setTimeout(() => t.remove(), 300); }, 2800);
+}
 </script>
+</body>
+</html>
