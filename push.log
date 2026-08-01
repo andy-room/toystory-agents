@@ -2129,3 +2129,23 @@ remote: This repository moved. Please use the new location:
 remote:   git@github.com:andy-room/toystory-agents.git        
 To github.com:soonyeons/toystory-agents.git
    95895b2..6249ecf  main -> main
+[main 16c99cc] auto: 2026-07-31 17:00 자동 저장
+ Committer: hunet_syhong <syhong@hunet-soon.local>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file:
+
+    git config --global --edit
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 2 files changed, 957 insertions(+)
+ create mode 100644 scroll-demo.html
+remote: This repository moved. Please use the new location:        
+remote:   git@github.com:andy-room/toystory-agents.git        
+To github.com:soonyeons/toystory-agents.git
+   6249ecf..16c99cc  main -> main
