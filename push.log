@@ -2206,3 +2206,35 @@ remote: This repository moved. Please use the new location:
 remote:   git@github.com:andy-room/toystory-agents.git        
 To github.com:soonyeons/toystory-agents.git
    f563d10..8eee5f6  main -> main
+[main 56aa65a] auto: 2026-08-04 17:00 자동 저장
+ Committer: hunet_syhong <syhong@hunet-soon.local>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file:
+
+    git config --global --edit
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 14 files changed, 5184 insertions(+)
+ create mode 100644 presentation/_pdf.html
+ create mode 100644 "presentation/images/ChatGPT Image 2026\353\205\204 8\354\233\224 4\354\235\274 \354\230\244\355\233\204 02_29_20.png"
+ create mode 100644 "presentation/images/\353\271\265\353\250\271\353\212\224 \354\206\214\353\205\204_\354\212\244\355\202\254\353\257\270\354\202\254\354\232\251.png"
+ create mode 100644 "presentation/images/\353\271\265\353\250\271\353\212\224 \354\206\214\353\205\204_\354\212\244\355\202\254\354\202\254\354\232\251.png"
+ create mode 100644 "presentation/images/\354\234\241\354\203\201\354\204\240\354\210\230_\354\212\244\355\202\254\353\257\270\354\202\254\354\232\251.png"
+ create mode 100644 "presentation/images/\354\234\241\354\203\201\354\204\240\354\210\230_\354\212\244\355\202\254\354\202\254\354\232\251.png"
+ create mode 100644 "presentation/images/\354\235\270\354\236\254\355\202\244\354\233\200.png"
+ create mode 100644 "presentation/images/\354\235\270\354\236\254\355\202\244\354\233\200_\353\252\250\353\260\224\354\235\274.png"
+ create mode 100644 "presentation/images/\355\202\244\353\263\264\353\223\234_\354\212\244\355\202\254\353\257\270\354\202\254\354\232\251.png"
+ create mode 100644 "presentation/images/\355\202\244\353\263\264\353\223\234_\354\212\244\355\202\254\354\202\254\354\232\251.png"
+ create mode 100644 presentation/index-hds.html
+ create mode 100644 presentation/index.html
+ create mode 100644 "presentation/\354\225\204\353\240\210\355\205\214\355\203\200\354\232\264\355\231\200_\353\224\224\354\236\220\354\235\270\355\214\200.zip"
+remote: This repository moved. Please use the new location:        
+remote:   git@github.com:andy-room/toystory-agents.git        
+To github.com:soonyeons/toystory-agents.git
+   8eee5f6..56aa65a  main -> main
